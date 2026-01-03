@@ -220,25 +220,43 @@ template <class T, size_t N, bool zero_reg>
 class regfile_t
 {
 public:
+  // Constructor: Size the vector to N and initialize lock to false
+  regfile_t() : data(N), locked(false) { reset(); }
+
+  // [EXPERIMENT] Methods to control the lock
+  void set_lock(bool en) { locked = en; }
+  bool get_lock() const { return locked; }
+
   void write(size_t i, T value)
   {
-    if (!zero_reg || i != 0)
-      data[i] = value;
+    if (zero_reg && i == 0) return;
+
+    // [EXPERIMENT] If locked and index >= 16, block the write
+    if (locked && i >= 16) {
+      return; 
+    }
+
+    data[i] = value;
   }
+
   const T& operator [] (size_t i) const
   {
     return data[i];
   }
-  regfile_t()
-  {
-    reset();
-  }
+
   void reset()
   {
-    memset(data, 0, sizeof(data));
+    // CRITICAL FIX: Use T() instead of 0.
+    // T() creates a default "zero" value that works for both integers 
+    // and complex floating-point structures.
+    data.assign(N, T()); 
+    
+    locked = false;
   }
+
 private:
-  T data[N];
+  std::vector<T> data;
+  bool locked; 
 };
 
 #define get_field(reg, mask) \

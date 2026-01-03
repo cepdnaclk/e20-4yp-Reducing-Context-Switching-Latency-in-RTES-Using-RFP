@@ -146,6 +146,30 @@ void processor_t::enable_log_commits()
   build_opcode_map();
 }
 
+// [INSERT THIS CLASS DEFINITION BEFORE processor_t::reset]
+class lock_csr_t : public csr_t {
+public:
+  lock_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
+
+  // 1. Read: We know this works
+  reg_t read() const noexcept override {
+    return proc->get_state()->XPR.get_lock() ? 1 : 0;
+  }
+
+  // 2. Write: I REMOVED 'override'. 
+  // If this signature is wrong, the compiler will tell us exactly what it expects
+  // in the error message "pure virtual function ... has no overrider".
+  void write(const reg_t val) noexcept {
+    proc->get_state()->XPR.set_lock(val & 1);
+  }
+
+  // 3. Unlogged Write: We know this works
+  bool unlogged_write(const reg_t val) noexcept override {
+    write(val);
+    return true;
+  }
+};
+
 void processor_t::reset()
 {
   xlen = isa.get_max_xlen();
@@ -160,6 +184,13 @@ void processor_t::reset()
     put_csr(CSR_PMPADDR0, ~reg_t(0));
     put_csr(CSR_PMPCFG0, PMP_R | PMP_W | PMP_X | PMP_NAPOT);
   }
+
+  // -------------------------------------------------------------------------
+  // [EXPERIMENT FIX] Custom CSR Registration
+  // -------------------------------------------------------------------------
+  // Instantiate the class we defined above.
+  state.csrmap[0x800] = std::make_shared<lock_csr_t>(this, 0x800);
+  // -------------------------------------------------------------------------
 
   for (auto e : custom_extensions) { // reset any extensions
     for (auto &csr: e.second->get_csrs(*this))
