@@ -216,48 +216,66 @@ private:
   uint64_t imm_sign() { return xs(31, 1); }
 };
 
+// [START OF PARTITIONED REGISTER FILE]
 template <class T, size_t N, bool zero_reg>
 class regfile_t
 {
 public:
-  // Constructor: Size the vector to N and initialize lock to false
-  regfile_t() : data(N), locked(false) { reset(); }
+  // Default to 1 partition, partition 0 active
+  regfile_t() : num_partitions(1), cur_part(0) { 
+      data.resize(N);
+      reset(); 
+  }
 
-  // [EXPERIMENT] Methods to control the lock
-  void set_lock(bool en) { locked = en; }
-  bool get_lock() const { return locked; }
+  // [NEW] Configure how many partitions we want (e.g., 4)
+  void set_num_partitions(size_t n) {
+      num_partitions = n;
+      // Resize the vector to hold (32 * n) registers
+      // We use T() to ensure zero-initialization for float128_t
+      data.assign(N * num_partitions, T());
+      cur_part = 0;
+  }
+
+  // [NEW] Switch the active partition
+  void set_partition(size_t p) {
+      if (p < num_partitions) {
+          cur_part = p;
+      }
+  }
+
+  // [NEW] Get current partition
+  size_t get_partition() const { return cur_part; }
 
   void write(size_t i, T value)
   {
     if (zero_reg && i == 0) return;
 
-    // [EXPERIMENT] If locked and index >= 16, block the write
-    if (locked && i >= 16) {
-      return; 
-    }
-
-    data[i] = value;
+    // [CORE LOGIC] Calculate physical index based on partition
+    // Physical Index = Logical Index + (Partition * 32)
+    size_t physical_index = i + (cur_part * N);
+    
+    data[physical_index] = value;
   }
 
   const T& operator [] (size_t i) const
   {
-    return data[i];
+    size_t physical_index = i + (cur_part * N);
+    return data[physical_index];
   }
 
   void reset()
   {
-    // CRITICAL FIX: Use T() instead of 0.
-    // T() creates a default "zero" value that works for both integers 
-    // and complex floating-point structures.
-    data.assign(N, T()); 
-    
-    locked = false;
+    // Clear ALL partitions on reset
+    data.assign(N * num_partitions, T());
+    cur_part = 0;
   }
 
 private:
   std::vector<T> data;
-  bool locked; 
+  size_t num_partitions;
+  size_t cur_part;
 };
+// [END OF PARTITIONED REGISTER FILE]
 
 #define get_field(reg, mask) \
   (((reg) & (std::remove_cv<decltype(reg)>::type)(mask)) / ((mask) & ~((mask) << 1)))
