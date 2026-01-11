@@ -157,23 +157,22 @@ public:
   bool unlogged_write(const reg_t val) noexcept override { return true; }
 };
 
-// In riscv/processor.cc
-
-class window_base_csr_t : public csr_t {
+class window_config_csr_t : public csr_t {
 public:
-  window_base_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
+  window_config_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
 
   reg_t read() const noexcept override {
-    // Return the current byte/index offset
-    return proc->get_state()->XPR.get_base_offset();
+    auto& xpr = proc->get_state()->XPR;
+    return (xpr.get_window_size() << 16) | (xpr.get_base_offset() & 0xFFFF);
   }
 
   void write(const reg_t val) {
-    // Set the RAW offset (e.g., 0, 10, 16)
-    proc->get_state()->XPR.set_window_base(val);
-    
-    // Also update Floating Point regs if you want them windowed too
-    proc->get_state()->FPR.set_window_base(val); 
+    reg_t new_base = val & 0xFFFF;
+    reg_t new_size = (val >> 16) & 0xFFFF;
+    if (new_size == 0) new_size = 32; // Prevent 0-size lockouts
+
+    proc->get_state()->XPR.set_window_config(new_base, new_size);
+    proc->get_state()->FPR.set_window_config(new_base, new_size);
   }
 
   bool unlogged_write(const reg_t val) noexcept override { write(val); return true; }
@@ -203,8 +202,8 @@ void processor_t::reset()
     put_csr(CSR_PMPCFG0, PMP_R | PMP_W | PMP_X | PMP_NAPOT);
   }
 
-  // Register CSR 0x800 to control the Window Base
-  state.csrmap[0x800] = std::make_shared<window_base_csr_t>(this, 0x800);
+  // Register CSR 0x800 to control the Window
+  state.csrmap[0x800] = std::make_shared<window_config_csr_t>(this, 0x800);
 
   for (auto e : custom_extensions) { 
     for (auto &csr: e.second->get_csrs(*this))

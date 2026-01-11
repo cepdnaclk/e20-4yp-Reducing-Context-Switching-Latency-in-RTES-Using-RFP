@@ -214,35 +214,34 @@ private:
   uint64_t imm_sign() { return xs(31, 1); }
 };
 
-// [SLIDING WINDOW REGISTER FILE]
+// [VARIABLE WINDOW REGISTER FILE]
 template <class T, size_t N, bool zero_reg>
 class regfile_t
 {
 public:
-  // Initialize with a large enough physical size (e.g., N=32, but we act as if we have more space physically if needed)
-  // For now, we fit inside the standard vector, but we change how we index it.
-  regfile_t() : data(N), base_offset(0) { reset(); }
+  // Default to full size (32) if not specified
+  regfile_t() : data(N), base_offset(0), window_size(N) { reset(); }
 
-  // [NEW] Set the sliding window base
-  void set_window_base(size_t offset) {
-      // Ensure we don't slide off the edge of the world
-      if (offset < N) {
-          base_offset = offset;
-      }
+  void set_window_config(size_t base, size_t size) {
+      if (base < N) base_offset = base;
+      // Clamp size so (Base + Size) doesn't exceed Physical N
+      if (base + size > N) window_size = N - base; 
+      else window_size = size;
   }
   
-  // [NEW] Get current base
   size_t get_base_offset() const { return base_offset; }
+  size_t get_window_size() const { return window_size; }
 
   void write(size_t i, T value)
   {
-    // x0 is ALWAYS 0 and never written, regardless of window
+    // x0 is always 0
     if (zero_reg && i == 0) return;
 
-    // [CORE LOGIC] Physical = Logical + Base
+    // [SECURITY] Hardware Boundary Check
+    // If Task 1 (Size 5) tries to write x5, we silently drop it.
+    if (i >= window_size) return; 
+
     size_t physical_index = i + base_offset;
-    
-    // Safety check: ensure we don't write outside physical memory
     if (physical_index < data.size()) {
         data[physical_index] = value;
     }
@@ -252,12 +251,12 @@ public:
   {
     if (zero_reg && i == 0) return data[0];
 
+    // [SECURITY] Read Out of Bounds returns 0
+    if (i >= window_size) return data[0];
+
     size_t physical_index = i + base_offset;
-    
-    // Safety check: return 0 if out of bounds
-    if (physical_index >= data.size()) {
-        return data[0]; 
-    }
+    if (physical_index >= data.size()) return data[0];
+
     return data[physical_index];
   }
 
@@ -265,11 +264,13 @@ public:
   {
     data.assign(N, T());
     base_offset = 0;
+    window_size = N;
   }
 
 private:
   std::vector<T> data;
-  size_t base_offset; // The "Window Pointer"
+  size_t base_offset;
+  size_t window_size; // [NEW] Track active window size
 };
 
 #define get_field(reg, mask) \
