@@ -160,29 +160,26 @@ public:
   bool unlogged_write(const reg_t val) noexcept override { return true; }
 };
 
-class partition_csr_t : public csr_t {
+class window_base_csr_t : public csr_t {
 public:
-  partition_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
+  window_base_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
 
-  // READ: Return the current partition ID
+  // READ: Return current base offset
   reg_t read() const noexcept override {
-    return proc->get_state()->XPR.get_partition();
+    return proc->get_state()->XPR.get_base_offset();
   }
 
-  // WRITE: Switch to the requested partition
-  // Note: removed 'override' on write() to avoid the signature errors 
+  // WRITE: Set new base offset
   void write(const reg_t val) {
-    proc->get_state()->XPR.set_partition(val);
-    proc->get_state()->FPR.set_partition(val); // Switch Floating Point too!
+    proc->get_state()->XPR.set_base_offset(val);
+    proc->get_state()->FPR.set_base_offset(val);
   }
 
-  // UNLOGGED_WRITE: Required by Spike
   bool unlogged_write(const reg_t val) noexcept override {
     write(val);
     return true;
   }
 };
-
 
 void processor_t::reset()
 {
@@ -192,16 +189,9 @@ void processor_t::reset()
     VU.reset();
   in_wfi = false;
 
-  // -------------------------------------------------------------------------
-  // [FIX] FORCE-ENABLE PERFORMANCE COUNTERS
-  // -------------------------------------------------------------------------
-  // 1. Force Machine Mode counters enabled
+  // Keep the Performance Counters Enabled (from previous step)
   put_csr(CSR_MCOUNTEREN, -1); 
-  
-  // 2. Install "Sticky" handler for scounteren (0x106)
-  // This prevents the OS/PK from disabling User-Mode access to counters.
   state.csrmap[0x106] = std::make_shared<sticky_counter_en_t>(this, 0x106);
-  // -------------------------------------------------------------------------
 
   if (n_pmp > 0) {
     put_csr(CSR_PMPADDR0, ~reg_t(0));
@@ -209,11 +199,12 @@ void processor_t::reset()
   }
 
   // -------------------------------------------------------------------------
-  // [NEW] Configure Register Partitions
+  // [NEW] Configure Sliding Window
   // -------------------------------------------------------------------------
-  state.XPR.set_num_partitions(4);
-  state.FPR.set_num_partitions(4);
-  state.csrmap[0x800] = std::make_shared<partition_csr_t>(this, 0x800);
+  // Note: We DO NOT call set_num_partitions. Standard size (32) is used.
+  
+  // Register CSR 0x800 to control the Offset
+  state.csrmap[0x800] = std::make_shared<window_base_csr_t>(this, 0x800);
   // -------------------------------------------------------------------------
 
   for (auto e : custom_extensions) { 
