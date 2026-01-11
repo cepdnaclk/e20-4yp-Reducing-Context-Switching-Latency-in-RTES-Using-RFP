@@ -144,7 +144,6 @@ void processor_t::enable_log_commits()
   build_opcode_map();
 }
 
-// [INSERT THIS NEAR THE TOP OF processor.cc]
 class sticky_counter_en_t : public csr_t {
 public:
   sticky_counter_en_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
@@ -158,29 +157,27 @@ public:
   bool unlogged_write(const reg_t val) noexcept override { return true; }
 };
 
-class partition_csr_t : public csr_t {
+// In riscv/processor.cc
+
+class window_base_csr_t : public csr_t {
 public:
-  partition_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
+  window_base_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
 
-  // READ: Return the current partition ID
   reg_t read() const noexcept override {
-    return proc->get_state()->XPR.get_partition();
+    // Return the current byte/index offset
+    return proc->get_state()->XPR.get_base_offset();
   }
 
-  // WRITE: Switch to the requested partition
-  // Note: removed 'override' on write() to avoid the signature errors 
   void write(const reg_t val) {
-    proc->get_state()->XPR.set_partition(val);
-    proc->get_state()->FPR.set_partition(val); // Switch Floating Point too!
+    // Set the RAW offset (e.g., 0, 10, 16)
+    proc->get_state()->XPR.set_window_base(val);
+    
+    // Also update Floating Point regs if you want them windowed too
+    proc->get_state()->FPR.set_window_base(val); 
   }
 
-  // UNLOGGED_WRITE: Required by Spike
-  bool unlogged_write(const reg_t val) noexcept override {
-    write(val);
-    return true;
-  }
+  bool unlogged_write(const reg_t val) noexcept override { write(val); return true; }
 };
-
 
 void processor_t::reset()
 {
@@ -206,13 +203,8 @@ void processor_t::reset()
     put_csr(CSR_PMPCFG0, PMP_R | PMP_W | PMP_X | PMP_NAPOT);
   }
 
-  // -------------------------------------------------------------------------
-  // [NEW] Configure Register Partitions
-  // -------------------------------------------------------------------------
-  state.XPR.set_num_partitions(4);
-  state.FPR.set_num_partitions(4);
-  state.csrmap[0x800] = std::make_shared<partition_csr_t>(this, 0x800);
-  // -------------------------------------------------------------------------
+  // Register CSR 0x800 to control the Window Base
+  state.csrmap[0x800] = std::make_shared<window_base_csr_t>(this, 0x800);
 
   for (auto e : custom_extensions) { 
     for (auto &csr: e.second->get_csrs(*this))

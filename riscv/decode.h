@@ -214,66 +214,63 @@ private:
   uint64_t imm_sign() { return xs(31, 1); }
 };
 
-// [START OF PARTITIONED REGISTER FILE]
+// [SLIDING WINDOW REGISTER FILE]
 template <class T, size_t N, bool zero_reg>
 class regfile_t
 {
 public:
-  // Default to 1 partition, partition 0 active
-  regfile_t() : num_partitions(1), cur_part(0) { 
-      data.resize(N);
-      reset(); 
-  }
+  // Initialize with a large enough physical size (e.g., N=32, but we act as if we have more space physically if needed)
+  // For now, we fit inside the standard vector, but we change how we index it.
+  regfile_t() : data(N), base_offset(0) { reset(); }
 
-  // [NEW] Configure how many partitions we want (e.g., 4)
-  void set_num_partitions(size_t n) {
-      num_partitions = n;
-      // Resize the vector to hold (32 * n) registers
-      // We use T() to ensure zero-initialization for float128_t
-      data.assign(N * num_partitions, T());
-      cur_part = 0;
-  }
-
-  // [NEW] Switch the active partition
-  void set_partition(size_t p) {
-      if (p < num_partitions) {
-          cur_part = p;
+  // [NEW] Set the sliding window base
+  void set_window_base(size_t offset) {
+      // Ensure we don't slide off the edge of the world
+      if (offset < N) {
+          base_offset = offset;
       }
   }
-
-  // [NEW] Get current partition
-  size_t get_partition() const { return cur_part; }
+  
+  // [NEW] Get current base
+  size_t get_base_offset() const { return base_offset; }
 
   void write(size_t i, T value)
   {
+    // x0 is ALWAYS 0 and never written, regardless of window
     if (zero_reg && i == 0) return;
 
-    // [CORE LOGIC] Calculate physical index based on partition
-    // Physical Index = Logical Index + (Partition * 32)
-    size_t physical_index = i + (cur_part * N);
+    // [CORE LOGIC] Physical = Logical + Base
+    size_t physical_index = i + base_offset;
     
-    data[physical_index] = value;
+    // Safety check: ensure we don't write outside physical memory
+    if (physical_index < data.size()) {
+        data[physical_index] = value;
+    }
   }
 
   const T& operator [] (size_t i) const
   {
-    size_t physical_index = i + (cur_part * N);
+    if (zero_reg && i == 0) return data[0];
+
+    size_t physical_index = i + base_offset;
+    
+    // Safety check: return 0 if out of bounds
+    if (physical_index >= data.size()) {
+        return data[0]; 
+    }
     return data[physical_index];
   }
 
   void reset()
   {
-    // Clear ALL partitions on reset
-    data.assign(N * num_partitions, T());
-    cur_part = 0;
+    data.assign(N, T());
+    base_offset = 0;
   }
 
 private:
   std::vector<T> data;
-  size_t num_partitions;
-  size_t cur_part;
+  size_t base_offset; // The "Window Pointer"
 };
-// [END OF PARTITIONED REGISTER FILE]
 
 #define get_field(reg, mask) \
   (((reg) & (std::remove_cv<decltype(reg)>::type)(mask)) / ((mask) & ~((mask) << 1)))
