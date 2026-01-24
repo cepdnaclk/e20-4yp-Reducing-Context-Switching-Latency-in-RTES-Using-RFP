@@ -22,3 +22,20 @@ STATE.mstatus->write(s);
 if (STATE.mstatush) STATE.mstatush->write(s >> 32); // log mstatush change
 if (STATE.tcontrol) STATE.tcontrol->write((STATE.tcontrol->read() & CSR_TCONTROL_MPTE) ? (CSR_TCONTROL_MPTE | CSR_TCONTROL_MTE) : 0);
 p->set_privilege(prev_prv, prev_virt);
+
+// =========================================================
+// AUTO-RESTORE WINDOW
+// =========================================================
+
+// 1. Read the Saved Window Config from CSR 0x801 (CSR_PREV_WIN)
+//    This simulates the hardware automatically popping the config.
+reg_t prev_win_config = p->get_state()->csrmap[0x801]->read();
+
+// 2. Extract Base and Size
+//    Format: [Size (16) | Base (16)]
+reg_t restore_size = (prev_win_config >> 16) & 0xFFFF;
+reg_t restore_base = prev_win_config & 0xFFFF;
+
+// 3. Restore the Register File Window
+p->get_state()->XPR.set_window_config(restore_base, restore_size);
+// p->get_state()->FPR.set_window_config(restore_base, restore_size); // Uncomment if using FPU

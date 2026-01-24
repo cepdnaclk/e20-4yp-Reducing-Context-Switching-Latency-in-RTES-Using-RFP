@@ -178,10 +178,27 @@ public:
   bool unlogged_write(const reg_t val) noexcept override { write(val); return true; }
 };
 
+class prev_window_config_csr_t : public csr_t {
+public:
+  prev_window_config_csr_t(processor_t* p, reg_t addr) : csr_t(p, addr) {}
+
+  reg_t read() const noexcept override {
+    return proc->previous_window_config;
+  }
+
+  void write(const reg_t val) {
+    // FreeRTOS will write this when restoring a task context
+    proc->previous_window_config = val;
+  }
+  
+  bool unlogged_write(const reg_t val) noexcept override { write(val); return true; }
+};
+
 void processor_t::reset()
 {
   xlen = isa.get_max_xlen();
   state.reset(this, isa.get_max_isa());
+  previous_window_config = 0;
   if (any_vector_extensions())
     VU.reset();
   in_wfi = false;
@@ -204,6 +221,7 @@ void processor_t::reset()
 
   // Register CSR 0x800 to control the Window
   state.csrmap[0x800] = std::make_shared<window_config_csr_t>(this, 0x800);
+  state.csrmap[0x801] = std::make_shared<prev_window_config_csr_t>(this, 0x801);
 
   for (auto e : custom_extensions) { 
     for (auto &csr: e.second->get_csrs(*this))
@@ -426,6 +444,23 @@ void processor_t::debug_output_log(std::stringstream *s)
 
 void processor_t::take_trap(trap_t& t, reg_t epc)
 {
+  // =========================================================
+  // AUTOMATIC WINDOW SWITCHING (HARDWARE TRAP ENTRY)
+  // =========================================================
+  
+  // 1. Capture the current window state (Base + Size)
+  reg_t current_base = state.XPR.get_base_offset();
+  reg_t current_size = state.XPR.get_window_size();
+  
+  // 2. Save it to 'previous_window_config' (CSR 0x801)
+  //    Format: [Size (16) | Base (16)]
+  previous_window_config = (current_size << 16) | (current_base & 0xFFFF);
+  
+  // 3. Force Register File to Kernel Mode (Base 0, Size 32)
+  //    This ensures x2 (SP) points to the physical Kernel Stack, not the Task Stack.
+  state.XPR.set_window_config(0, 32);
+  state.FPR.set_window_config(0, 32);
+
   unsigned max_xlen = isa.get_max_xlen();
 
   if (debug) {
