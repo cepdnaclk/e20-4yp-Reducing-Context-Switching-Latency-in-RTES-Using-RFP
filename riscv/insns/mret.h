@@ -20,14 +20,14 @@ s = set_field(s, MSTATUS_MPV, 0);
 // =========================================================
 
 // A. Read the Saved Window Config (from csrw 0x801)
-reg_t prev_win_config = p->get_state()->prev_window;
+reg_t prev_win_config = p->get_state()->window_staged;
 
 // B. Extract Base and Size
 reg_t restore_size = (prev_win_config >> 16) & 0xFFFF;
 reg_t restore_base = prev_win_config & 0xFFFF;
 
 // C. Update Hardware State
-p->get_state()->window_base = prev_win_config; 
+p->get_state()->window_active = prev_win_config;
 p->get_state()->XPR.set_window_config(restore_base, restore_size);
 
 // D. CRITICAL: Update the CSR Map

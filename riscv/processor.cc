@@ -695,11 +695,11 @@ void processor_t::put_csr(int which, reg_t val)
   if (which == 0x801) {
       // Add this printf to prove it runs!
       fprintf(stderr, "[DEBUG] Writing 0x801: %lx\n", (unsigned long)val);
-      state.prev_window = val;
+      state.window_staged = val;
       return;
   }
   if (which == 0x800) {
-      state.window_base = val;
+      state.window_active = val;
       return;
   }
   // >>>>>> END CRITICAL SECTION <<<<<<
@@ -716,8 +716,8 @@ void processor_t::put_csr(int which, reg_t val)
 // side effects on reads.
 reg_t processor_t::get_csr(int which, insn_t insn, bool write, bool peek)
 {
-  if (which == 0x800) return state.window_base;
-  if (which == 0x801) return state.prev_window;
+  if (which == 0x800) return state.window_active;
+  if (which == 0x801) return state.window_staged;
   auto search = state.csrmap.find(which);
   if (search != state.csrmap.end()) {
     if (!peek)

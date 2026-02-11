@@ -89,8 +89,8 @@ struct state_t
   std::unordered_map<reg_t, csr_t_p> csrmap;
   reg_t prv;    // TODO: Can this be an enum instead?
   reg_t prev_prv;
-  reg_t window_base; 
-  reg_t prev_window;
+  reg_t window_active;  // Current Offset (for CSR 0x800)
+  reg_t window_staged;  // Next Offset (for CSR 0x801)
   bool prv_changed;
   bool v_changed;
   bool v;
