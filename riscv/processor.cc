@@ -690,20 +690,57 @@ void processor_t::disasm(insn_t insn)
 void processor_t::put_csr(int which, reg_t val)
 {
   val = zext_xlen(val);
-
-  // >>>>>> CRITICAL: THIS MUST BE FIRST <<<<<<
+  
+  // [0x801] Window Staging CSR (Write triggers "God Mode" Dump)
   if (which == 0x801) {
-      // Add this printf to prove it runs!
-      fprintf(stderr, "[DEBUG] Writing 0x801: %lx\n", (unsigned long)val);
       state.window_staged = val;
+
+      // === GENERIC GOD MODE: DUMP ENTIRE PHYSICAL FILE (64 REGS) ===
+      fprintf(stderr, "\n[HARDWARE DUMP] Full Physical Register File State:\n");
+      fprintf(stderr, "================================================================\n");
+
+      // 1. Save current hardware state (so we can restore it after peeking)
+      reg_t saved_base = state.XPR.get_base_offset();
+      reg_t saved_size = state.XPR.get_window_size();
+
+      // 2. Iterate through the physical file in "Banks" of 32
+      //    (Assuming Total Physical Registers = 64)
+      for (int bank = 0; bank < 2; bank++) {
+          int phys_start = bank * 32;
+          
+          // Force the hardware window to look at this physical bank
+          // We set size=32 to view the whole bank as "x0-x31"
+          state.XPR.set_window_config(phys_start, 32);
+
+          fprintf(stderr, "--- Physical Registers [%02d - %02d] ---\n", phys_start, phys_start + 31);
+
+          // Print in rows of 8 for readability
+          for (int row = 0; row < 32; row += 8) {
+              fprintf(stderr, "  p%02d: ", phys_start + row);
+              for (int col = 0; col < 8; col++) {
+                  // We read logical register (row+col), which maps to (phys_start + row + col)
+                  reg_t val = state.XPR[row + col];
+                  fprintf(stderr, "%08lx ", (unsigned long)val);
+              }
+              fprintf(stderr, "\n");
+          }
+          fprintf(stderr, "\n");
+      }
+
+      // 3. RESTORE original state immediately
+      state.XPR.set_window_config(saved_base, saved_size);
+      
+      fprintf(stderr, "================================================================\n\n");
       return;
   }
+
+  // [0x800] Active Window (Read-Only in HW, but settable here for debug if needed)
   if (which == 0x800) {
       state.window_active = val;
       return;
   }
-  // >>>>>> END CRITICAL SECTION <<<<<<
 
+  // Standard CSR handling
   auto search = state.csrmap.find(which);
   if (search != state.csrmap.end()) {
     search->second->write(val);

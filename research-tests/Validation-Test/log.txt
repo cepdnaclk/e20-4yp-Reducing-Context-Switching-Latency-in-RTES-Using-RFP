@@ -1,0 +1,16 @@
+
+[TEST 1] Register Integrity (The Canary Test)
+[TASK A] Filling Registers (s1=A.., s2=B.., s3=C..)
+[TASK A] Yielding to Task B...
+    [TASK B] Hello! I am using regs s1-s3 for my own data.
+[TASK A] Back in Context. Checking Canaries...
+  [PASS] s1 preserved.
+  [PASS] s2 preserved.
+  [PASS] s3 preserved.
+
+[TEST 2] Endurance Stress Test (1000 Switches)
+  [DONE] Completed 1000 switches.
+  Total Instructions: 84018
+  Average Inst/Switch: 42
+
+[SUCCESS] ALL VALIDATION TESTS PASSED.

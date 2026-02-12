@@ -1,0 +1,23 @@
+Dump 1 (The "Before" State):
+
+    Window 0 is doing work (x1, x2, x5 are active).
+
+    Window 1 is dead empty (0x00...).
+
+    Meaning: Hardware started cleanly in the default mode.
+
+Dump 2 (The "After" State):
+
+    Window 0 Data is Preserved (Values didn't change).
+
+    Window 1 is ALIVE!
+
+        Look at x2 (Stack Pointer) in Window 1: 0xffffffff80010100.
+
+        It matches Window 0's x2.
+
+        Meaning: Code successfully teleported the stack pointer from the background window to the new foreground window.
+
+    Look at x1 (Return Address) in Window 1: ...8000009e.
+
+        Meaning: The CPU successfully executed a function call (call) inside the new register bank.

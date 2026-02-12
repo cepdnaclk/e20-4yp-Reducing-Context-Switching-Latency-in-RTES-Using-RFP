@@ -1,0 +1,7 @@
+
+[TASK A] Measuring HRW Switch Overhead...
+
+=== RESEARCH RESULTS ===
+1. Hardware Window Switch (HRW): 62 instructions
+2. Standard Software Switch (Simulated): ~872 instructions
+3. IMPACT: 14x Efficiency Improvement
