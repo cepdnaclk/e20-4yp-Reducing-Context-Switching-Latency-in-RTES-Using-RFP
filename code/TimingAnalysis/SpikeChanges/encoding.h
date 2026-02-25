@@ -1,0 +1,7 @@
+#define CSR_MCTX_START 0x7c0
+#define CSR_MCTX_END 0x7c1
+#define CSR_MCTX_DELTA 0x7c2
+
+DECLARE_CSR(mctx_start, CSR_MCTX_START)
+DECLARE_CSR(mctx_end, CSR_MCTX_END)
+DECLARE_CSR(mctx_delta, CSR_MCTX_DELTA)
