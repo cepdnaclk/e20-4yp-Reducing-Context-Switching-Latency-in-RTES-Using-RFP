@@ -460,6 +460,14 @@ load_x x15, 13 * portWORD_SIZE( sp )
     load_x x31, 29 * portWORD_SIZE( sp )
 #endif /* ifndef __riscv_32e */
 addi sp, sp, portCONTEXT_SIZE
+    # --- THESIS INJECTION: END TIMER ---
+    csrr t0, mcycle
+    la t1, temp_start_cycle
+    lw t2, 0(t1)
+    sub t0, t0, t2       /* Calculate latency */
+    la t1, async_tick_cycles
+    sw t0, 0(t1)         /* Store in global variable */
+    # -------------------------------------
 
 mret
    .endm
