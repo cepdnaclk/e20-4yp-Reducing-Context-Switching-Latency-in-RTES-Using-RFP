@@ -1,0 +1,12 @@
+
+=== BENCHMARK START ===
+Running BASELINE (Software Save/Restore)... ..........Done.
+  Min: 338 cycles
+  Max: 339 cycles
+  Avg: 338 cycles
+
+Running PROPOSED (Hardware Windows)... ..........Done.
+  Min: 78 cycles
+  Max: 79 cycles
+  Avg: 78 cycles
+
