@@ -149,6 +149,9 @@
 .extern xISRStackTop
 .extern xCriticalNesting
 .extern pxCriticalNesting
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+.extern port_restore_frame_ptr
+#endif
 /*-----------------------------------------------------------*/
 
     .macro portcontexSAVE_FPU_CONTEXT
@@ -299,13 +302,22 @@ add sp, sp, -( 2 * portWORD_SIZE )
 
    .macro portcontextSAVE_CONTEXT_INTERNAL
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
-    /* If yielding task had base != 0, it used a register window: minimal save only. */
-    csrr t0, portasmCSR_WINDOW_STAGED
-    li t1, 0xFFFF
-    and t0, t0, t1
-    bnez t0, 1f
+    /* Always full save when simulator does not apply register window: GPRs must live in kernel window (phys 0-31) so task sees them after mret. Set to 1f for minimal save when HW applies window. */
+    la t0, port_current_task_window_base
+    load_x t0, 0( t0 )
+    /* bnez t0, 1f */
 #endif
 addi sp, sp, -portCONTEXT_SIZE
+    /* Save t5/t6 (x30,x31) first so CYCLE_BREAKDOWN_PROFILE can use them without clobbering task state. */
+#ifndef __riscv_32e
+    store_x x30, 28 * portWORD_SIZE( sp )
+    store_x x31, 29 * portWORD_SIZE( sp )
+#endif
+#if defined( CYCLE_BREAKDOWN_PROFILE )
+    csrr t5, mcycle
+    la t6, port_profile_save_begin
+    store_x t5, 0( t6 )
+#endif
 store_x x1,  2  * portWORD_SIZE( sp )
 store_x x5,  3  * portWORD_SIZE( sp )
 store_x x6,  4  * portWORD_SIZE( sp )
@@ -333,8 +345,6 @@ store_x x15, 13 * portWORD_SIZE( sp )
     store_x x27, 25 * portWORD_SIZE( sp )
     store_x x28, 26 * portWORD_SIZE( sp )
     store_x x29, 27 * portWORD_SIZE( sp )
-    store_x x30, 28 * portWORD_SIZE( sp )
-    store_x x31, 29 * portWORD_SIZE( sp )
 #endif /* ifndef __riscv_32e */
 
 load_x t0, xCriticalNesting                                   /* Load the value of xCriticalNesting into t0. */
@@ -398,15 +408,28 @@ portasmSAVE_ADDITIONAL_REGISTERS /* Defined in freertos_risc_v_chip_specific_ext
 #endif
 
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
-    /* Full save: mark context type 0 so restore does full path; offset 31 (window_cfg) is left as-is from init or previous run. */
+    /* Full save: legacy task has no window; store 0 at offset 31 so restore sets port_current_task_window_base=0 and does not write 0x801. */
+    store_x x0, portWINDOW_CFG_OFFSET * portWORD_SIZE( sp )
+    /* Mark context type 0 so restore does full path. */
     store_x x0, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )
 #endif
 
 load_x t0, pxCurrentTCB          /* Load pxCurrentTCB. */
 store_x sp, 0 ( t0 )             /* Write sp to first TCB member. */
+#if defined( CYCLE_BREAKDOWN_PROFILE )
+    csrr t5, mcycle
+    la t6, port_profile_save_end
+    store_x t5, 0( t6 )
+#endif
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
     j 2f
-1:  addi sp, sp, -portCONTEXT_SIZE
+1:
+#ifdef CYCLE_BREAKDOWN_PROFILE
+    csrr t5, mcycle
+    la t6, port_profile_minimal_save_begin
+    store_x t5, 0( t6 )
+#endif
+    addi sp, sp, -portCONTEXT_SIZE
     csrr t0, mstatus
     store_x t0, 1 * portWORD_SIZE( sp )
     load_x t0, xCriticalNesting
@@ -417,6 +440,11 @@ store_x sp, 0 ( t0 )             /* Write sp to first TCB member. */
     store_x t0, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )   /* Minimal save: context_type = 1. */
     load_x t0, pxCurrentTCB
     store_x sp, 0 ( t0 )
+#if defined( CYCLE_BREAKDOWN_PROFILE )
+    csrr t5, mcycle
+    la t6, port_profile_minimal_save_end
+    store_x t5, 0( t6 )
+#endif
 2:
 #endif
 
@@ -445,6 +473,23 @@ load_x sp, xISRStackTop /* Switch to ISR stack. */
    .macro portcontextRESTORE_CONTEXT
 load_x t1, pxCurrentTCB /* Load pxCurrentTCB. */
 load_x sp, 0 ( t1 )     /* Read sp from first TCB member. */
+#ifdef CYCLE_BREAKDOWN_PROFILE
+    la t5, port_profile_minimal_restore_taken
+    store_x x0, 0( t5 )     /* Clear flag; minimal path will set to 1. */
+#endif
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    /* Update port_current_task_window_base from incoming task's window_cfg so next save uses correct path. */
+    load_x t0, portWINDOW_CFG_OFFSET * portWORD_SIZE( sp )
+    li t5, 0xFFFF
+    and t0, t0, t5
+    la t5, port_current_task_window_base
+    store_x t0, 0( t5 )
+#endif
+#if defined( CYCLE_BREAKDOWN_PROFILE )
+    csrr t5, mcycle
+    la t6, port_profile_restore_begin
+    store_x t5, 0( t6 )
+#endif
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
     /* context_type at offset 32: 1 = minimal save (use minimal restore), 0 = full save. */
     load_x t2, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )
@@ -515,6 +560,11 @@ load_x x15, 13 * portWORD_SIZE( sp )
     load_x x27, 25 * portWORD_SIZE( sp )
     load_x x28, 26 * portWORD_SIZE( sp )
     load_x x29, 27 * portWORD_SIZE( sp )
+#if defined( CYCLE_BREAKDOWN_PROFILE )
+    csrr t5, mcycle
+    la t6, port_profile_restore_end
+    store_x t5, 0( t6 )
+#endif
     load_x x30, 28 * portWORD_SIZE( sp )
     load_x x31, 29 * portWORD_SIZE( sp )
 #endif /* ifndef __riscv_32e */
@@ -528,13 +578,19 @@ addi sp, sp, portCONTEXT_SIZE
     store_x t4, 0(t1)
     # -------------------------------------
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
-    /* Load window_cfg from saved frame (t2 clobbered by FPU/VPU restore); set 0x801 before mret if task is windowed. */
+    /* GPRs already loaded into kernel window (phys 0-31). When simulator does not apply window, task runs with phys 0-31 so no copy needed. */
     addi t4, sp, -portCONTEXT_SIZE
     load_x t2, portWINDOW_CFG_OFFSET * portWORD_SIZE( t4 )
-    beqz t2, 4f
-    csrw portasmCSR_WINDOW_STAGED, t2   /* Full restore for windowed task: set 0x801 so task runs in its window. */
-4:  j 5f
-3:  load_x t0, 0 ( sp )
+6:
+    csrw portasmCSR_WINDOW_STAGED, t2   /* 0 => window 0 (legacy); non-zero => task window. */
+    j 5f
+3:
+#ifdef CYCLE_BREAKDOWN_PROFILE
+    csrr t5, mcycle
+    la t6, port_profile_minimal_restore_begin
+    store_x t5, 0( t6 )
+#endif
+    load_x t0, 0 ( sp )
     csrw mepc, t0
     load_x t3, 1 * portWORD_SIZE( sp )
     csrw mstatus, t3
@@ -544,6 +600,14 @@ addi sp, sp, portCONTEXT_SIZE
     load_x t1, pxCriticalNesting
     store_x t0, 0 ( t1 )
     addi sp, sp, portCONTEXT_SIZE
+#ifdef CYCLE_BREAKDOWN_PROFILE
+    csrr t5, mcycle
+    la t6, port_profile_minimal_restore_end
+    store_x t5, 0( t6 )
+    addi t5, x0, 1
+    la t6, port_profile_minimal_restore_taken
+    store_x t5, 0( t6 )    /* Mark that minimal restore path was taken. */
+#endif
     mret
 5:
 #endif

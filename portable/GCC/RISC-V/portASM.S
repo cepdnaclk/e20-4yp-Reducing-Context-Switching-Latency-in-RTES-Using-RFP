@@ -312,8 +312,12 @@ xPortStartFirstTask:
     ret
 
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
-/* First task is windowed: start via mret so the FYP hardware applies CSR 0x801 to the register window (ret does not). */
+/* First task is windowed: load GPRs into kernel window (phys 0-31) then mret; no HW window switch so sim sees same bank. */
 xPortStartFirstTaskWindowed:
+    li      t5, 0xFFFF
+    and     t5, t0, t5                                      /* Base from window_cfg (t0 still from branch). */
+    la      t6, port_current_task_window_base
+    store_x t5, 0( t6 )                                     /* For save path; we use full save when sim does not apply window. */
     load_x  t1, 0( sp )                                     /* Task entry point -> mepc. */
     load_x  t2, 1 * portWORD_SIZE( sp )                     /* mstatus. */
     addi    t2, t2, 0x08                                    /* Set MIE so interrupts enabled. */
@@ -322,9 +326,39 @@ xPortStartFirstTaskWindowed:
     store_x t3, 0( t4 )                                     /* Restore xCriticalNesting for the task. */
     csrw    mepc, t1
     csrw    mstatus, t2
-    csrw    portasmCSR_WINDOW_STAGED, t0                    /* Stage window; mret will apply it. */
-    addi    sp, sp, portCONTEXT_SIZE
-    mret                                                    /* HW applies 0x801; first task runs in its partition. */
+    load_x  x1,  2  * portWORD_SIZE( sp )
+    load_x  x5,  3  * portWORD_SIZE( sp )
+    load_x  x6,  4  * portWORD_SIZE( sp )
+    load_x  x7,  5  * portWORD_SIZE( sp )
+    load_x  x8,  6  * portWORD_SIZE( sp )
+    load_x  x9,  7  * portWORD_SIZE( sp )
+    load_x  x10, 8  * portWORD_SIZE( sp )
+    load_x  x11, 9  * portWORD_SIZE( sp )
+    load_x  x12, 10 * portWORD_SIZE( sp )
+    load_x  x13, 11 * portWORD_SIZE( sp )
+    load_x  x14, 12 * portWORD_SIZE( sp )
+    load_x  x15, 13 * portWORD_SIZE( sp )
+#ifndef __riscv_32e
+    load_x  x16, 14 * portWORD_SIZE( sp )
+    load_x  x17, 15 * portWORD_SIZE( sp )
+    load_x  x18, 16 * portWORD_SIZE( sp )
+    load_x  x19, 17 * portWORD_SIZE( sp )
+    load_x  x20, 18 * portWORD_SIZE( sp )
+    load_x  x21, 19 * portWORD_SIZE( sp )
+    load_x  x22, 20 * portWORD_SIZE( sp )
+    load_x  x23, 21 * portWORD_SIZE( sp )
+    load_x  x24, 22 * portWORD_SIZE( sp )
+    load_x  x25, 23 * portWORD_SIZE( sp )
+    load_x  x26, 24 * portWORD_SIZE( sp )
+    load_x  x27, 25 * portWORD_SIZE( sp )
+    load_x  x28, 26 * portWORD_SIZE( sp )
+    load_x  x29, 27 * portWORD_SIZE( sp )
+    load_x  x30, 28 * portWORD_SIZE( sp )
+    load_x  x31, 29 * portWORD_SIZE( sp )
+#endif
+    add     x2, sp, x0                                      /* Task sp = frame base (initial stack not stored in frame). */
+    csrw    portasmCSR_WINDOW_STAGED, t0                   /* Stage window for mret (sim may ignore). */
+    mret
 #endif
 /*-----------------------------------------------------------*/
 

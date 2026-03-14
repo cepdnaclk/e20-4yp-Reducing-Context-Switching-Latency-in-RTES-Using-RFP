@@ -101,6 +101,13 @@ size_t * pxCriticalNesting = &xCriticalNesting;
 /* Used to catch tasks that attempt to return from their implementing function. */
 size_t xTaskReturnAddress = ( size_t ) portTASK_RETURN_ADDRESS;
 
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+/* Scratch for full restore of a windowed task: holds frame pointer so portContext.h
+ * can switch to the task window (csrw 0x800) then reload GPRs from the frame into
+ * the task's physical registers (instead of kernel window 0-31). */
+void * port_restore_frame_ptr;
+#endif
+
 /* Set configCHECK_FOR_STACK_OVERFLOW to 3 to add ISR stack checking to task
  * stack checking.  A problem in the ISR stack will trigger an assert, not call
  * the stack overflow hook function (because the stack overflow hook is specific
@@ -227,3 +234,22 @@ void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize 
 }
 #endif /* configUSE_RISCV_REGISTER_WINDOWS */
 /*-----------------------------------------------------------*/
+
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+/* Updated on every restore from the incoming task's window_cfg (base bits). Used by save path to decide full vs minimal when CSR 0x800 is not reliable. */
+volatile uint32_t port_current_task_window_base = 0;
+#endif
+/*-----------------------------------------------------------*/
+
+#if defined( CYCLE_BREAKDOWN_PROFILE )
+/* Cycle-accurate breakdown: written from portContext.h assembly; read by cycle_breakdown_test. */
+volatile uint32_t port_profile_save_begin = 0;
+volatile uint32_t port_profile_save_end = 0;
+volatile uint32_t port_profile_minimal_save_begin = 0;
+volatile uint32_t port_profile_minimal_save_end = 0;
+volatile uint32_t port_profile_restore_begin = 0;
+volatile uint32_t port_profile_restore_end = 0;
+volatile uint32_t port_profile_minimal_restore_begin = 0;
+volatile uint32_t port_profile_minimal_restore_end = 0;
+volatile uint32_t port_profile_minimal_restore_taken = 0;  /* Set to 1 in minimal restore path; reset at start of restore. */
+#endif /* CYCLE_BREAKDOWN_PROFILE */
