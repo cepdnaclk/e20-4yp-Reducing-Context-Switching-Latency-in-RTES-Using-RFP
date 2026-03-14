@@ -12,6 +12,7 @@ SECTIONS
   _end = .;
   _heap_end = _end + 0x10000;
   . = . + 0x10000;
+  . = ALIGN(16);   /* Port requires 16-byte aligned ISR stack (configASSERT in xPortStartScheduler). */
   stack_top = .;
   /* Port expects this for the ISR stack when configISR_STACK_SIZE_WORDS is not set. */
   __freertos_irq_stack_top = .;

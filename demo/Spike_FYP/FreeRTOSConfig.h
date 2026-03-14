@@ -50,7 +50,11 @@
 /* FYP: Enable register-window context switch (Spike + expanded PRF, CSR 0x800/0x801). */
 #define configUSE_RISCV_REGISTER_WINDOWS        1
 
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+/* Required for FYP_Tests latency/workload tests (tasks suspend so idle can print stats). */
+#define INCLUDE_vTaskSuspend                    1
+
+/* On assert failure, print '!' to UART (0x10000000) so "stuck after Starting scheduler" can be diagnosed. */
+#define configASSERT( x ) do { if( ( x ) == 0 ) { (*(volatile unsigned char *)0x10000000) = (unsigned char)'!'; taskDISABLE_INTERRUPTS(); for( ;; ); } } while( 0 )
 #define configASSERT_DEFINED                   1
 
 #endif /* FREERTOS_CONFIG_H */

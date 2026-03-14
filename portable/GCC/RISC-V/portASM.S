@@ -260,6 +260,10 @@ chip_specific_stack_frame:              /* First add any chip specific registers
 xPortStartFirstTask:
     load_x  sp, pxCurrentTCB            /* Load pxCurrentTCB. */
     load_x  sp, 0( sp )                 /* Read sp from first TCB member. */
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    load_x  t0, portWINDOW_CFG_OFFSET * portWORD_SIZE( sp )  /* window_cfg: 0 = legacy, else windowed. */
+    bnez    t0, xPortStartFirstTaskWindowed   /* First task is windowed: start via mret so HW applies 0x801. */
+#endif
 
     load_x  x1, 0( sp ) /* Note for starting the scheduler the exception return address is used as the function return address. */
 
@@ -306,6 +310,22 @@ xPortStartFirstTask:
 
     addi    sp, sp, portCONTEXT_SIZE
     ret
+
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+/* First task is windowed: start via mret so the FYP hardware applies CSR 0x801 to the register window (ret does not). */
+xPortStartFirstTaskWindowed:
+    load_x  t1, 0( sp )                                     /* Task entry point -> mepc. */
+    load_x  t2, 1 * portWORD_SIZE( sp )                     /* mstatus. */
+    addi    t2, t2, 0x08                                    /* Set MIE so interrupts enabled. */
+    load_x  t3, portCRITICAL_NESTING_OFFSET * portWORD_SIZE( sp )
+    load_x  t4, pxCriticalNesting
+    store_x t3, 0( t4 )                                     /* Restore xCriticalNesting for the task. */
+    csrw    mepc, t1
+    csrw    mstatus, t2
+    csrw    portasmCSR_WINDOW_STAGED, t0                    /* Stage window; mret will apply it. */
+    addi    sp, sp, portCONTEXT_SIZE
+    mret                                                    /* HW applies 0x801; first task runs in its partition. */
+#endif
 /*-----------------------------------------------------------*/
 
 freertos_risc_v_application_exception_handler:
