@@ -206,3 +206,24 @@ void vPortEndScheduler( void )
     }
 }
 /*-----------------------------------------------------------*/
+
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize )
+{
+    StackType_t * pxTopOfStack;
+
+    if ( xTask == NULL )
+    {
+        return;
+    }
+
+    pxTopOfStack = *( ( StackType_t ** ) xTask );
+
+    if ( pxTopOfStack != NULL )
+    {
+        /* Format: (size << 16) | base; HW uses this for CSR 0x801 on restore. */
+        pxTopOfStack[ portWINDOW_CFG_OFFSET ] = ( ( StackType_t ) ulSize << 16 ) | ( ulBase & 0xFFFFU );
+    }
+}
+#endif /* configUSE_RISCV_REGISTER_WINDOWS */
+/*-----------------------------------------------------------*/

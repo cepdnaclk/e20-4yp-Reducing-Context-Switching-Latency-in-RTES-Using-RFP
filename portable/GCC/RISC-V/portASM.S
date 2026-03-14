@@ -198,6 +198,12 @@ definitions. */
  * pxCode
  */
 pxPortInitialiseStack:
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    addi a0, a0, -portWORD_SIZE         /* Space for context_type (offset 32); 0 = full save. */
+    store_x x0, 0(a0)
+    addi a0, a0, -portWORD_SIZE         /* Space for window_cfg (offset 31); 0 = legacy task. */
+    store_x x0, 0(a0)
+#endif
     addi a0, a0, -portWORD_SIZE         /* Space for critical nesting count. */
     store_x x0, 0(a0)                   /* Critical nesting count starts at 0 for every task. */
 

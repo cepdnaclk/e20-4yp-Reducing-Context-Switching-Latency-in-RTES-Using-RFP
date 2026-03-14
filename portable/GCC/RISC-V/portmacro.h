@@ -175,6 +175,17 @@ extern size_t xCriticalNesting;
 #define portMEMORY_BARRIER()    __asm volatile ( "" ::: "memory" )
 /*-----------------------------------------------------------*/
 
+/* Set to 1 when using Spike+FYP with expanded PRF and CSR 0x800/0x801.
+ * Enables zero-overhead context switch for tasks using a register window. */
+#ifndef configUSE_RISCV_REGISTER_WINDOWS
+    #define configUSE_RISCV_REGISTER_WINDOWS    0
+#endif
+
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+    #define portWINDOW_CFG_OFFSET    31
+    void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize );
+#endif
+
 /* configCLINT_BASE_ADDRESS is a legacy definition that was replaced by the
  * configMTIME_BASE_ADDRESS and configMTIMECMP_BASE_ADDRESS definitions.  For
  * backward compatibility derive the newer definitions from the old if the old

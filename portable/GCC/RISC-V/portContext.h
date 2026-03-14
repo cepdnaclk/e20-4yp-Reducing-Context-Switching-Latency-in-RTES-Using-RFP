@@ -49,7 +49,26 @@
     #error Assembler did not define __riscv_xlen
 #endif
 
-#include "freertos_risc_v_chip_specific_extensions.h"
+/* When building for Spike+FYP demo (-DportasmSPIKE_FYP_CHIP), definitions are
+ * inlined here so no extra chip header file is needed.  Otherwise use the
+ * standard include (chip directory must be on the assembler -I path). */
+#if defined( portasmSPIKE_FYP_CHIP )
+    #ifndef __FREERTOS_RISC_V_EXTENSIONS_H__
+    #define __FREERTOS_RISC_V_EXTENSIONS_H__
+    #define portasmUSE_REGISTER_WINDOWS       1
+    #define portasmHAS_SIFIVE_CLINT           1
+    #define portasmHAS_MTIME                  1
+    #define portasmADDITIONAL_CONTEXT_SIZE    0
+    #define portasmCSR_WINDOW_ACTIVE  0x800
+    #define portasmCSR_WINDOW_STAGED  0x801
+    .macro portasmSAVE_ADDITIONAL_REGISTERS
+    .endm
+    .macro portasmRESTORE_ADDITIONAL_REGISTERS
+    .endm
+    #endif /* __FREERTOS_RISC_V_EXTENSIONS_H__ */
+#else
+    #include "freertos_risc_v_chip_specific_extensions.h"
+#endif
 
 /* Only the standard core registers are stored by default.  Any additional
  * registers must be saved by the portasmSAVE_ADDITIONAL_REGISTERS and
@@ -60,8 +79,16 @@
     #define portCONTEXT_SIZE               ( 15 * portWORD_SIZE )
     #define portCRITICAL_NESTING_OFFSET    14
 #else
-    #define portCONTEXT_SIZE               ( 31 * portWORD_SIZE )
-    #define portCRITICAL_NESTING_OFFSET    30
+    #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+        /* Extra words: 31 = window_cfg (CSR 0x801), 32 = context_type (0 = full save, 1 = minimal save). */
+        #define portCONTEXT_SIZE               ( 33 * portWORD_SIZE )
+        #define portCRITICAL_NESTING_OFFSET    30
+        #define portWINDOW_CFG_OFFSET           31
+        #define portCONTEXT_TYPE_OFFSET        32
+    #else
+        #define portCONTEXT_SIZE               ( 31 * portWORD_SIZE )
+        #define portCRITICAL_NESTING_OFFSET    30
+    #endif
 #endif
 
 #if ( configENABLE_FPU == 1 )
@@ -271,6 +298,13 @@ add sp, sp, -( 2 * portWORD_SIZE )
 /*-----------------------------------------------------------*/
 
    .macro portcontextSAVE_CONTEXT_INTERNAL
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    /* If yielding task had base != 0, it used a register window: minimal save only. */
+    csrr t0, portasmCSR_WINDOW_STAGED
+    li t1, 0xFFFF
+    and t0, t0, t1
+    bnez t0, 1f
+#endif
 addi sp, sp, -portCONTEXT_SIZE
 store_x x1,  2  * portWORD_SIZE( sp )
 store_x x5,  3  * portWORD_SIZE( sp )
@@ -363,8 +397,28 @@ portasmSAVE_ADDITIONAL_REGISTERS /* Defined in freertos_risc_v_chip_specific_ext
 4:
 #endif
 
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    /* Full save: mark context type 0 so restore does full path; offset 31 (window_cfg) is left as-is from init or previous run. */
+    store_x x0, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )
+#endif
+
 load_x t0, pxCurrentTCB          /* Load pxCurrentTCB. */
 store_x sp, 0 ( t0 )             /* Write sp to first TCB member. */
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    j 2f
+1:  addi sp, sp, -portCONTEXT_SIZE
+    csrr t0, mstatus
+    store_x t0, 1 * portWORD_SIZE( sp )
+    load_x t0, xCriticalNesting
+    store_x t0, portCRITICAL_NESTING_OFFSET * portWORD_SIZE( sp )
+    csrr t0, portasmCSR_WINDOW_STAGED
+    store_x t0, portWINDOW_CFG_OFFSET * portWORD_SIZE( sp )
+    addi t0, x0, 1
+    store_x t0, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )   /* Minimal save: context_type = 1. */
+    load_x t0, pxCurrentTCB
+    store_x sp, 0 ( t0 )
+2:
+#endif
 
    .endm
 /*-----------------------------------------------------------*/
@@ -391,6 +445,11 @@ load_x sp, xISRStackTop /* Switch to ISR stack. */
    .macro portcontextRESTORE_CONTEXT
 load_x t1, pxCurrentTCB /* Load pxCurrentTCB. */
 load_x sp, 0 ( t1 )     /* Read sp from first TCB member. */
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    /* context_type at offset 32: 1 = minimal save (use minimal restore), 0 = full save. */
+    load_x t2, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )
+    bnez t2, 3f
+#endif
 
 /* Load mepc with the address of the instruction in the task to run next. */
 load_x t0, 0 ( sp )
@@ -461,14 +520,33 @@ load_x x15, 13 * portWORD_SIZE( sp )
 #endif /* ifndef __riscv_32e */
 addi sp, sp, portCONTEXT_SIZE
     # --- THESIS INJECTION: END TIMER ---
-    csrr t0, mcycle
+    csrr t4, mcycle
     la t1, temp_start_cycle
-    lw t2, 0(t1)
-    sub t0, t0, t2       /* Calculate latency */
+    load_x t5, 0(t1)
+    sub t4, t4, t5       /* latency = end - start */
     la t1, async_tick_cycles
-    sw t0, 0(t1)         /* Store in global variable */
+    store_x t4, 0(t1)
     # -------------------------------------
-
+#if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
+    /* Load window_cfg from saved frame (t2 clobbered by FPU/VPU restore); set 0x801 before mret if task is windowed. */
+    addi t4, sp, -portCONTEXT_SIZE
+    load_x t2, portWINDOW_CFG_OFFSET * portWORD_SIZE( t4 )
+    beqz t2, 4f
+    csrw portasmCSR_WINDOW_STAGED, t2   /* Full restore for windowed task: set 0x801 so task runs in its window. */
+4:  j 5f
+3:  load_x t0, 0 ( sp )
+    csrw mepc, t0
+    load_x t3, 1 * portWORD_SIZE( sp )
+    csrw mstatus, t3
+    load_x t0, portWINDOW_CFG_OFFSET * portWORD_SIZE( sp )
+    csrw portasmCSR_WINDOW_STAGED, t0
+    load_x t0, portCRITICAL_NESTING_OFFSET * portWORD_SIZE( sp )
+    load_x t1, pxCriticalNesting
+    store_x t0, 0 ( t1 )
+    addi sp, sp, portCONTEXT_SIZE
+    mret
+5:
+#endif
 mret
    .endm
 /*-----------------------------------------------------------*/
