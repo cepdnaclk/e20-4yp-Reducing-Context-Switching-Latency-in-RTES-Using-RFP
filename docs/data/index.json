@@ -31,12 +31,14 @@
             "email": "e16088@eng.pdn.ac.lk"
         }
     ],
-    "media": [
-        {
-            "type": "youtube",
-            "title": "",
-            "url": "#"
-        }
-    ],
-    "tags": ["Final Year Projects", "Embedded Systems", "ESCAL"]
+    "tags": [
+        "Final Year Reasearch Project",
+        "Embedded Systems",
+        "RISCV",
+        "FreeRTOS",
+        "CVA6",
+        "ESCAL"
+      ],
+    "image": "cover_page.jpg",
+    "thumbnail": "thumbnail.jpg"
 }
