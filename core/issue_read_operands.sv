@@ -102,6 +102,8 @@ module issue_read_operands
     output logic [31:0] cvxif_off_instr_o,
     // CVA6 Hart ID - SUBSYSTEM
     input logic [CVA6Cfg.XLEN-1:0] hart_id_i,
+    // Active register window config [31:16] = size, [15:0] = base
+    input logic [CVA6Cfg.XLEN-1:0] window_config_i,
     // CVXIF Issue interface
     input logic x_issue_ready_i,
     input x_issue_resp_t x_issue_resp_i,
@@ -138,6 +140,7 @@ module issue_read_operands
 );
 
   localparam OPERANDS_PER_INSTR = CVA6Cfg.NrRgprPorts / CVA6Cfg.NrIssuePorts;
+  localparam logic [CVA6Cfg.XLEN-1:0] FULL_WINDOW_CONFIG = {16'd32, 16'd0};
 
   typedef struct packed {
     logic none, load, store, alu, alu2, ctrl_flow, mult, csr, fpu, fpu_vec, cvxif, accel, aes;
@@ -938,6 +941,7 @@ module issue_read_operands
         .clk_i,
         .rst_ni,
         .test_en_i(1'b0),
+        .window_config_i(window_config_i),
         .raddr_i  (raddr_pack),
         .rdata_o  (rdata),
         .waddr_i  (waddr_pack),
@@ -1000,6 +1004,7 @@ module issue_read_operands
             .clk_i,
             .rst_ni,
             .test_en_i(1'b0),
+            .window_config_i(FULL_WINDOW_CONFIG),
             .raddr_i  (fp_raddr_pack),
             .rdata_o  (fprdata),
             .waddr_i  (waddr_pack),

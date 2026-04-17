@@ -90,6 +90,8 @@ module csr_regfile
     output logic [2:0] frm_o,
     // Floating-Point Precision Control - EX_STAGE
     output logic [6:0] fprec_o,
+    // Active register window configuration [31:16] = size, [15:0] = base
+    output logic [CVA6Cfg.XLEN-1:0] window_config_o,
     // Vector extension status - ID_STAGE
     output riscv::xs_t vs_o,
     // interrupt management to id stage - ID_STAGE
@@ -267,6 +269,8 @@ module csr_regfile
   logic [CVA6Cfg.XLEN-1:0] mtinst_q, mtinst_d;
   logic [CVA6Cfg.XLEN-1:0] mtval2_q, mtval2_d;
   logic fiom_d, fiom_q;
+  logic [CVA6Cfg.XLEN-1:0] window_config_q, window_config_d;
+  logic [CVA6Cfg.XLEN-1:0] prev_window_config_q, prev_window_config_d;
 
   logic [CVA6Cfg.XLEN-1:0] stvec_q, stvec_d;
   logic [CVA6Cfg.XLEN-1:0] scounteren_q, scounteren_d;
@@ -320,6 +324,7 @@ module csr_regfile
   // CBO enable flags from menvcfg/senvcfg/henvcfg
   riscv::cbie_t mcbie_q, mcbie_d, scbie_q, scbie_d, hcbie_q, hcbie_d;
   logic mcbcfe_q, mcbcfe_d, scbcfe_q, scbcfe_d, hcbcfe_q, hcbcfe_d;
+  localparam logic [CVA6Cfg.XLEN-1:0] DEFAULT_WINDOW_CONFIG = CVA6Cfg.XLEN'(32'h0020_0000);
 
   localparam logic [CVA6Cfg.XLEN-1:0] IsaCode = (CVA6Cfg.XLEN'(CVA6Cfg.RVA) <<  0)                // A - Atomic Instructions extension
   | (CVA6Cfg.XLEN'(CVA6Cfg.RVB) << 1)  // B - Bitmanip extension
@@ -351,6 +356,7 @@ module csr_regfile
   assign fs_o = mstatus_q.fs;
   assign vfs_o = (CVA6Cfg.RVH) ? vsstatus_q.fs : riscv::Off;
   assign vs_o = mstatus_q.vs;
+  assign window_config_o = window_config_q;
   // ----------------
   // CSR Read logic
   // ----------------
@@ -404,6 +410,8 @@ module csr_regfile
             read_access_exception = 1'b1;
           end
         end
+        12'h800: csr_rdata = window_config_q;
+        12'h801: csr_rdata = prev_window_config_q;
         // non-standard extension
         riscv::CSR_FTRAN: begin
           if (CVA6Cfg.FpPresent && !(mstatus_q.fs == riscv::Off || (CVA6Cfg.RVH && v_q && vsstatus_q.fs == riscv::Off))) begin
@@ -1013,6 +1021,8 @@ module csr_regfile
       jvt_d = jvt_q;
     end
     fcsr_d       = fcsr_q;
+    window_config_d = window_config_q;
+    prev_window_config_d = prev_window_config_q;
 
     priv_lvl_d   = priv_lvl_q;
     v_d          = v_q;
@@ -1147,6 +1157,12 @@ module csr_regfile
           end else begin
             update_access_exception = 1'b1;
           end
+        end
+        12'h800: begin
+          window_config_d = csr_wdata;
+        end
+        12'h801: begin
+          prev_window_config_d = csr_wdata;
         end
         riscv::CSR_FTRAN: begin
           if (CVA6Cfg.FpPresent && !(mstatus_q.fs == riscv::Off || (CVA6Cfg.RVH && v_q && vsstatus_q.fs == riscv::Off))) begin
@@ -2010,6 +2026,8 @@ module csr_regfile
     // Exception is taken and we are not in debug mode
     // exceptions in debug mode don't update any fields
     if ((CVA6Cfg.DebugEn && !debug_mode_q && ex_i.cause != riscv::DEBUG_REQUEST && ex_i.valid) || (!CVA6Cfg.DebugEn && ex_i.valid) || (!CVA6Cfg.DebugEn && CVA6Cfg.SDTRIG && break_from_trigger)) begin
+      prev_window_config_d = window_config_q;
+      window_config_d = DEFAULT_WINDOW_CONFIG;
       // do not flush, flush is reserved for CSR writes with side effects
       flush_o = 1'b0;
       // figure out where to trap to
@@ -2327,6 +2345,7 @@ module csr_regfile
         mstatus_d.mpv = 1'b0;
         if (mstatus_q.mpp != riscv::PRIV_LVL_M) mstatus_d.mprv = 1'b0;
       end
+      window_config_d = prev_window_config_q;
     end
 
     if (CVA6Cfg.RVS && sret && ((CVA6Cfg.RVH && !v_q) || !CVA6Cfg.RVH)) begin
@@ -2780,6 +2799,8 @@ module csr_regfile
       mscratch_q       <= {CVA6Cfg.XLEN{1'b0}};
       if (CVA6Cfg.TvalEn) mtval_q <= {CVA6Cfg.XLEN{1'b0}};
       fiom_q          <= '0;
+      window_config_q <= DEFAULT_WINDOW_CONFIG;
+      prev_window_config_q <= '0;
       dcache_q        <= {{CVA6Cfg.XLEN - 1{1'b0}}, 1'b1};
       icache_q        <= {{CVA6Cfg.XLEN - 1{1'b0}}, 1'b1};
       mcountinhibit_q <= '0;
@@ -2878,6 +2899,8 @@ module csr_regfile
       mscratch_q       <= mscratch_d;
       if (CVA6Cfg.TvalEn) mtval_q <= mtval_d;
       fiom_q          <= fiom_d;
+      window_config_q <= window_config_d;
+      prev_window_config_q <= prev_window_config_d;
       dcache_q        <= dcache_d;
       icache_q        <= icache_d;
       mcountinhibit_q <= mcountinhibit_d;

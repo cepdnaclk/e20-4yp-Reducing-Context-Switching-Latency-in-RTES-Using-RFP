@@ -26,13 +26,16 @@ module ariane_regfile #(
     parameter config_pkg::cva6_cfg_t CVA6Cfg       = config_pkg::cva6_cfg_empty,
     parameter int unsigned           DATA_WIDTH    = 32,
     parameter int unsigned           NR_READ_PORTS = 2,
-    parameter bit                    ZERO_REG_ZERO = 0
+    parameter bit                    ZERO_REG_ZERO = 0,
+    parameter int unsigned           PHYSICAL_REGS = 64
 ) (
     // clock and reset
     input  logic                                             clk_i,
     input  logic                                             rst_ni,
     // disable clock gates for testing
     input  logic                                             test_en_i,
+    // register window configuration: [31:16] = size, [15:0] = base
+    input  logic [CVA6Cfg.XLEN-1:0]                          window_config_i,
     // read port
     input  logic [        NR_READ_PORTS-1:0][           4:0] raddr_i,
     output logic [        NR_READ_PORTS-1:0][DATA_WIDTH-1:0] rdata_o,
@@ -42,17 +45,44 @@ module ariane_regfile #(
     input  logic [CVA6Cfg.NrCommitPorts-1:0]                 we_i
 );
 
-  localparam ADDR_WIDTH = 5;
-  localparam NUM_WORDS = 2 ** ADDR_WIDTH;
+  localparam int unsigned ADDR_WIDTH = (PHYSICAL_REGS > 1) ? $clog2(PHYSICAL_REGS) : 1;
+  localparam int unsigned NUM_WORDS = PHYSICAL_REGS;
 
   logic [            NUM_WORDS-1:0][DATA_WIDTH-1:0] mem;
   logic [CVA6Cfg.NrCommitPorts-1:0][ NUM_WORDS-1:0] we_dec;
+  logic [15:0] window_base, window_size;
+  logic [NR_READ_PORTS-1:0][ADDR_WIDTH-1:0] phys_raddr;
+  logic [NR_READ_PORTS-1:0] read_in_window;
+  logic [CVA6Cfg.NrCommitPorts-1:0][ADDR_WIDTH-1:0] phys_waddr;
+  logic [CVA6Cfg.NrCommitPorts-1:0] write_in_window;
+
+  assign window_base = window_config_i[15:0];
+  assign window_size = window_config_i[31:16];
+
+  always_comb begin : window_translation
+    for (int unsigned i = 0; i < NR_READ_PORTS; i++) begin
+      read_in_window[i] = 1'b0;
+      phys_raddr[i]     = '0;
+      if (raddr_i[i] < window_size && (window_base + raddr_i[i]) < PHYSICAL_REGS) begin
+        read_in_window[i] = 1'b1;
+        phys_raddr[i]     = ADDR_WIDTH'(window_base + raddr_i[i]);
+      end
+    end
+    for (int unsigned i = 0; i < CVA6Cfg.NrCommitPorts; i++) begin
+      write_in_window[i] = 1'b0;
+      phys_waddr[i]      = '0;
+      if (waddr_i[i] < window_size && (window_base + waddr_i[i]) < PHYSICAL_REGS) begin
+        write_in_window[i] = 1'b1;
+        phys_waddr[i]      = ADDR_WIDTH'(window_base + waddr_i[i]);
+      end
+    end
+  end
 
 
   always_comb begin : we_decoder
     for (int unsigned j = 0; j < CVA6Cfg.NrCommitPorts; j++) begin
       for (int unsigned i = 0; i < NUM_WORDS; i++) begin
-        if (waddr_i[j] == i) we_dec[j][i] = we_i[j];
+        if (write_in_window[j] && (phys_waddr[j] == i)) we_dec[j][i] = we_i[j];
         else we_dec[j][i] = 1'b0;
       end
     end
@@ -77,7 +107,15 @@ module ariane_regfile #(
   end
 
   for (genvar i = 0; i < NR_READ_PORTS; i++) begin
-    assign rdata_o[i] = mem[raddr_i[i]];
+    always_comb begin
+      rdata_o[i] = '0;
+      if (read_in_window[i]) begin
+        rdata_o[i] = mem[phys_raddr[i]];
+      end
+      if (ZERO_REG_ZERO && (raddr_i[i] == '0)) begin
+        rdata_o[i] = '0;
+      end
+    end
   end
 
 endmodule

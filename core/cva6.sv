@@ -559,6 +559,7 @@ module cva6
   riscv::xs_t vfs;
   logic [2:0] frm_csr_id_issue_ex;
   logic [6:0] fprec_csr_ex;
+  logic [CVA6Cfg.XLEN-1:0] window_config_csr_id_issue;
   riscv::xs_t vs;
   logic enable_translation_csr_ex;
   logic enable_g_translation_csr_ex;
@@ -916,6 +917,7 @@ module cva6
       .xfu_ready_i             (x_issue_ready_ex_id),
       .x_off_instr_o           (x_off_instr_id_ex),
       .hart_id_i               (hart_id_i),
+      .window_config_i         (window_config_csr_id_issue),
       .x_issue_ready_i         (x_issue_ready),
       .x_issue_resp_i          (x_issue_resp),
       .x_issue_valid_o         (x_issue_valid),
@@ -1202,6 +1204,7 @@ module cva6
       .fflags_o                (fflags_csr_commit),
       .frm_o                   (frm_csr_id_issue_ex),
       .fprec_o                 (fprec_csr_ex),
+      .window_config_o         (window_config_csr_id_issue),
       .vs_o                    (vs),
       .irq_ctrl_o              (irq_ctrl_csr_id),
       .en_translation_o        (enable_translation_csr_ex),

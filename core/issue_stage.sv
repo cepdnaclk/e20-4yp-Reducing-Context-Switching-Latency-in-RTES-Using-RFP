@@ -108,6 +108,8 @@ module issue_stage
     output logic [31:0] x_off_instr_o,
     // CVA6 Hart ID - SUBSYSTEM
     input logic [CVA6Cfg.XLEN-1:0] hart_id_i,
+    // Active register window config [31:16] = size, [15:0] = base
+    input logic [CVA6Cfg.XLEN-1:0] window_config_i,
     // CVXIF Issue interface - EX_STAGE
     input logic x_issue_ready_i,
     // TO_BE_COMPLETED - EX_STAGE
@@ -292,6 +294,7 @@ module issue_stage
       .cvxif_ready_i           (xfu_ready_i),
       .cvxif_off_instr_o       (x_off_instr_o),
       .hart_id_i               (hart_id_i),
+      .window_config_i         (window_config_i),
       .x_issue_ready_i         (x_issue_ready_i),
       .x_issue_resp_i          (x_issue_resp_i),
       .x_issue_valid_o         (x_issue_valid_o),
