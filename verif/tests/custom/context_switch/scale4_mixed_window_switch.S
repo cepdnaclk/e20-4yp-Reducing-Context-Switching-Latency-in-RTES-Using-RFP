@@ -1,4 +1,4 @@
-/* Four-context scaling test with 16-register windows over 64 physical regs. */
+/* Four-context scaling test with mixed window sizes over 64 physical regs. */
 
   .section .text.init
   .globl _start
@@ -15,9 +15,9 @@ main:
 
   csrr    t0, 0xB00
   li      t1, 32
-sc_cycle_spin:
+scm_cycle_spin:
   addi    t1, t1, -1
-  bnez    t1, sc_cycle_spin
+  bnez    t1, scm_cycle_spin
   csrr    t2, 0xB00
   beq     t2, t0, mcycle_fail
 
@@ -36,9 +36,11 @@ sc_cycle_spin:
   sw      zero, 40(t0)
   sw      zero, 44(t0)
 
+  # loop countdown
   li      t0, 0x130
   li      t1, 64
   sw      t1, 0(t0)
+  # sum / min / max
   li      t0, 0x134
   sw      zero, 0(t0)
   li      t0, 0x138
@@ -46,8 +48,10 @@ sc_cycle_spin:
   sw      t1, 0(t0)
   li      t0, 0x13c
   sw      zero, 0(t0)
+  # rotating index 0..3
   li      t0, 0x140
   sw      zero, 0(t0)
+  # heartbeat
   li      t0, 0x118
   sw      zero, 0(t0)
   la      t0, acc_trap_entry
@@ -69,16 +73,20 @@ scale_loop:
   beq     t0, t1, scale_cfg1
   li      t1, 2
   beq     t0, t1, scale_cfg2
-  li      t1, 0x00100030
+  # idx3: size 20, base 36
+  li      t1, 0x00140024
   j       scale_stage
 scale_cfg0:
-  li      t1, 0x00100000
+  # idx0: size 8, base 0
+  li      t1, 0x00080000
   j       scale_stage
 scale_cfg1:
-  li      t1, 0x00100010
+  # idx1: size 12, base 8
+  li      t1, 0x000c0008
   j       scale_stage
 scale_cfg2:
-  li      t1, 0x00100020
+  # idx2: size 16, base 20
+  li      t1, 0x00100014
 
 scale_stage:
   li      t0, 0x11c
@@ -111,26 +119,27 @@ scale_stage:
   li      t0, 0x11c
   lw      t0, 0(t0)
   csrr    t1, 0x800
-  bne     t1, t0, sc_cfg_skip
+  bne     t1, t0, scm_cfg_skip
 
   li      t0, 0x134
   lw      t1, 0(t0)
   add     t1, t1, t2
   sw      t1, 0(t0)
-sc_cfg_skip:
+scm_cfg_skip:
 
   li      t0, 0x138
   lw      t1, 0(t0)
-  bltu    t2, t1, sc_min_upd
-sc_min_done:
+  bltu    t2, t1, scm_min_upd
+scm_min_done:
   li      t0, 0x13c
   lw      t1, 0(t0)
-  bltu    t1, t2, sc_max_upd
-sc_max_done:
+  bltu    t1, t2, scm_max_upd
+scm_max_done:
   li      t0, 0x130
   lw      t2, 0(t0)
   addi    t2, t2, -1
   sw      t2, 0(t0)
+
   li      t0, 0x140
   lw      t1, 0(t0)
   addi    t1, t1, 1
@@ -146,6 +155,7 @@ scale_idx_store:
 scale_done:
   li      t2, 64
 
+  # return to full window before print path
   li      t0, 0x00200000
   csrw    0x801, t0
   ecall
@@ -158,14 +168,14 @@ scale_done:
   lw      a2, 0(t0)
   divu    t0, a3, t2
   mv      a4, t0
-  bltu    a2, a1, sc_fix_max
-sc_fix_max_done:
-  bltu    a4, a1, sc_fix_avg_lo
-sc_fix_avg_lo_done:
-  bltu    a2, a4, sc_fix_avg_hi
-sc_fix_avg_hi_done:
+  bltu    a2, a1, scm_fix_max
+scm_fix_max_done:
+  bltu    a4, a1, scm_fix_avg_lo
+scm_fix_avg_lo_done:
+  bltu    a2, a4, scm_fix_avg_hi
+scm_fix_avg_hi_done:
 
-  la      a0, sc_tag
+  la      a0, scm_tag
   jal     ra, print_str
   mv      a0, a1
   jal     ra, print_hex32
@@ -203,25 +213,25 @@ sc_fix_avg_hi_done:
   sw      zero, 44(t1)   # cfg mismatch
   j       test_pass
 
-sc_min_upd:
+scm_min_upd:
   sw      t2, 0(t0)
-  j       sc_min_done
+  j       scm_min_done
 
-sc_max_upd:
+scm_max_upd:
   sw      t2, 0(t0)
-  j       sc_max_done
+  j       scm_max_done
 
-sc_fix_max:
+scm_fix_max:
   mv      a2, a1
-  j       sc_fix_max_done
+  j       scm_fix_max_done
 
-sc_fix_avg_lo:
+scm_fix_avg_lo:
   mv      a4, a1
-  j       sc_fix_avg_lo_done
+  j       scm_fix_avg_lo_done
 
-sc_fix_avg_hi:
+scm_fix_avg_hi:
   mv      a4, a2
-  j       sc_fix_avg_hi_done
+  j       scm_fix_avg_hi_done
 
 write_sig_snapshot:
   li      t6, 64
@@ -285,7 +295,7 @@ unexpected_trap:
   sw      t0, 0(t1)
   csrr    t2, mepc
   sw      t2, 4(t1)
-  li      t2, 0xbad00002
+  li      t2, 0xbad00005
   sw      t2, 8(t1)
   j       test_fail
 
@@ -307,14 +317,14 @@ print_hex32:
   sb      t1, 0(t0)
   li      t2, 28
   la      t3, hex_tab
-sc_hex_loop:
+scm_hex_loop:
   srl     t4, a0, t2
   andi    t4, t4, 0xf
   add     t4, t4, t3
   lbu     t5, 0(t4)
   sb      t5, 0(t0)
   addi    t2, t2, -4
-  bgez    t2, sc_hex_loop
+  bgez    t2, scm_hex_loop
   ret
 
 test_fail:
@@ -358,8 +368,8 @@ fromhost:
   .section .rodata
 hex_tab:
   .asciz "0123456789ABCDEF"
-sc_tag:
-  .asciz "MCYCLE_SCALE4 min/max/avg="
+scm_tag:
+  .asciz "MCYCLE_SCALE4_MIXED min/max/avg="
 sep:
   .asciz "/"
 nl:

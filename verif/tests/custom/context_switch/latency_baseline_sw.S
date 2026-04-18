@@ -28,13 +28,38 @@ lb_cycle_spin:
   li      s4, 0
   li      s9, 0x118
   sw      zero, 0(s9)
+  la      t0, acc_trap_entry
+  sw      zero, 0(t0)
+  la      t0, acc_trap_body
+  sw      zero, 0(t0)
+  la      t0, acc_mret_return
+  sw      zero, 0(t0)
 
 baseline_loop:
   call    dummy_save_restore
   csrr    t3, 0xB00
+  la      t0, trap_start_cycle
+  sw      t3, 0(t0)
+  csrr    t3, 0xB00
   ecall
   csrr    t4, 0xB00
   sub     t2, t4, t3
+  la      t0, trap_entry_cycle
+  lw      t5, 0(t0)
+  la      t0, trap_start_cycle
+  lw      t6, 0(t0)
+  sub     t5, t5, t6
+  la      t0, acc_trap_entry
+  lw      t6, 0(t0)
+  add     t6, t6, t5
+  sw      t6, 0(t0)
+  la      t0, mret_start_cycle
+  lw      t5, 0(t0)
+  sub     t5, t4, t5
+  la      t0, acc_mret_return
+  lw      t6, 0(t0)
+  add     t6, t6, t5
+  sw      t6, 0(t0)
   add     s2, s2, t2
   bltu    t2, s3, lb_min_upd
 lb_min_done:
@@ -72,6 +97,21 @@ lb_fix_avg_hi_done:
   sw      s3, 0(t1)
   sw      s4, 4(t1)
   sw      s5, 8(t1)
+  sw      zero, 12(t1)   # workload
+  sw      s2, 16(t1)     # trap roundtrip sum
+  la      t0, acc_trap_entry
+  lw      t2, 0(t0)
+  sw      t2, 20(t1)     # trap entry
+  la      t0, acc_trap_body
+  lw      t2, 0(t0)
+  sw      t2, 24(t1)     # trap body
+  sw      zero, 28(t1)   # spill/save
+  sw      zero, 32(t1)   # restore
+  sw      zero, 36(t1)   # stage
+  la      t0, acc_mret_return
+  lw      t2, 0(t0)
+  sw      t2, 40(t1)     # mret return
+  sw      zero, 44(t1)   # cfg mismatch
   j       test_pass
 
 lb_min_upd:
@@ -93,6 +133,30 @@ lb_fix_avg_lo:
 lb_fix_avg_hi:
   mv      s5, s4
   j       lb_fix_avg_hi_done
+
+write_sig_snapshot:
+  li      t6, 128
+  divu    t4, s2, t6
+  li      t5, 0x120
+  sw      s3, 0(t5)
+  sw      s4, 4(t5)
+  sw      t4, 8(t5)
+  sw      zero, 12(t5)
+  sw      s2, 16(t5)
+  la      t0, acc_trap_entry
+  lw      t6, 0(t0)
+  sw      t6, 20(t5)
+  la      t0, acc_trap_body
+  lw      t6, 0(t0)
+  sw      t6, 24(t5)
+  sw      zero, 28(t5)
+  sw      zero, 32(t5)
+  sw      zero, 36(t5)
+  la      t0, acc_mret_return
+  lw      t6, 0(t0)
+  sw      t6, 40(t5)
+  sw      zero, 44(t5)
+  ret
 
 dummy_save_restore:
   addi    sp, sp, -64
@@ -134,14 +198,28 @@ dummy_save_restore:
   .align 4
 trap_entry:
   csrr    t0, mcause
+  beqz    t0, trap_do_mret
   li      t1, 8
   beq     t0, t1, trap_do_mret
   li      t1, 11
   bne     t0, t1, unexpected_trap
 trap_do_mret:
+  csrr    t2, 0xB00
+  la      t3, trap_entry_cycle
+  sw      t2, 0(t3)
   csrr    t0, mepc
   addi    t0, t0, 4
   csrw    mepc, t0
+  csrr    t2, 0xB00
+  la      t3, mret_start_cycle
+  sw      t2, 0(t3)
+  la      t3, trap_entry_cycle
+  lw      t4, 0(t3)
+  sub     t5, t2, t4
+  la      t3, acc_trap_body
+  lw      t4, 0(t3)
+  add     t4, t4, t5
+  sw      t4, 0(t3)
   mret
 
 unexpected_trap:
@@ -182,6 +260,7 @@ lb_hex_loop:
   ret
 
 test_fail:
+  jal     ra, write_sig_snapshot
   li      t0, 0
   la      t1, tohost
   sw      t0, 0(t1)
@@ -190,6 +269,7 @@ test_fail:
   j       1b
 
 mcycle_fail:
+  jal     ra, write_sig_snapshot
   li      t0, 0
   li      t1, 0x100
   li      t2, 0xdeadbeef
@@ -226,6 +306,21 @@ sep:
   .asciz "/"
 nl:
   .asciz "\n"
+
+  .section .bss
+  .align 4
+acc_trap_entry:
+  .word 0
+acc_trap_body:
+  .word 0
+acc_mret_return:
+  .word 0
+trap_start_cycle:
+  .word 0
+trap_entry_cycle:
+  .word 0
+mret_start_cycle:
+  .word 0
 
   .section .signature, "aw", @progbits
   .align 4

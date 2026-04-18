@@ -95,6 +95,10 @@ run_one() {
   local bench_line
   local sig_min sig_max sig_avg
   local dec_min dec_max dec_avg
+  local sig_workload sig_trap_rt sig_trap_entry sig_trap_body sig_save sig_restore sig_stage sig_mret_return sig_mismatch
+  local dec_workload dec_trap_rt dec_trap_entry dec_trap_body dec_save dec_restore dec_stage dec_mret_return dec_mismatch
+  local avg_workload avg_trap_rt avg_trap_entry avg_trap_body avg_save avg_restore avg_stage avg_mret_return
+  local iter_count
   local addr_min addr_max addr_avg
   sim_cycles="$(awk 'match($0,/after [0-9]+ cycles/){print substr($0,RSTART+6,RLENGTH-13)}' "$log" | tail -n 1)"
   bench_line="$(awk '/MCYCLE_/ {line=$0} END{print line}' "$log")"
@@ -122,6 +126,45 @@ run_one() {
       dec_avg="$((16#${sig_avg#0x}))"
       echo "[CTXSW_BM] RESULT $test_name mcycle_dec min=$dec_min max=$dec_max avg=$dec_avg"
     fi
+
+    sig_workload="$(grep -aE "mem 0x0*0000012c " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_trap_rt="$(grep -aE "mem 0x0*00000130 " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_trap_entry="$(grep -aE "mem 0x0*00000134 " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_trap_body="$(grep -aE "mem 0x0*00000138 " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_save="$(grep -aE "mem 0x0*0000013c " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_restore="$(grep -aE "mem 0x0*00000140 " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_stage="$(grep -aE "mem 0x0*00000144 " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_mret_return="$(grep -aE "mem 0x0*00000148 " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    sig_mismatch="$(grep -aE "mem 0x0*0000014c " "$trace" | tail -n 1 | awk '{print $NF}' || true)"
+    if [ -n "${sig_workload:-}" ] && [ -n "${sig_trap_rt:-}" ] && [ -n "${sig_trap_entry:-}" ] && [ -n "${sig_trap_body:-}" ] && [ -n "${sig_save:-}" ] && [ -n "${sig_restore:-}" ] && [ -n "${sig_stage:-}" ] && [ -n "${sig_mret_return:-}" ] && [ -n "${sig_mismatch:-}" ]; then
+      echo "[CTXSW_BM] RESULT $test_name breakdown_hex_sum workload=${sig_workload} trap_roundtrip=${sig_trap_rt} trap_entry=${sig_trap_entry} trap_body=${sig_trap_body} spill_or_save=${sig_save} restore=${sig_restore} stage=${sig_stage} mret_return=${sig_mret_return} cfg_mismatch=${sig_mismatch}"
+      dec_workload="$((16#${sig_workload#0x}))"
+      dec_trap_rt="$((16#${sig_trap_rt#0x}))"
+      dec_trap_entry="$((16#${sig_trap_entry#0x}))"
+      dec_trap_body="$((16#${sig_trap_body#0x}))"
+      dec_save="$((16#${sig_save#0x}))"
+      dec_restore="$((16#${sig_restore#0x}))"
+      dec_stage="$((16#${sig_stage#0x}))"
+      dec_mret_return="$((16#${sig_mret_return#0x}))"
+      dec_mismatch="$((16#${sig_mismatch#0x}))"
+      echo "[CTXSW_BM] RESULT $test_name breakdown_dec_sum workload=$dec_workload trap_roundtrip=$dec_trap_rt trap_entry=$dec_trap_entry trap_body=$dec_trap_body spill_or_save=$dec_save restore=$dec_restore stage=$dec_stage mret_return=$dec_mret_return cfg_mismatch=$dec_mismatch"
+      case "$test_name" in
+        rr2_window_switch|scale4_window_switch|scale4_mixed_window_switch) iter_count=64 ;;
+        latency_baseline_sw|latency_hw_window) iter_count=128 ;;
+        spill_oldest_window_switch) iter_count=5 ;;
+        stress_rt_window100|stress_rt_baseline100) iter_count=500 ;;
+        *) iter_count=1 ;;
+      esac
+      avg_workload="$((dec_workload / iter_count))"
+      avg_trap_rt="$((dec_trap_rt / iter_count))"
+      avg_trap_entry="$((dec_trap_entry / iter_count))"
+      avg_trap_body="$((dec_trap_body / iter_count))"
+      avg_save="$((dec_save / iter_count))"
+      avg_restore="$((dec_restore / iter_count))"
+      avg_stage="$((dec_stage / iter_count))"
+      avg_mret_return="$((dec_mret_return / iter_count))"
+      echo "[CTXSW_BM] RESULT $test_name breakdown_dec_avg_per_iter workload=$avg_workload trap_roundtrip=$avg_trap_rt trap_entry=$avg_trap_entry trap_body=$avg_trap_body spill_or_save=$avg_save restore=$avg_restore stage=$avg_stage mret_return=$avg_mret_return cfg_mismatch=$dec_mismatch iterations=$iter_count"
+    fi
   else
     echo "[CTXSW_BM] RESULT $test_name mcycle_hex unavailable (trace missing)"
   fi
@@ -129,6 +172,10 @@ run_one() {
 
 run_one "rr2_window_switch"
 run_one "scale4_window_switch"
+run_one "scale4_mixed_window_switch"
+run_one "spill_oldest_window_switch"
+run_one "stress_rt_window100"
+run_one "stress_rt_baseline100"
 run_one "latency_baseline_sw"
 run_one "latency_hw_window"
 

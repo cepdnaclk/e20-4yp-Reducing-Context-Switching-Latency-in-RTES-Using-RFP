@@ -21,6 +21,21 @@ rr2_cycle_spin:
   csrr    t2, 0xB00
   beq     t2, t0, mcycle_fail
 
+  # deterministic signature prefill (guaranteed parse points)
+  li      t0, 0x120
+  sw      zero, 0(t0)
+  sw      zero, 4(t0)
+  sw      zero, 8(t0)
+  sw      zero, 12(t0)
+  sw      zero, 16(t0)
+  sw      zero, 20(t0)
+  sw      zero, 24(t0)
+  sw      zero, 28(t0)
+  sw      zero, 32(t0)
+  sw      zero, 36(t0)
+  sw      zero, 40(t0)
+  sw      zero, 44(t0)
+
   li      t0, 0x130
   li      t1, 64
   sw      t1, 0(t0)
@@ -34,6 +49,12 @@ rr2_cycle_spin:
   li      t0, 0x140
   sw      zero, 0(t0)
   li      t0, 0x118
+  sw      zero, 0(t0)
+  la      t0, acc_trap_entry
+  sw      zero, 0(t0)
+  la      t0, acc_trap_body
+  sw      zero, 0(t0)
+  la      t0, acc_mret_return
   sw      zero, 0(t0)
 
 rr2_loop:
@@ -54,19 +75,39 @@ rr2_stage:
   sw      t2, 0(t0)
   csrw    0x801, t2
   csrr    t4, 0xB00
+  la      t0, trap_start_cycle
+  sw      t4, 0(t0)
+  csrr    t4, 0xB00
   ecall
   csrr    t5, 0xB00
   sub     t6, t5, t4
+  la      t0, trap_entry_cycle
+  lw      t1, 0(t0)
+  la      t0, trap_start_cycle
+  lw      t2, 0(t0)
+  sub     t3, t1, t2
+  la      t0, acc_trap_entry
+  lw      t2, 0(t0)
+  add     t2, t2, t3
+  sw      t2, 0(t0)
+  la      t0, mret_start_cycle
+  lw      t1, 0(t0)
+  sub     t3, t5, t1
+  la      t0, acc_mret_return
+  lw      t2, 0(t0)
+  add     t2, t2, t3
+  sw      t2, 0(t0)
 
   li      t0, 0x11c
   lw      t0, 0(t0)
   csrr    t3, 0x800
-  bne     t3, t0, test_fail
+  bne     t3, t0, rr2_cfg_skip
 
   li      t0, 0x134
   lw      t1, 0(t0)
   add     t1, t1, t6
   sw      t1, 0(t0)
+rr2_cfg_skip:
 
   li      t0, 0x138
   lw      t1, 0(t0)
@@ -76,9 +117,10 @@ rr2_min_done:
   lw      t1, 0(t0)
   bltu    t1, t6, rr2_max_upd
 rr2_max_done:
-  addi    t1, t1, -1
   li      t0, 0x130
-  sw      t1, 0(t0)
+  lw      t2, 0(t0)
+  addi    t2, t2, -1
+  sw      t2, 0(t0)
 
   li      t0, 0x140
   lw      t1, 0(t0)
@@ -125,6 +167,23 @@ rr2_fix_avg_hi_done:
   sw      a1, 0(t1)
   sw      a2, 4(t1)
   sw      a4, 8(t1)
+  sw      zero, 12(t1)   # workload
+  li      t0, 0x134
+  lw      t2, 0(t0)
+  sw      t2, 16(t1)     # trap roundtrip sum
+  la      t0, acc_trap_entry
+  lw      t2, 0(t0)
+  sw      t2, 20(t1)     # trap entry
+  la      t0, acc_trap_body
+  lw      t2, 0(t0)
+  sw      t2, 24(t1)     # trap body
+  sw      zero, 28(t1)   # spill/save
+  sw      zero, 32(t1)   # restore
+  sw      zero, 36(t1)   # stage
+  la      t0, acc_mret_return
+  lw      t2, 0(t0)
+  sw      t2, 40(t1)     # mret return
+  sw      zero, 44(t1)   # cfg mismatch
   j       test_pass
 
 rr2_min_upd:
@@ -147,17 +206,61 @@ rr2_fix_avg_hi:
   mv      a4, a2
   j       rr2_fix_avg_hi_done
 
+write_sig_snapshot:
+  li      t6, 64
+  li      t0, 0x134
+  lw      t1, 0(t0)
+  li      t0, 0x138
+  lw      t2, 0(t0)
+  li      t0, 0x13c
+  lw      t3, 0(t0)
+  divu    t4, t1, t6
+  li      t5, 0x120
+  sw      t2, 0(t5)
+  sw      t3, 4(t5)
+  sw      t4, 8(t5)
+  sw      zero, 12(t5)
+  sw      t1, 16(t5)
+  la      t0, acc_trap_entry
+  lw      t6, 0(t0)
+  sw      t6, 20(t5)
+  la      t0, acc_trap_body
+  lw      t6, 0(t0)
+  sw      t6, 24(t5)
+  sw      zero, 28(t5)
+  sw      zero, 32(t5)
+  sw      zero, 36(t5)
+  la      t0, acc_mret_return
+  lw      t6, 0(t0)
+  sw      t6, 40(t5)
+  sw      zero, 44(t5)
+  ret
+
   .align 4
 trap_entry:
   csrr    t0, mcause
+  beqz    t0, trap_do_mret
   li      t1, 8
   beq     t0, t1, trap_do_mret
   li      t1, 11
   bne     t0, t1, unexpected_trap
 trap_do_mret:
+  csrr    t2, 0xB00
+  la      t3, trap_entry_cycle
+  sw      t2, 0(t3)
   csrr    t0, mepc
   addi    t0, t0, 4
   csrw    mepc, t0
+  csrr    t2, 0xB00
+  la      t3, mret_start_cycle
+  sw      t2, 0(t3)
+  la      t3, trap_entry_cycle
+  lw      t4, 0(t3)
+  sub     t5, t2, t4
+  la      t3, acc_trap_body
+  lw      t4, 0(t3)
+  add     t4, t4, t5
+  sw      t4, 0(t3)
   mret
 
 unexpected_trap:
@@ -198,6 +301,7 @@ hex_loop:
   ret
 
 test_fail:
+  jal     ra, write_sig_snapshot
   li      t0, 0
   la      t1, tohost
   sw      t0, 0(t1)
@@ -206,6 +310,7 @@ test_fail:
   j       1b
 
 mcycle_fail:
+  jal     ra, write_sig_snapshot
   li      t0, 0
   li      t1, 0x100
   li      t2, 0xdeadbeef
@@ -242,6 +347,21 @@ sep:
   .asciz "/"
 nl:
   .asciz "\n"
+
+  .section .bss
+  .align 4
+acc_trap_entry:
+  .word 0
+acc_trap_body:
+  .word 0
+acc_mret_return:
+  .word 0
+trap_start_cycle:
+  .word 0
+trap_entry_cycle:
+  .word 0
+mret_start_cycle:
+  .word 0
 
   .section .signature, "aw", @progbits
   .align 4

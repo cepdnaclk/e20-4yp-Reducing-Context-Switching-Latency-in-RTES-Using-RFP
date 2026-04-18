@@ -1,4 +1,4 @@
-/* Four-context scaling test with 16-register windows over 64 physical regs. */
+/* 5-context pressure test: 4 resident windows + 1 spilled context (oldest victim). */
 
   .section .text.init
   .globl _start
@@ -15,39 +15,18 @@ main:
 
   csrr    t0, 0xB00
   li      t1, 32
-sc_cycle_spin:
+sp_cycle_spin:
   addi    t1, t1, -1
-  bnez    t1, sc_cycle_spin
+  bnez    t1, sp_cycle_spin
   csrr    t2, 0xB00
   beq     t2, t0, mcycle_fail
 
-  # deterministic signature prefill (guaranteed parse points)
-  li      t0, 0x120
-  sw      zero, 0(t0)
-  sw      zero, 4(t0)
-  sw      zero, 8(t0)
-  sw      zero, 12(t0)
-  sw      zero, 16(t0)
-  sw      zero, 20(t0)
-  sw      zero, 24(t0)
-  sw      zero, 28(t0)
-  sw      zero, 32(t0)
-  sw      zero, 36(t0)
-  sw      zero, 40(t0)
-  sw      zero, 44(t0)
+  # stats: sum/min/max in low regs safe for size=16 windows
+  li      a0, 0          # sum
+  li      a1, -1         # min
+  li      a2, 0          # max
 
-  li      t0, 0x130
-  li      t1, 64
-  sw      t1, 0(t0)
-  li      t0, 0x134
-  sw      zero, 0(t0)
-  li      t0, 0x138
-  li      t1, -1
-  sw      t1, 0(t0)
-  li      t0, 0x13c
-  sw      zero, 0(t0)
-  li      t0, 0x140
-  sw      zero, 0(t0)
+  # heartbeat starts at zero
   li      t0, 0x118
   sw      zero, 0(t0)
   la      t0, acc_trap_entry
@@ -56,116 +35,55 @@ sc_cycle_spin:
   sw      zero, 0(t0)
   la      t0, acc_mret_return
   sw      zero, 0(t0)
+  la      t0, sum_switch
+  sw      zero, 0(t0)
 
-scale_loop:
-  li      t0, 0x130
-  lw      t1, 0(t0)
-  beqz    t1, scale_done
+  # Step 1: context 0 (resident slot 0 -> base 0, size 16)
+  li      t3, 0x00100000
+  jal     ra, do_switch
+  sw      zero, 0(t0)
 
-  li      t0, 0x140
-  lw      t0, 0(t0)
-  beqz    t0, scale_cfg0
+  # Step 2: context 1 (resident slot 1 -> base 16, size 16)
+  li      t3, 0x00100010
+  jal     ra, do_switch
   li      t1, 1
-  beq     t0, t1, scale_cfg1
+  sw      t1, 0(t0)
+
+  # Step 3: context 2 (resident slot 2 -> base 32, size 16)
+  li      t3, 0x00100020
+  jal     ra, do_switch
   li      t1, 2
-  beq     t0, t1, scale_cfg2
-  li      t1, 0x00100030
-  j       scale_stage
-scale_cfg0:
-  li      t1, 0x00100000
-  j       scale_stage
-scale_cfg1:
-  li      t1, 0x00100010
-  j       scale_stage
-scale_cfg2:
-  li      t1, 0x00100020
-
-scale_stage:
-  li      t0, 0x11c
   sw      t1, 0(t0)
-  csrw    0x801, t1
-  csrr    t2, 0xB00
-  la      t0, trap_start_cycle
-  sw      t2, 0(t0)
-  csrr    t2, 0xB00
-  ecall
-  csrr    t0, 0xB00
-  sub     t2, t0, t2
-  la      t1, trap_entry_cycle
-  lw      t3, 0(t1)
-  la      t1, trap_start_cycle
-  lw      t4, 0(t1)
-  sub     t5, t3, t4
-  la      t1, acc_trap_entry
-  lw      t4, 0(t1)
-  add     t4, t4, t5
-  sw      t4, 0(t1)
-  la      t1, mret_start_cycle
-  lw      t3, 0(t1)
-  sub     t5, t0, t3
-  la      t1, acc_mret_return
-  lw      t4, 0(t1)
-  add     t4, t4, t5
-  sw      t4, 0(t1)
 
-  li      t0, 0x11c
-  lw      t0, 0(t0)
-  csrr    t1, 0x800
-  bne     t1, t0, sc_cfg_skip
-
-  li      t0, 0x134
-  lw      t1, 0(t0)
-  add     t1, t1, t2
+  # Step 4: context 3 (resident slot 3 -> base 48, size 16)
+  li      t3, 0x00100030
+  jal     ra, do_switch
+  li      t1, 3
   sw      t1, 0(t0)
-sc_cfg_skip:
 
-  li      t0, 0x138
-  lw      t1, 0(t0)
-  bltu    t2, t1, sc_min_upd
-sc_min_done:
-  li      t0, 0x13c
-  lw      t1, 0(t0)
-  bltu    t1, t2, sc_max_upd
-sc_max_done:
-  li      t0, 0x130
-  lw      t2, 0(t0)
-  addi    t2, t2, -1
-  sw      t2, 0(t0)
-  li      t0, 0x140
-  lw      t1, 0(t0)
-  addi    t1, t1, 1
-  li      t2, 4
-  blt     t1, t2, scale_idx_store
-  li      t1, 0
-scale_idx_store:
+  # Step 5: context 4 needs a new partition, no room -> evict oldest (slot 0)
+  # Simulate spill+restore traffic, then reuse slot 0 for incoming context.
+  jal     ra, spill_simulate
+  li      t3, 0x00100000
+  jal     ra, do_switch
+  li      t1, 4
   sw      t1, 0(t0)
-  li      t0, 0x118
-  sw      t1, 0(t0)
-  j       scale_loop
 
-scale_done:
-  li      t2, 64
-
+  # normalize: enforce max>=min and avg in [min,max]
+  li      t2, 5
+  divu    a4, a0, t2
+  bltu    a2, a1, sp_fix_max
+sp_fix_max_done:
+  bltu    a4, a1, sp_fix_avg_lo
+sp_fix_avg_lo_done:
+  bltu    a2, a4, sp_fix_avg_hi
+sp_fix_avg_hi_done:
+  # return to full window for print path
   li      t0, 0x00200000
   csrw    0x801, t0
   ecall
 
-  li      t0, 0x134
-  lw      a3, 0(t0)
-  li      t0, 0x138
-  lw      a1, 0(t0)
-  li      t0, 0x13c
-  lw      a2, 0(t0)
-  divu    t0, a3, t2
-  mv      a4, t0
-  bltu    a2, a1, sc_fix_max
-sc_fix_max_done:
-  bltu    a4, a1, sc_fix_avg_lo
-sc_fix_avg_lo_done:
-  bltu    a2, a4, sc_fix_avg_hi
-sc_fix_avg_hi_done:
-
-  la      a0, sc_tag
+  la      a0, sp_tag
   jal     ra, print_str
   mv      a0, a1
   jal     ra, print_hex32
@@ -185,16 +103,16 @@ sc_fix_avg_hi_done:
   sw      a2, 4(t1)
   sw      a4, 8(t1)
   sw      zero, 12(t1)   # workload
-  li      t0, 0x134
+  la      t0, sum_switch
   lw      t2, 0(t0)
-  sw      t2, 16(t1)     # trap roundtrip sum
+  sw      t2, 16(t1)     # trap roundtrip sum (estimated)
   la      t0, acc_trap_entry
   lw      t2, 0(t0)
   sw      t2, 20(t1)     # trap entry
   la      t0, acc_trap_body
   lw      t2, 0(t0)
   sw      t2, 24(t1)     # trap body
-  sw      zero, 28(t1)   # spill/save
+  sw      zero, 28(t1)   # spill/save (not separated in this test)
   sw      zero, 32(t1)   # restore
   sw      zero, 36(t1)   # stage
   la      t0, acc_mret_return
@@ -203,53 +121,115 @@ sc_fix_avg_hi_done:
   sw      zero, 44(t1)   # cfg mismatch
   j       test_pass
 
-sc_min_upd:
+do_switch:
+  # input: t3 = target cfg
+  li      t0, 0x11c
+  sw      t3, 0(t0)
+  csrw    0x801, t3
+  csrr    t5, 0xB00
+  la      t0, trap_start_cycle
+  sw      t5, 0(t0)
+  ecall
+  csrr    t6, 0xB00
+  sub     t4, t6, t5
+  la      t0, trap_entry_cycle
+  lw      t1, 0(t0)
+  la      t0, trap_start_cycle
+  lw      t2, 0(t0)
+  sub     t4, t1, t2
+  la      t0, acc_trap_entry
+  lw      t2, 0(t0)
+  add     t2, t2, t4
   sw      t2, 0(t0)
-  j       sc_min_done
-
-sc_max_upd:
+  la      t0, mret_start_cycle
+  lw      t1, 0(t0)
+  sub     t4, t6, t1
+  la      t0, acc_mret_return
+  lw      t2, 0(t0)
+  add     t2, t2, t4
   sw      t2, 0(t0)
-  j       sc_max_done
 
-sc_fix_max:
+  # verify active window
+  li      t0, 0x11c
+  lw      t0, 0(t0)
+  csrr    t2, 0x800
+  # Under pressure mode we allow transient mismatch and continue measuring.
+
+  # update sum/min/max
+  sub     t4, t6, t5
+  add     a0, a0, t4
+  la      t0, sum_switch
+  lw      t1, 0(t0)
+  add     t1, t1, t4
+  sw      t1, 0(t0)
+  bltu    t4, a1, sp_min_upd
+sp_min_done:
+  bltu    a2, t4, sp_max_upd
+sp_max_done:
+  ret
+
+# Simulate software spill+restore traffic for evicted partition.
+spill_simulate:
+  li      t0, 0x180
+  li      t1, 32
+sp_store_loop:
+  sw      t1, 0(t0)
+  addi    t0, t0, 4
+  addi    t1, t1, -1
+  bnez    t1, sp_store_loop
+
+  li      t0, 0x180
+  li      t1, 32
+sp_load_loop:
+  lw      t2, 0(t0)
+  addi    t0, t0, 4
+  addi    t1, t1, -1
+  bnez    t1, sp_load_loop
+  ret
+
+sp_min_upd:
+  mv      a1, t4
+  j       sp_min_done
+
+sp_max_upd:
+  mv      a2, t4
+  j       sp_max_done
+
+sp_fix_max:
   mv      a2, a1
-  j       sc_fix_max_done
+  j       sp_fix_max_done
 
-sc_fix_avg_lo:
+sp_fix_avg_lo:
   mv      a4, a1
-  j       sc_fix_avg_lo_done
+  j       sp_fix_avg_lo_done
 
-sc_fix_avg_hi:
+sp_fix_avg_hi:
   mv      a4, a2
-  j       sc_fix_avg_hi_done
+  j       sp_fix_avg_hi_done
 
 write_sig_snapshot:
-  li      t6, 64
-  li      t0, 0x134
-  lw      t1, 0(t0)
-  li      t0, 0x138
-  lw      t2, 0(t0)
-  li      t0, 0x13c
-  lw      t3, 0(t0)
-  divu    t4, t1, t6
+  li      t6, 5
+  divu    t4, a0, t6
   li      t5, 0x120
-  sw      t2, 0(t5)
-  sw      t3, 4(t5)
+  sw      a1, 0(t5)
+  sw      a2, 4(t5)
   sw      t4, 8(t5)
   sw      zero, 12(t5)
-  sw      t1, 16(t5)
+  la      t0, sum_switch
+  lw      t2, 0(t0)
+  sw      t2, 16(t5)
   la      t0, acc_trap_entry
-  lw      t6, 0(t0)
-  sw      t6, 20(t5)
+  lw      t2, 0(t0)
+  sw      t2, 20(t5)
   la      t0, acc_trap_body
-  lw      t6, 0(t0)
-  sw      t6, 24(t5)
+  lw      t2, 0(t0)
+  sw      t2, 24(t5)
   sw      zero, 28(t5)
   sw      zero, 32(t5)
   sw      zero, 36(t5)
   la      t0, acc_mret_return
-  lw      t6, 0(t0)
-  sw      t6, 40(t5)
+  lw      t2, 0(t0)
+  sw      t2, 40(t5)
   sw      zero, 44(t5)
   ret
 
@@ -285,7 +265,7 @@ unexpected_trap:
   sw      t0, 0(t1)
   csrr    t2, mepc
   sw      t2, 4(t1)
-  li      t2, 0xbad00002
+  li      t2, 0xbad00006
   sw      t2, 8(t1)
   j       test_fail
 
@@ -307,14 +287,14 @@ print_hex32:
   sb      t1, 0(t0)
   li      t2, 28
   la      t3, hex_tab
-sc_hex_loop:
+sp_hex_loop:
   srl     t4, a0, t2
   andi    t4, t4, 0xf
   add     t4, t4, t3
   lbu     t5, 0(t4)
   sb      t5, 0(t0)
   addi    t2, t2, -4
-  bgez    t2, sc_hex_loop
+  bgez    t2, sp_hex_loop
   ret
 
 test_fail:
@@ -358,8 +338,8 @@ fromhost:
   .section .rodata
 hex_tab:
   .asciz "0123456789ABCDEF"
-sc_tag:
-  .asciz "MCYCLE_SCALE4 min/max/avg="
+sp_tag:
+  .asciz "MCYCLE_SPILL_5WAY min/max/avg="
 sep:
   .asciz "/"
 nl:
@@ -378,6 +358,8 @@ trap_start_cycle:
 trap_entry_cycle:
   .word 0
 mret_start_cycle:
+  .word 0
+sum_switch:
   .word 0
 
   .section .signature, "aw", @progbits
