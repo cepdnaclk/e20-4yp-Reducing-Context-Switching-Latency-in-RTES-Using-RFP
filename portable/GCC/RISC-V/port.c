@@ -106,6 +106,11 @@ size_t xTaskReturnAddress = ( size_t ) portTASK_RETURN_ADDRESS;
  * can switch to the task window (csrw 0x800) then reload GPRs from the frame into
  * the task's physical registers (instead of kernel window 0-31). */
 void * port_restore_frame_ptr;
+
+/* Integrity counters used by CVA6 validation tests. */
+volatile uint32_t port_window_invalid_minimal_restore = 0;
+volatile uint32_t port_window_kernel_borrow_restores = 0;
+volatile uint32_t port_window_kernel_stage_count = 0;
 #endif
 
 /* Set configCHECK_FOR_STACK_OVERFLOW to 3 to add ISR stack checking to task
@@ -217,6 +222,7 @@ void vPortEndScheduler( void )
 #if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
 void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize )
 {
+    uint32_t ulWindowConfig;
     StackType_t * pxTopOfStack;
 
     if ( xTask == NULL )
@@ -224,12 +230,14 @@ void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize 
         return;
     }
 
+    ulWindowConfig = ( ( uint32_t ) ulSize << 16 ) | ( ulBase & 0xFFFFU );
+    vTaskSetWindowingContext( ( TaskHandle_t ) xTask, ulWindowConfig, pdFALSE );
+
     pxTopOfStack = *( ( StackType_t ** ) xTask );
 
     if ( pxTopOfStack != NULL )
     {
-        /* Format: (size << 16) | base; HW uses this for CSR 0x801 on restore. */
-        pxTopOfStack[ portWINDOW_CFG_OFFSET ] = ( ( StackType_t ) ulSize << 16 ) | ( ulBase & 0xFFFFU );
+        pxTopOfStack[ portWINDOW_CFG_OFFSET ] = ( StackType_t ) ulWindowConfig;
     }
 }
 #endif /* configUSE_RISCV_REGISTER_WINDOWS */
@@ -239,6 +247,58 @@ void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize 
 /* Updated on every restore from the incoming task's window_cfg (base bits). Used by save path to decide full vs minimal when CSR 0x800 is not reliable. */
 volatile uint32_t port_current_task_window_base = 0;
 #endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+void vPortTaskSetKernelBorrowing( void * xTask, BaseType_t xEnable )
+{
+    StackType_t * pxTopOfStack;
+    uint32_t ulWindowConfig = 0;
+
+    if( xTask == NULL )
+    {
+        return;
+    }
+
+    if( xEnable == pdFALSE )
+    {
+        if( xTaskGetWindowingContext( ( TaskHandle_t ) xTask, &ulWindowConfig, NULL, NULL ) == pdFALSE )
+        {
+            ulWindowConfig = 0;
+        }
+    }
+
+    vTaskSetWindowingContext( ( TaskHandle_t ) xTask, ulWindowConfig, xEnable );
+
+    pxTopOfStack = *( ( StackType_t ** ) xTask );
+
+    if( pxTopOfStack != NULL )
+    {
+        pxTopOfStack[ portWINDOW_CFG_OFFSET ] = ( xEnable != pdFALSE ) ? 0U : ( StackType_t ) ulWindowConfig;
+    }
+}
+/*-----------------------------------------------------------*/
+
+void vPortGetWindowIntegrityCounters( uint32_t * pulInvalidMinimalRestore,
+                                      uint32_t * pulKernelBorrowRestores,
+                                      uint32_t * pulKernelWindowStages )
+{
+    if( pulInvalidMinimalRestore != NULL )
+    {
+        *pulInvalidMinimalRestore = port_window_invalid_minimal_restore;
+    }
+
+    if( pulKernelBorrowRestores != NULL )
+    {
+        *pulKernelBorrowRestores = port_window_kernel_borrow_restores;
+    }
+
+    if( pulKernelWindowStages != NULL )
+    {
+        *pulKernelWindowStages = port_window_kernel_stage_count;
+    }
+}
+#endif /* configUSE_RISCV_REGISTER_WINDOWS */
 /*-----------------------------------------------------------*/
 
 #if defined( CYCLE_BREAKDOWN_PROFILE )

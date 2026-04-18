@@ -59,6 +59,7 @@
     #define portasmHAS_SIFIVE_CLINT           1
     #define portasmHAS_MTIME                  1
     #define portasmADDITIONAL_CONTEXT_SIZE    0
+    #define portasmENABLE_MINIMAL_SAVE        1
     #define portasmCSR_WINDOW_ACTIVE  0x800
     #define portasmCSR_WINDOW_STAGED  0x801
     .macro portasmSAVE_ADDITIONAL_REGISTERS
@@ -66,8 +67,27 @@
     .macro portasmRESTORE_ADDITIONAL_REGISTERS
     .endm
     #endif /* __FREERTOS_RISC_V_EXTENSIONS_H__ */
+#elif defined( portasmCVA6_FYP_CHIP )
+    #ifndef __FREERTOS_RISC_V_EXTENSIONS_H__
+    #define __FREERTOS_RISC_V_EXTENSIONS_H__
+    #define portasmUSE_REGISTER_WINDOWS       1
+    #define portasmHAS_SIFIVE_CLINT           0
+    #define portasmHAS_MTIME                  0
+    #define portasmADDITIONAL_CONTEXT_SIZE    0
+    #define portasmENABLE_MINIMAL_SAVE        1
+    #define portasmCSR_WINDOW_ACTIVE          0x800
+    #define portasmCSR_WINDOW_STAGED          0x801
+    .macro portasmSAVE_ADDITIONAL_REGISTERS
+    .endm
+    .macro portasmRESTORE_ADDITIONAL_REGISTERS
+    .endm
+    #endif /* __FREERTOS_RISC_V_EXTENSIONS_H__ */
 #else
     #include "freertos_risc_v_chip_specific_extensions.h"
+#endif
+
+#if !defined( portasmENABLE_MINIMAL_SAVE )
+    #define portasmENABLE_MINIMAL_SAVE 1
 #endif
 
 /* Only the standard core registers are stored by default.  Any additional
@@ -151,6 +171,9 @@
 .extern pxCriticalNesting
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
 .extern port_restore_frame_ptr
+.extern port_window_invalid_minimal_restore
+.extern port_window_kernel_borrow_restores
+.extern port_window_kernel_stage_count
 #endif
 /*-----------------------------------------------------------*/
 
@@ -302,10 +325,12 @@ add sp, sp, -( 2 * portWORD_SIZE )
 
    .macro portcontextSAVE_CONTEXT_INTERNAL
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
-    /* Always full save when simulator does not apply register window: GPRs must live in kernel window (phys 0-31) so task sees them after mret. Set to 1f for minimal save when HW applies window. */
+#if ( portasmENABLE_MINIMAL_SAVE == 1 )
+    /* Non-zero base means task owns a dedicated window and can use minimal save. */
     la t0, port_current_task_window_base
     load_x t0, 0( t0 )
-    /* bnez t0, 1f */
+    bnez t0, 1f
+#endif
 #endif
 addi sp, sp, -portCONTEXT_SIZE
     /* Save t5/t6 (x30,x31) first so CYCLE_BREAKDOWN_PROFILE can use them without clobbering task state. */
@@ -493,7 +518,14 @@ load_x sp, 0 ( t1 )     /* Read sp from first TCB member. */
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
     /* context_type at offset 32: 1 = minimal save (use minimal restore), 0 = full save. */
     load_x t2, portCONTEXT_TYPE_OFFSET * portWORD_SIZE( sp )
-    bnez t2, 3f
+    beqz t2, 4f
+    load_x t4, portWINDOW_CFG_OFFSET * portWORD_SIZE( sp )
+    bnez t4, 3f
+    la t5, port_window_invalid_minimal_restore
+    load_x t6, 0( t5 )
+    addi t6, t6, 1
+    store_x t6, 0( t5 )
+4:
 #endif
 
 /* Load mepc with the address of the instruction in the task to run next. */
@@ -569,21 +601,24 @@ load_x x15, 13 * portWORD_SIZE( sp )
     load_x x31, 29 * portWORD_SIZE( sp )
 #endif /* ifndef __riscv_32e */
 addi sp, sp, portCONTEXT_SIZE
-    # --- THESIS INJECTION: END TIMER ---
-    csrr t4, mcycle
-    la t1, temp_start_cycle
-    load_x t5, 0(t1)
-    sub t4, t4, t5       /* latency = end - start */
-    la t1, async_tick_cycles
-    store_x t4, 0(t1)
-    # -------------------------------------
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
     /* GPRs already loaded into kernel window (phys 0-31). When simulator does not apply window, task runs with phys 0-31 so no copy needed. */
     addi t4, sp, -portCONTEXT_SIZE
     load_x t2, portWINDOW_CFG_OFFSET * portWORD_SIZE( t4 )
+    beqz t2, 7f
 6:
     csrw portasmCSR_WINDOW_STAGED, t2   /* 0 => window 0 (legacy); non-zero => task window. */
     j 5f
+7:
+    la t5, port_window_kernel_borrow_restores
+    load_x t6, 0( t5 )
+    addi t6, t6, 1
+    store_x t6, 0( t5 )
+    la t5, port_window_kernel_stage_count
+    load_x t6, 0( t5 )
+    addi t6, t6, 1
+    store_x t6, 0( t5 )
+    j 6b
 3:
 #ifdef CYCLE_BREAKDOWN_PROFILE
     csrr t5, mcycle

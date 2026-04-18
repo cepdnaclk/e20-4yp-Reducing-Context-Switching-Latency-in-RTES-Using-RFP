@@ -450,6 +450,12 @@ typedef struct tskTaskControlBlock       /* The old naming convention is used to
     #if ( configUSE_POSIX_ERRNO == 1 )
         int iTaskErrno;
     #endif
+
+    #if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+        uint32_t ulPortWindowConfig;      /* (size << 16) | base written to CSR 0x801 on restore. */
+        uint8_t ucPortBorrowKernelWindow; /* pdTRUE when task intentionally borrows kernel window. */
+        uint8_t ucPortLastContextType;    /* 0 = full restore, 1 = minimal restore. */
+    #endif
 } tskTCB;
 
 /* The old tskTCB name is maintained above then typedefed to the new TCB_t name
@@ -8870,3 +8876,78 @@ void vTaskResetState( void )
     #endif /* #if ( configGENERATE_RUN_TIME_STATS == 1 ) */
 }
 /*-----------------------------------------------------------*/
+
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+
+void vTaskSetWindowingContext( TaskHandle_t xTask,
+                               uint32_t ulWindowConfig,
+                               BaseType_t xBorrowKernelWindow )
+{
+    TCB_t * pxTCB;
+
+    pxTCB = prvGetTCBFromHandle( xTask );
+    configASSERT( pxTCB != NULL );
+
+    taskENTER_CRITICAL();
+    {
+        pxTCB->ulPortWindowConfig = ulWindowConfig;
+        pxTCB->ucPortBorrowKernelWindow = ( xBorrowKernelWindow != pdFALSE ) ? ( uint8_t ) pdTRUE : ( uint8_t ) pdFALSE;
+    }
+    taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t xTaskGetWindowingContext( TaskHandle_t xTask,
+                                     uint32_t * pulWindowConfig,
+                                     BaseType_t * pxBorrowKernelWindow,
+                                     uint8_t * pucLastContextType )
+{
+    const TCB_t * pxTCB;
+    BaseType_t xResult = pdFALSE;
+
+    pxTCB = prvGetTCBFromHandle( xTask );
+
+    if( pxTCB != NULL )
+    {
+        taskENTER_CRITICAL();
+        {
+            if( pulWindowConfig != NULL )
+            {
+                *pulWindowConfig = pxTCB->ulPortWindowConfig;
+            }
+
+            if( pxBorrowKernelWindow != NULL )
+            {
+                *pxBorrowKernelWindow = ( pxTCB->ucPortBorrowKernelWindow != ( uint8_t ) 0U ) ? pdTRUE : pdFALSE;
+            }
+
+            if( pucLastContextType != NULL )
+            {
+                *pucLastContextType = pxTCB->ucPortLastContextType;
+            }
+        }
+        taskEXIT_CRITICAL();
+        xResult = pdTRUE;
+    }
+
+    return xResult;
+}
+/*-----------------------------------------------------------*/
+
+void vTaskSetLastWindowContextType( TaskHandle_t xTask,
+                                    UBaseType_t uxContextType )
+{
+    TCB_t * pxTCB;
+
+    pxTCB = prvGetTCBFromHandle( xTask );
+    configASSERT( pxTCB != NULL );
+
+    taskENTER_CRITICAL();
+    {
+        pxTCB->ucPortLastContextType = ( uxContextType != ( UBaseType_t ) 0U ) ? 1U : 0U;
+    }
+    taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
+#endif /* configUSE_RISCV_REGISTER_WINDOWS */

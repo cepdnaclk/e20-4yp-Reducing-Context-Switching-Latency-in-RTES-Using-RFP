@@ -3792,6 +3792,34 @@ void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut ) PRIVILEGED_FUNC
 
 #endif /* #if ( ( portUSING_MPU_WRAPPERS == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) && ( configENABLE_ACCESS_CONTROL_LIST == 1 ) ) */
 
+#if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+/*
+ * Port support API: attaches register-window metadata to a task.
+ * ulWindowConfig format: (size << 16) | base.
+ * xBorrowKernelWindow:
+ *   pdTRUE  -> task runs in kernel window via full save/restore path.
+ *   pdFALSE -> task uses its configured window and can use minimal path.
+ */
+    void vTaskSetWindowingContext( TaskHandle_t xTask,
+                                   uint32_t ulWindowConfig,
+                                   BaseType_t xBorrowKernelWindow ) PRIVILEGED_FUNCTION;
+
+/*
+ * Port support API: query window metadata from a task.
+ */
+    BaseType_t xTaskGetWindowingContext( TaskHandle_t xTask,
+                                         uint32_t * pulWindowConfig,
+                                         BaseType_t * pxBorrowKernelWindow,
+                                         uint8_t * pucLastContextType ) PRIVILEGED_FUNCTION;
+
+/*
+ * Port support API: save the last restore mode used by the task.
+ * uxContextType: 0=full restore, 1=minimal restore.
+ */
+    void vTaskSetLastWindowContextType( TaskHandle_t xTask,
+                                        UBaseType_t uxContextType ) PRIVILEGED_FUNCTION;
+#endif
+
 /* *INDENT-OFF* */
 #ifdef __cplusplus
     }

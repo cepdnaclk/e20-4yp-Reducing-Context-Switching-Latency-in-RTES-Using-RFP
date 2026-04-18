@@ -175,15 +175,30 @@ extern size_t xCriticalNesting;
 #define portMEMORY_BARRIER()    __asm volatile ( "" ::: "memory" )
 /*-----------------------------------------------------------*/
 
-/* Set to 1 when using Spike+FYP with expanded PRF and CSR 0x800/0x801.
- * Enables zero-overhead context switch for tasks using a register window. */
+/* Set to 1 when using a register-window aware core with CSR 0x800/0x801.
+ * Enables mixed full/minimal context switch paths for windowed tasks. */
 #ifndef configUSE_RISCV_REGISTER_WINDOWS
     #define configUSE_RISCV_REGISTER_WINDOWS    0
 #endif
 
 #if ( configUSE_RISCV_REGISTER_WINDOWS == 1 )
+    /* When enabled, the kernel reserves window (base=0,size=32) and allows
+     * task windows in other partitions. */
+    #ifndef configRISCV_WINDOWED_KERNEL_MODE
+        #define configRISCV_WINDOWED_KERNEL_MODE    1
+    #endif
+
+    /* Guard against invalid window/context combinations. */
+    #ifndef configRISCV_WINDOW_BORROW_GUARD
+        #define configRISCV_WINDOW_BORROW_GUARD     1
+    #endif
+
     #define portWINDOW_CFG_OFFSET    31
     void vPortTaskSetRegisterWindow( void * xTask, uint32_t ulBase, uint32_t ulSize );
+    void vPortTaskSetKernelBorrowing( void * xTask, BaseType_t xEnable );
+    void vPortGetWindowIntegrityCounters( uint32_t * pulInvalidMinimalRestore,
+                                          uint32_t * pulKernelBorrowRestores,
+                                          uint32_t * pulKernelWindowStages );
 #endif
 
 /* configCLINT_BASE_ADDRESS is a legacy definition that was replaced by the

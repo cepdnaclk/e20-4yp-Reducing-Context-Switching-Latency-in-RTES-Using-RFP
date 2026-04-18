@@ -312,7 +312,8 @@ xPortStartFirstTask:
     ret
 
 #if defined( portasmUSE_REGISTER_WINDOWS ) && ( portasmUSE_REGISTER_WINDOWS == 1 )
-/* First task is windowed: load GPRs into kernel window (phys 0-31) then mret; no HW window switch so sim sees same bank. */
+/* First task is windowed: stage window via 0x801 and enter through mret so the
+ * first task instruction executes with the staged task mapping. */
 xPortStartFirstTaskWindowed:
     li      t5, 0xFFFF
     and     t5, t0, t5                                      /* Base from window_cfg (t0 still from branch). */
@@ -408,24 +409,9 @@ exit_without_context_switch:
     portcontextRESTORE_CONTEXT
 /*-----------------------------------------------------------*/
 
-# --- THESIS VARIABLES ---
-.global async_tick_cycles
-.section .data
-.align 4
-async_tick_cycles: .word 0
-temp_start_cycle:  .word 0
-
-.section .text
-# ------------------------
-
 .section .text.freertos_risc_v_trap_handler
 .align 8
 freertos_risc_v_trap_handler:
-    # --- START TIMER ---
-    csrr t0, mcycle
-    la t1, temp_start_cycle
-    sw t0, 0(t1)
-    # -------------------------------------
     portcontextSAVE_CONTEXT_INTERNAL
 
     csrr a0, mcause
@@ -478,12 +464,4 @@ application_exception_handler:
 
 processed_source:
     portcontextRESTORE_CONTEXT
-    # --- INJECT END TIMER HERE ---
-    csrr t0, mcycle
-    la t1, temp_start_cycle
-    lw t2, 0(t1)
-    sub t0, t0, t2       # Calculate latency (End - Start)
-    la t1, async_tick_cycles
-    sw t0, 0(t1)         # Store in global variable
-    # -------------------------------------
 /*-----------------------------------------------------------*/
