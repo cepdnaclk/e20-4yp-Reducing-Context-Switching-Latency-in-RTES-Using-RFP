@@ -43,6 +43,8 @@ baseline_loop:
   csrr    t3, 0xB00
   ecall
   csrr    t4, 0xB00
+  la      t0, trap_start_cycle
+  lw      t3, 0(t0)
   sub     t2, t4, t3
   la      t0, trap_entry_cycle
   lw      t5, 0(t0)

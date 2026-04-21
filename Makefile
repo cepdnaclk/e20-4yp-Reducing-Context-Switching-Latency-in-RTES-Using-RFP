@@ -699,8 +699,8 @@ verilate_command := $(verilator) --no-timing verilator_config.vlt               
                     $(list_incdir) --top-module ariane_testharness                                               \
                     --threads-dpi none                                                                           \
                     --Mdir $(ver-library) -O3                                                                    \
-                    --exe corev_apu/tb/ariane_tb.cpp corev_apu/tb/dpi/SimDTM.cc corev_apu/tb/dpi/SimJTAG.cc      \
-                    corev_apu/tb/dpi/remote_bitbang.cc corev_apu/tb/dpi/msim_helper.cc
+                    --exe corev_apu/tb/ariane_tb.cpp corev_apu/tb/dpi/elfloader.cc corev_apu/tb/dpi/SimDTM.cc      \
+                    corev_apu/tb/dpi/SimJTAG.cc corev_apu/tb/dpi/remote_bitbang.cc corev_apu/tb/dpi/msim_helper.cc
 
 # User Verilator, at some point in the future this will be auto-generated
 verilate:

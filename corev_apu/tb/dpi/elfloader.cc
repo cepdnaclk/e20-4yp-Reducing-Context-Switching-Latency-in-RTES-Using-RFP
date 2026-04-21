@@ -62,7 +62,41 @@ extern "C" void read_section (long long address, const svOpenArrayHandle buffer)
     }
 }
 
+extern "C" void read_section_void(long long address, void* buffer, uint64_t size) {
+    assert(mems.count(address) > 0);
+    uint64_t n = size == 0 ? static_cast<uint64_t>(mems[address].size()) : size;
+    uint8_t* dst = static_cast<uint8_t*>(buffer);
+    memset(dst, 0, n);
+
+    uint64_t base = static_cast<uint64_t>(address);
+    uint64_t end = base + n;
+    for (auto &seg : mems) {
+      uint64_t seg_base = seg.first;
+      uint64_t seg_end = seg_base + seg.second.size();
+      if (seg_end <= base || seg_base >= end) continue;
+
+      uint64_t copy_start = seg_base > base ? seg_base : base;
+      uint64_t copy_end = seg_end < end ? seg_end : end;
+      uint64_t copy_len = copy_end - copy_start;
+      uint64_t src_off = copy_start - seg_base;
+      uint64_t dst_off = copy_start - base;
+      memcpy(dst + dst_off, seg.second.data() + src_off, copy_len);
+    }
+}
+
+extern "C" char read_symbol(const char* symbol_name, long long* address) {
+    auto it = symbols.find(std::string(symbol_name));
+    if (it == symbols.end()) return 1;
+    *address = static_cast<long long>(it->second);
+    return 0;
+}
+
 extern "C" void read_elf(const char* filename) {
+    sections.clear();
+    symbols.clear();
+    mems.clear();
+    section_index = 0;
+
     int fd = open(filename, O_RDONLY);
     struct stat s;
     assert(fd != -1);
@@ -81,7 +115,6 @@ extern "C" void read_elf(const char* filename) {
 
 
     std::vector<uint8_t> zeros;
-    std::map<std::string, uint64_t> symbols;
 
     #define LOAD_ELF(ehdr_t, phdr_t, shdr_t, sym_t) do { \
     ehdr_t* eh = (ehdr_t*)buf; \

@@ -37,7 +37,7 @@ scm_cycle_spin:
   sw      zero, 44(t0)
 
   # loop countdown
-  li      t0, 0x130
+  la      t0, loop_counter
   li      t1, 64
   sw      t1, 0(t0)
   # sum / min / max
@@ -49,7 +49,7 @@ scm_cycle_spin:
   li      t0, 0x13c
   sw      zero, 0(t0)
   # rotating index 0..3
-  li      t0, 0x140
+  la      t0, loop_index
   sw      zero, 0(t0)
   # heartbeat
   li      t0, 0x118
@@ -62,11 +62,11 @@ scm_cycle_spin:
   sw      zero, 0(t0)
 
 scale_loop:
-  li      t0, 0x130
+  la      t0, loop_counter
   lw      t1, 0(t0)
   beqz    t1, scale_done
 
-  li      t0, 0x140
+  la      t0, loop_index
   lw      t0, 0(t0)
   beqz    t0, scale_cfg0
   li      t1, 1
@@ -135,12 +135,12 @@ scm_min_done:
   lw      t1, 0(t0)
   bltu    t1, t2, scm_max_upd
 scm_max_done:
-  li      t0, 0x130
+  la      t0, loop_counter
   lw      t2, 0(t0)
   addi    t2, t2, -1
   sw      t2, 0(t0)
 
-  li      t0, 0x140
+  la      t0, loop_index
   lw      t1, 0(t0)
   addi    t1, t1, 1
   li      t2, 4
@@ -388,6 +388,10 @@ trap_start_cycle:
 trap_entry_cycle:
   .word 0
 mret_start_cycle:
+  .word 0
+loop_counter:
+  .word 0
+loop_index:
   .word 0
 
   .section .signature, "aw", @progbits

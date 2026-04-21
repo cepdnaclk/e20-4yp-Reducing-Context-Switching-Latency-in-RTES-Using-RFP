@@ -2,6 +2,9 @@
 
 This folder contains bare-metal tests used to validate and measure the partitioned register-window context-switch mechanism in CVA6.
 
+**Step-by-step (environment, bare-metal, FreeRTOS, Spike, RVFI):** see [`STEP_BY_STEP_RUN_TESTS.md`](STEP_BY_STEP_RUN_TESTS.md).
+**Clone-and-run reproducibility entrypoint:** see [`REPRODUCIBLE_RUN_README.md`](REPRODUCIBLE_RUN_README.md) and script [`reproduce_ctxsw_eval.sh`](reproduce_ctxsw_eval.sh).
+
 ## What Hardware Feature Is Being Tested
 
 These tests target the custom register-window CSRs and trap handshake:
@@ -14,6 +17,12 @@ These tests target the custom register-window CSRs and trap handshake:
 - `mcountinhibit` (`CSR 0x320`): cleared to ensure counters run
 
 All tests use `tohost` for pass/fail termination and write min/max/avg values to signature addresses consumed by the regression script.
+
+## Journal / Q1 supplementary material
+
+- **`JOURNAL_EVALUATION_SUPPLEMENT.md`**: methodology boilerplate (trampoline anatomy, bare-metal vs FreeRTOS configs, RVFI instruction-count procedure, Spike trace appendix recipe, FreeRTOS workload vs yield-only benchmarks).
+- **`PUBLICATION_MODIFICATIONS_SPIKE_CVA6_FREERTOS.md`**: full implementation appendix (RTL CSR/regfile paths, Spike behavioral deltas including tooling-only hooks, FreeRTOS TCB/port/asm changes, cross-platform contracts, suggested figures).
+- **`rvfi_count_instructions.sh`**: count retired instructions in `trace_rvfi_hart_00.dasm` (total or between two PCs).
 
 ## Files in This Folder
 
@@ -42,6 +51,18 @@ Notes:
 - Set `BUILD_MODEL=1` if you want the script to rebuild Verilator model first.
 - Output logs/traces are written under:
   - `verif/sim/out_<date>/ctxsw_baremetal/`
+
+### FreeRTOS CVA6 phase tests
+
+The FreeRTOS CVA6 suite (integrity, sequence, borrow-policy checks) is run with:
+
+```bash
+bash verif/regress/freertos-windowed-cva6.sh
+```
+
+This script builds `FreeRTOS-Kernel/demo/CVA6_FYP` and writes logs/signatures to:
+
+- `verif/sim/out_<date>/freertos_cva6/`
 
 ## Common Output Fields
 
@@ -125,8 +146,8 @@ The regression script converts these sums into per-iteration averages and prints
 **Expected result**
 
 - Should print `MCYCLE_LAT_SW ...`
-- Current validated run (representative):
-  - `mcycle_dec min/max/avg = 27 / 34 / 27`
+- Current validated run:
+  - `mcycle_dec min/max/avg = 62 / 96 / 62`
 
 ### 4) `scale4_mixed_window_switch.S`
 
