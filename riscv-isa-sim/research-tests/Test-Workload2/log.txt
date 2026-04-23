@@ -1,0 +1,1276 @@
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABABA
+Done.
+  Min: 512 cycles
+  Max: 4732 cycles
+  Avg: 2622 cycles
+
+=== REAL WORKLOAD STRESS TEST ===
+
+Running BASELINE (Software Save/Restore)... 
+AAAAAAAAAA
+Done.
+  Min: 5021 cycles
+  Max: 5022 cycles
+  Avg: 5021 cycles
+
+Running PROPOSED (Hardware Windows)... 
+BABABABABABABABABAB

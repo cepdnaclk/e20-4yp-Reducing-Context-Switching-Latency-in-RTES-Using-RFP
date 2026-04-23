@@ -1,0 +1,49 @@
+=== Phase 4b: Round-Robin Scheduler ===
+[KERNEL] Starting Task A logic...
+
+[TASK A] Window 0 (Kernel). Counter: 0x00000000
+[TASK A] Yielding...
+
+    [TASK B] Window 1 (User).   Counter: 0x00000000
+    [TASK B] Yielding...
+[TASK A] Resumed!
+
+[TASK A] Window 0 (Kernel). Counter: 0x00000001
+[TASK A] Yielding...
+    [TASK B] Resumed!
+
+    [TASK B] Window 1 (User).   Counter: 0x00000001
+    [TASK B] Yielding...
+[TASK A] Resumed!
+
+[TASK A] Window 0 (Kernel). Counter: 0x00000002
+[TASK A] Yielding...
+    [TASK B] Resumed!
+
+    [TASK B] Window 1 (User).   Counter: 0x00000002
+    [TASK B] Yielding...
+[TASK A] Resumed!
+
+[TASK A] Window 0 (Kernel). Counter: 0x00000003
+[TASK A] Yielding...
+    [TASK B] Resumed!
+
+    [TASK B] Window 1 (User).   Counter: 0x00000003
+    [TASK B] Yielding...
+[TASK A] Resumed!
+
+[TASK A] Window 0 (Kernel). Counter: 0x00000004
+[TASK A] Yielding...
+    [TASK B] Resumed!
+
+    [TASK B] Window 1 (User).   Counter: 0x00000004
+    [TASK B] Yielding...
+[TASK A] Resumed!
+
+[TASK A] Window 0 (Kernel). Counter: 0x00000005
+[TASK A] Yielding...
+    [TASK B] Resumed!
+
+    [TASK B] Window 1 (User).   Counter: 0x00000005
+    [TASK B] Yielding...
+[TASK A] Resumed!
