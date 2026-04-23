@@ -151,7 +151,7 @@
 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
 <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
 </span>
-<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Research Project 2024.08</span>
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Undergraduate Research Project</span>
 </div>
 <h1 class="font-headline text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-8">
                             Reducing Context-Switch <span class="text-accent text-glow">Overhead</span> in Real-Time Embedded Systems.
@@ -279,7 +279,7 @@
 <!-- Stats Row -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-md mt-16 pt-8 border-t border-slate-100">
 <div class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50">
-<div class="text-2xl font-bold text-primary">2 Cyc</div>
+<div class="text-2xl font-bold text-primary">2 Cycle</div>
 <div class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Handover</div>
 </div>
 <div class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50">
@@ -361,7 +361,7 @@
 <tr class="hover:bg-slate-50/50 transition-colors">
 <td class="px-6 py-5 font-bold text-on-surface">Baseline RISC-V + FreeRTOS</td>
 <td class="px-6 py-5 text-on-surface-variant">None</td>
-<td class="px-6 py-5 text-on-surface-variant">62 cy avg micro-path; stress avg 393 cy</td>
+<td class="px-6 py-5 text-on-surface-variant">62 cycle avg micro-path; stress avg 393 cy</td>
 <td class="px-6 py-5 text-on-surface-variant">Baseline CVA6 path</td>
 <td class="px-6 py-5 text-on-surface-variant">Yes (Stack)</td>
 </tr>
@@ -369,27 +369,27 @@
 <td class="px-6 py-5 font-bold text-on-surface">CV32RT</td>
 <td class="px-6 py-5 text-on-surface-variant">Bank replication + background drain</td>
 <td class="px-6 py-5 text-on-surface-variant">Not primary target (focus is fast ISR)</td>
-<td class="px-6 py-5 text-on-surface-variant">6 cy reported</td>
+<td class="px-6 py-5 text-on-surface-variant">6 cycle reported</td>
 <td class="px-6 py-5 text-on-surface-variant">Yes (Background context commit)</td>
 </tr>
 <tr class="hover:bg-slate-50/50 transition-colors">
 <td class="px-6 py-5 font-bold text-on-surface">PCS</td>
 <td class="px-6 py-5 text-on-surface-variant">24.4K–473.2K gates (config-dependent)</td>
 <td class="px-6 py-5 text-on-surface-variant">Direct hardware switch in interrupt flow</td>
-<td class="px-6 py-5 text-on-surface-variant">4 cy reported</td>
+<td class="px-6 py-5 text-on-surface-variant">4 cycle reported</td>
 <td class="px-6 py-5 text-on-surface-variant">No (Depth-bounded HW stack)</td>
 </tr>
 <tr class="hover:bg-slate-50/50 transition-colors">
 <td class="px-6 py-5 font-bold text-on-surface">Hoozemans VLIW</td>
 <td class="px-6 py-5 text-on-surface-variant">+13.7% LUT / +6.9% FF</td>
-<td class="px-6 py-5 text-on-surface-variant">8 cy HW switch (VLIW context model)</td>
+<td class="px-6 py-5 text-on-surface-variant">8 cycle HW switch (VLIW context model)</td>
 <td class="px-6 py-5 text-on-surface-variant">—</td>
 <td class="px-6 py-5 text-on-surface-variant">No</td>
 </tr>
 <tr class="hover:bg-slate-50/50 transition-colors">
 <td class="px-6 py-5 font-bold text-on-surface">Rafla Windowed MIPS</td>
 <td class="px-6 py-5 text-on-surface-variant">Internal register-window bank set</td>
-<td class="px-6 py-5 text-on-surface-variant">4 cy save+restore model</td>
+<td class="px-6 py-5 text-on-surface-variant">4 cycle save+restore model</td>
 <td class="px-6 py-5 text-on-surface-variant">—</td>
 <td class="px-6 py-5 text-on-surface-variant">Spill on wrap</td>
 </tr>
@@ -403,7 +403,7 @@
 <tr class="bg-primary/5 hover:bg-primary/10 transition-colors border-l-4 border-primary">
 <td class="px-6 py-5 font-bold text-primary">DRFP (This Work)</td>
 <td class="px-6 py-5 text-on-surface-variant">+2 CSRs + partitioned RF storage</td>
-<td class="px-6 py-5 font-bold text-on-surface">2 cy micro-path; 173 cy avg stress</td>
+<td class="px-6 py-5 font-bold text-on-surface">2 cycle micro-path; 173 cycle avg stress</td>
 <td class="px-6 py-5 text-on-surface-variant">Baseline CVA6 trap path</td>
 <td class="px-6 py-5 text-on-surface-variant">Yes (Software spill/reload fallback)</td>
 </tr>
@@ -463,7 +463,6 @@
 <div class="max-w-[1440px] mx-auto">
 <div class="text-center mb-xl">
 <h2 class="font-headline-lg text-headline-lg mb-sm">Research Team</h2>
-<p class="font-body-lg text-on-surface-variant">Collaborative effort from the Department of Computer Engineering.</p>
 </div>
 <!-- Supervisors -->
 <div class="mb-16">
@@ -477,7 +476,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Dr. Isuru Nawinne</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Senior Lecturer</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Department of Computer Engineering</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Peradeniya</p>
 </div>
 <!-- Supervisor 2 -->
 <div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
@@ -487,7 +487,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Prof. Roshan Ragel</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Professor</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Department of Computer Engineering</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Peradeniya</p>
 </div>
 <!-- Supervisor 3 -->
 <div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
@@ -497,7 +498,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Dr. Oshani Dayarathne</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Senior Lecturer</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Faculty of Science</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Peradeniya</p>
 </div>
 <!-- Supervisor 4 -->
 <div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
@@ -507,7 +509,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Heshan Dissanayake</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Lecturer (Prob.)</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">School of Electrical and Computer Engineering</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Sydney</p>
 </div>
 </div>
 </div>
@@ -523,7 +526,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Chethiya Bandara</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Undergraduate Researcher</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Department of Computer Engineering</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Peradeniya</p>
 </div>
 <!-- Student 2 -->
 <div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
@@ -533,7 +537,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Bimsara Janakantha</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Undergraduate Researcher</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Department of Computer Engineering</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Peradeniya</p>
 </div>
 <!-- Student 3 -->
 <div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
@@ -543,7 +548,8 @@
 </div>
 </div>
 <h4 class="font-bold text-on-surface text-lg">Kavindu Methpura</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Undergraduate Researcher</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Department of Computer Engineering</p>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">University of Peradeniya</p>
 </div>
 </div>
 </div>
