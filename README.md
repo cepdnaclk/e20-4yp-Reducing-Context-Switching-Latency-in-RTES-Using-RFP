@@ -25,3 +25,35 @@ To design, implement, and empirically evaluate a register file partitioning mech
 3. **Maintaining area efficiency** by avoiding full register replication—partitioning shares physical storage while enforcing access isolation through decode logic
 
 The implementation targets the Spike instruction set simulator augmented with partitioning logic and access control mechanisms, enabling cycle-accurate evaluation of context switch latency under realistic RTOS workloads. This methodology follows established practices for pre-silicon architectural exploration in RISC-V research (Celio et al., 2021), allowing quantitative comparison against conventional software-managed context switching.
+
+## Keeping Sub-Repos in Sync
+
+This repository tracks three external codebases as git subtrees:
+- `cva6/` from remote `cva6-local`, branch `reasearch`
+- `riscv-isa-sim/` from remote `spike-local`, branch `research-dynamic-partitions-FreeRTOS-SP`
+- `FreeRTOS-Kernel/` from remote `freertos-local`, branch `fyp-rfp-4`
+
+Before pulling updates (or after cloning this main repo on a new machine), configure the local source remotes:
+
+```bash
+./scripts/setup-subrepo-remotes.sh
+```
+
+After you add new commits in those source repositories, update this main repo with:
+
+```bash
+./scripts/update-subrepos.sh
+```
+
+If you prefer one squashed commit per subtree update:
+
+```bash
+./scripts/update-subrepos.sh --squash
+```
+
+You can also update a single subtree manually, for example:
+
+```bash
+git fetch spike-local research-dynamic-partitions-FreeRTOS-SP
+git subtree pull --prefix=riscv-isa-sim spike-local research-dynamic-partitions-FreeRTOS-SP -m "Update riscv-isa-sim subtree"
+```
