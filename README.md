@@ -77,3 +77,22 @@ You can also update a single subtree manually, for example:
 git fetch spike-local research-dynamic-partitions-FreeRTOS-SP
 git subtree pull --prefix=riscv-isa-sim spike-local research-dynamic-partitions-FreeRTOS-SP -m "Update riscv-isa-sim subtree"
 ```
+
+## GitHub “Contributors” graph (upstream authors)
+
+The **Insights → Contributors** view on [this repository](https://github.com/cepdnaclk/e20-4yp-Reducing-Context-Switching-Latency-in-RTES-Using-RFP) is built from **commit authors on the default branch**. Importing `cva6/`, `riscv-isa-sim/`, and `FreeRTOS-Kernel/` with **`git subtree add` brought in their full histories**, so GitHub correctly lists everyone who ever authored those commits—not only your team.
+
+GitHub **does not** offer a setting to exclude specific directories or “vendor” paths from that graph (see [Viewing a repository’s contributors](https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/viewing-a-projects-contributors)).
+
+**Ways to change what the graph shows (all involve trade-offs):**
+
+1. **Keep full history on a non-default branch, use a slimmer default branch**  
+   Push the current `main` to a branch such as `archive/full-subtree-history`, then replace **default** `main` with a new history that only contains your org’s meta commits (for example one squashed snapshot per release, or **git submodules** pointing at your forks). The Contributors graph for the default branch then mostly reflects people who commit to that meta history. Anyone who needs full per-file history can use the archive branch or the forks.
+
+2. **Submodules instead of subtrees for future integration**  
+   The default branch then mostly records submodule pointer bumps; upstream authors stay on the separate repositories’ graphs, not mixed into this repo’s graph the same way.
+
+3. **Do nothing**  
+   Leave the graph as-is; treat it as “authors present in imported histories,” not “people who worked on this FYP only.”
+
+There is **no** repository toggle that hides upstream authors while keeping the same default-branch subtree history unchanged.
