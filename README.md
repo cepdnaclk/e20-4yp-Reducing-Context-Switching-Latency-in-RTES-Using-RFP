@@ -259,5 +259,5 @@ For a single squashed commit per update, use `./scripts/update-subrepos.sh --squ
 
 ## 14) GitHub “Contributors” and authorship
 
-GitHub’s **Contributors** view counts **commit authors** on the default branch. Because the subtrees were added with their **entire** histories, that list includes **every** author who has ever committed to the vendored CVA6, Spike, and FreeRTOS trees—not only people who worked on this FYP. For who performed **this** work, use this README, your project author list, and your formal write-up; treat the GitHub graph as a **history of imported repositories**, not a project roster.
+GitHub’s **Contributors** view counts **commit authors** on the default branch. Because the subtrees were added with their **entire** histories, that list includes **every** author who has ever committed to the vendored CVA6, Spike, and FreeRTOS trees—not only people who worked on this FYP.
 
