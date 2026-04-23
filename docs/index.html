@@ -210,7 +210,7 @@
       </div>
     </nav>
     <main class="mt-16">
-      <!-- Bespoke Hero Section -->
+      <!Hero Section -->
       <section
         class="relative min-h-[85vh] flex items-center overflow-hidden bg-surface-dark py-xl px-gutter"
       >
@@ -231,7 +231,7 @@
                 </span>
                 <span
                   class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent"
-                  >Research Project 2024.08</span
+                  >Undergraduate Research Project</span
                 >
               </div>
               <h1
@@ -328,7 +328,7 @@
           </div>
         </div>
       </section>
-      <!-- Redesigned Abstract/Problem Section -->
+      <!-- Abstract/Problem Section -->
       <section class="py-xl px-gutter bg-white" id="summary">
         <div class="max-w-[1440px] mx-auto">
           <div class="grid lg:grid-cols-12 gap-xl">
@@ -500,7 +500,7 @@
                 <div
                   class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50"
                 >
-                  <div class="text-2xl font-bold text-primary">2 Cyc</div>
+                  <div class="text-2xl font-bold text-primary">2 Cycle</div>
                   <div
                     class="text-[9px] font-bold uppercase tracking-widest text-slate-400"
                   >
@@ -598,21 +598,6 @@
                   class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300"
                 >
                   <img
-                    alt="Microarchitecture Diagram"
-                    class="w-full rounded-lg"
-                    src="assets/Microarchitecture%20of%20the%20partitioned%20integer%20register%20file.svg"
-                  />
-                  <figcaption
-                    class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase"
-                  >
-                    Figure 1: Microarchitecture of the partitioned integer
-                    register file.
-                  </figcaption>
-                </figure>
-                <figure
-                  class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300"
-                >
-                  <img
                     alt="Architecture Diagram"
                     class="w-full rounded-lg"
                     src="assets/modified-riscv-datapath-with-register-partitioning-logic.svg"
@@ -620,10 +605,26 @@
                   <figcaption
                     class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase"
                   >
-                    Figure 2: Modified RISC-V Datapath with Register
+                    Figure 1: Modified RISC-V Datapath with Register
                     Partitioning Logic
                   </figcaption>
                 </figure>
+                <figure
+                  class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300"
+                >
+                  <img
+                    alt="Microarchitecture Diagram"
+                    class="w-full rounded-lg"
+                    src="assets/Microarchitecture%20of%20the%20partitioned%20integer%20register%20file.svg"
+                  />
+                  <figcaption
+                    class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase"
+                  >
+                    Figure 2: Microarchitecture of the partitioned integer
+                    register file.
+                  </figcaption>
+                </figure>
+
               </div>
             </div>
           </div>
@@ -686,7 +687,7 @@
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">None</td>
                   <td class="px-6 py-5 text-on-surface-variant">
-                    62 cy avg micro-path; stress avg 393 cy
+                    62 cycle avg micro-path; stress avg 393 cycle
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
                     Baseline CVA6 path
@@ -702,7 +703,7 @@
                     Not primary target (focus is fast ISR)
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
-                    6 cy reported
+                    6 cycle reported
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
                     Yes (Background context commit)
@@ -717,7 +718,7 @@
                     Direct hardware switch in interrupt flow
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
-                    4 cy reported
+                    4 cycle reported
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
                     No (Depth-bounded HW stack)
@@ -731,7 +732,7 @@
                     +13.7% LUT / +6.9% FF
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
-                    8 cy HW switch (VLIW context model)
+                    8 cycle HW switch (VLIW context model)
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">—</td>
                   <td class="px-6 py-5 text-on-surface-variant">No</td>
@@ -744,7 +745,7 @@
                     Internal register-window bank set
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
-                    4 cy save+restore model
+                    4 cycle save+restore model
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">—</td>
                   <td class="px-6 py-5 text-on-surface-variant">
@@ -772,7 +773,7 @@
                     +2 CSRs + partitioned RF storage
                   </td>
                   <td class="px-6 py-5 font-bold text-on-surface">
-                    2 cy micro-path; 173 cy avg stress
+                    2 cycle micro-path; 173 cycle avg stress
                   </td>
                   <td class="px-6 py-5 text-on-surface-variant">
                     Baseline CVA6 trap path
@@ -865,7 +866,7 @@
                     >check_circle</span
                   >
                   <span class="text-on-surface-variant"
-                    >Verified on FPGA (Xilinx Artix-7) for power and area
+                    >Ready to be verified on FPGA (Xilinx Gensys 2) for power and area
                     metrics</span
                   >
                 </li>
@@ -882,7 +883,6 @@
               Research Team
             </h2>
             <p class="font-body-lg text-on-surface-variant">
-              Collaborative effort from the Department of Computer Engineering.
             </p>
           </div>
           <!-- Supervisors -->
@@ -890,7 +890,7 @@
             <h3
               class="font-label-caps text-xs tracking-widest uppercase text-primary mb-10 font-bold border-b border-outline-variant pb-2 inline-block"
             >
-              Faculty Supervisors
+              Research Supervisors
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-lg">
               <!-- Supervisor 1 -->
@@ -916,7 +916,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Senior Lecturer
+                  Department of Computer Engineering
+                </p>
+               <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Peradeniya
                 </p>
               </div>
               <!-- Supervisor 2 -->
@@ -942,7 +947,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Professor
+                  Department of Computer Engineering
+                </p>
+               <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Peradeniya
                 </p>
               </div>
               <!-- Supervisor 3 -->
@@ -968,7 +978,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Senior Lecturer
+                  Department of Statistics and Computer Science
+                </p>
+                <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Peradeniya
                 </p>
               </div>
               <!-- Supervisor 4 -->
@@ -994,7 +1009,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Lecturer (Prob.)
+                  School of Electrical and Computer Engineering
+                </p>
+                <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Sydney
                 </p>
               </div>
             </div>
@@ -1030,7 +1050,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Undergraduate Researcher
+                  Department of Computer Engineering
+                </p>
+               <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Peradeniya
                 </p>
               </div>
               <!-- Student 2 -->
@@ -1056,7 +1081,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Undergraduate Researcher
+                  Department of Computer Engineering
+                </p>
+               <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Peradeniya
                 </p>
               </div>
               <!-- Student 3 -->
@@ -1082,7 +1112,12 @@
                 <p
                   class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
                 >
-                  Undergraduate Researcher
+                  Department of Computer Engineering
+                </p>
+               <p
+                  class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1"
+                >
+                  University of Peradeniya
                 </p>
               </div>
             </div>
