@@ -244,10 +244,9 @@
               <p
                 class="text-slate-400 text-lg max-w-xl leading-relaxed mb-10 font-light max-w-[65ch]"
               >
-                A novel hardware-software co-design approach implementing
-                Dynamic Register File Partitioning (DRFP) on RISC-V to
-                drastically reduce interrupt latency and task-switching
-                overhead.
+                A concise showcase of our DRFP hardware-software co-design on
+                RISC-V CVA6, focused on faster RTOS context switching with
+                bounded fallback behavior under oversubscription.
               </p>
               <div class="flex flex-wrap gap-4">
                 <a
@@ -310,7 +309,7 @@
                   <div
                     class="text-[9px] font-bold text-accent uppercase tracking-widest"
                   >
-                    Stack saving latency
+                    Dense GPR spill on resident path
                   </div>
                 </div>
                 <div>
@@ -333,7 +332,7 @@
         <div class="max-w-[1440px] mx-auto">
           <div class="grid lg:grid-cols-12 gap-xl">
             <!-- Left Sidebar: Key Definitions -->
-            <div class="lg:col-span-4 flex flex-col gap-md">
+            <div class="lg:col-span-4 flex flex-col gap-xl">
               <div
                 class="p-lg border border-white/20 glass-panel rounded-xl shadow-xl bg-white/10 hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
               >
@@ -360,10 +359,46 @@
                     </p>
                   </div>
                   <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      CSR 0x801
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Staged descriptor written before trap return; committed by
+                      hardware on <span class="font-code-snippet">mret</span>.
+                    </p>
+                  </div>
+                  <div>
                     <h5 class="text-primary text-sm font-bold mb-1">WCET</h5>
                     <p class="text-xs text-on-surface-variant leading-relaxed">
                       Worst-Case Execution Time: The critical metric for
                       safety-critical timing determinism.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      Oversubscription
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Condition where runnable tasks exceed available resident
+                      hardware windows, triggering spill/reload fallback work.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      Resident Path
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Minimal switch path used when task context remains in a
+                      dedicated hardware partition.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      O-WCET
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Observed worst-case latency within the measured benchmark
+                      envelope, distinct from a certified universal bound.
                     </p>
                   </div>
                 </div>
@@ -464,32 +499,79 @@
               >
                 <div class="space-y-4 max-w-[65ch]">
                   <p>
-                    Traditional software-only context switching requires saving
-                    all N registers to memory, incurring O(N) latency as task
-                    complexity grows. While hardware-assisted schemes like
-                    shadow register sets achieve constant switch timing, they
-                    often impose prohibitive area and power costs impractical
-                    for resource-constrained systems.
+                    This project addresses a core real-time systems problem:
+                    context switches are often dominated by memory traffic from
+                    saving and restoring general-purpose registers. In a
+                    software-only path, that cost scales with the amount of
+                    architectural state moved to and from memory, which can
+                    hurt responsiveness and predictability as task pressure
+                    grows. Our approach, Dynamic Register File Partitioning
+                    (DRFP), is a hardware-software co-design built around CVA6,
+                    Spike, and FreeRTOS-Kernel. The objective is not to replace
+                    the operating system scheduler, but to reduce the expensive
+                    save/restore portion whenever a task can stay resident in a
+                    hardware-backed register partition.
                   </p>
                   <p>
-                    We propose a
-                    <strong>hardware-software co-designed</strong> mechanism
-                    that enables heterogeneous logical partitioning of the
-                    register file (RF). This
+                    On the hardware side, CVA6 is extended with a larger
+                    physical integer register file and two custom machine-mode
+                    CSRs: 0x800 for the active window descriptor and 0x801 for
+                    the staged/previous descriptor. The trap path snapshots and
+                    restores window metadata so that a resident task switch can
+                    avoid dense GPR spill/reload traffic. On the software side,
+                    the FreeRTOS RISC-V port is integrated with mixed context
+                    handling: a minimal path for window-resident tasks and a
+                    full save/restore fallback for non-resident or legacy
+                    paths. This keeps compatibility with the standard software
+                    model while enabling acceleration where the hardware
+                    residency condition is satisfied.
+                  </p>
+                  <p>
+                    Spike is used as a functional oracle to validate CSR and
+                    trap semantics, while cycle claims are taken from CVA6 RTL
+                    simulation under Verilator. This separation is important:
+                    functional correctness and timing evidence are verified in
+                    different, complementary environments. We run dedicated
+                    bare-metal context-switch tests to isolate mechanism costs,
+                    then validate integrated behavior through FreeRTOS flow and
+                    regression scripts.
                   </p>
                 </div>
                 <div class="space-y-4 max-w-[65ch]">
                   <p>
-                    approach is fully transparent to applications, which
-                    continue to observe a standard architectural register
-                    interface.
+                    The measured results show a clear two-regime behavior.
+                    Under resident conditions, the handover primitive remains
+                    very small and stable, with low memory movement in the
+                    switch path. Under heavy oversubscription (for example, many
+                    logical tasks competing for a small number of resident
+                    windows), DRFP still preserves correctness through fallback,
+                    but average and tail latency increase because spill/reload
+                    work reappears. This makes the performance story realistic:
+                    DRFP reduces central switching cost when residency is
+                    available, and degrades gracefully when it is not.
                   </p>
                   <p>
-                    By extending a 32-bit RISC-V core (CVA6) with additional
-                    register storage and two custom machine-mode CSRs, we manage
-                    active and staged register windows. On each trap, the core
-                    snapshots the active window and switches to a kernel window,
-                    eliminating massive memory traffic.
+                    In our published evaluation flow, this behavior is shown
+                    with stress and traffic/predictability benchmarks that
+                    compare DRFP against a software baseline in the same CVA6
+                    environment. Representative numbers include lower average
+                    switch cost and significantly lower context-state bytes per
+                    switch on resident-friendly workloads, alongside wider
+                    spread in oversubscribed scenarios. These outcomes align
+                    with the architecture: the hardware primitive is short, but
+                    full end-to-end timing also depends on residency policy and
+                    fallback frequency.
+                  </p>
+                  <p>
+                    The project therefore contributes a practical integration
+                    path rather than an isolated microarchitectural trick:
+                    custom CSR semantics in hardware, verified functional
+                    behavior in Spike, cycle-accurate evidence in CVA6 RTL, and
+                    OS-level application through FreeRTOS-Kernel. The software
+                    contract remains familiar (standard architectural register
+                    view for applications), while the platform gains a
+                    controllable mechanism to reduce context-switch overhead in
+                    real-time workloads.
                   </p>
                 </div>
               </div>
@@ -565,13 +647,12 @@
                     >0x800</span
                   >
                   <h4 class="font-headline-md text-headline-md">
-                    CSR_PART_CFG
+                    CSR_WINDOW_ACTIVE (0x800)
                   </h4>
                 </div>
                 <p class="text-sm text-on-surface-variant leading-relaxed">
-                  The Partition Configuration Register manages the active bank
-                  allocation and defines the split point for the physical
-                  register file.
+                  Active window descriptor. It selects the physical register
+                  partition currently visible as architectural x0-x31.
                 </p>
               </div>
               <div
@@ -583,12 +664,13 @@
                     >0x801</span
                   >
                   <h4 class="font-headline-md text-headline-md">
-                    CSR_PART_STATUS
+                    CSR_WINDOW_STAGED (0x801)
                   </h4>
                 </div>
                 <p class="text-sm text-on-surface-variant leading-relaxed">
-                  Real-time status register monitoring current partition usage,
-                  context IDs, and interrupt-triggered state transitions.
+                  Staged/previous window descriptor. Software writes the next
+                  mapping here; trap return (\u006dret) commits it for the incoming
+                  task context.
                 </p>
               </div>
             </div>
@@ -612,16 +694,20 @@
                 <figure
                   class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300"
                 >
-                  <img
-                    alt="Microarchitecture Diagram"
-                    class="w-full rounded-lg"
-                    src="assets/Microarchitecture%20of%20the%20partitioned%20integer%20register%20file.svg"
-                  />
+                  <div
+                    class="w-full rounded-lg border border-slate-100 bg-slate-50 p-3 min-h-[340px] flex items-center justify-center"
+                  >
+                    <img
+                      alt="Microarchitecture Diagram from Paper Figure 2"
+                      class="w-full h-auto max-h-[420px] object-contain"
+                      src="assets/Microarchitecture%20of%20the%20partitioned%20integer%20register%20file.svg"
+                    />
+                  </div>
                   <figcaption
                     class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase"
                   >
                     Figure 2: Microarchitecture of the partitioned integer
-                    register file.
+                    register file (rendered from the paper figure).
                   </figcaption>
                 </figure>
 
@@ -798,8 +884,8 @@
                 Testing &amp; Benchmarking
               </h2>
               <p class="font-body-lg text-on-surface-variant mt-sm">
-                Comparative analysis of latency against standard RV32IM
-                implementations.
+                Measured comparison against the software baseline in the same
+                CVA6 + FreeRTOS evaluation flow.
               </p>
             </div>
             <div class="flex gap-sm">
@@ -812,33 +898,154 @@
               <div class="flex items-center gap-base">
                 <span class="w-3 h-3 bg-slate-400 rounded-full"></span>
                 <span class="text-sm font-label-caps uppercase"
-                  >Baseline RV32</span
+                  >Software Baseline</span
                 >
               </div>
             </div>
           </div>
           <div class="grid lg:grid-cols-2 gap-xl">
             <div
-              class="relative hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 rounded-xl"
+              class="relative hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 rounded-xl bg-white border border-outline-variant academic-shadow p-6"
             >
-              <img
-                alt="Performance Benchmarks"
-                class="w-full rounded-xl border border-outline-variant academic-shadow"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfzrAjAgiTCn-xmZ6wKGGh4FGMKPAbNYfp1BWsUKi1nfRIUrkkx-8zotEJ7ZARwozePG-XlzDoBxxRbz6digGIGNHTeNb4W7z9bO9oAY1q3MJafjr0RgRrHYF69EeGJy-Nk6KDM0My6JkNBvvv71yOaF5M6r7qAqXrp7PvmJnUDIaq4G6jMqecLCG_nphWkNbIioxBkFmXisJcFzpoVwvOQ0d9HfTYufuCQYUYG10FDRis4MmaQDLOAcUbAZFhWHIyqnfN1jShglYA"
-              />
+              <h4 class="font-headline-md text-headline-md mb-2">
+                Measured Baseline vs DRFP (500-iteration stress and
+                traffic/predictability runs)
+              </h4>
+              <p class="text-xs text-on-surface-variant mb-5">
+                Lower is better. Data is aggregated from two run families:
+                100-task oversubscription stress tests and a dedicated
+                traffic/predictability benchmark pair.
+              </p>
+              <svg
+                aria-label="Benchmark comparison chart"
+                class="w-full h-auto"
+                role="img"
+                viewBox="0 0 760 430"
+              >
+                <rect fill="#ffffff" height="430" width="760"></rect>
+                <!-- Plot area -->
+                <rect
+                  fill="#f8fafc"
+                  height="300"
+                  stroke="#e2e8f0"
+                  width="640"
+                  x="90"
+                  y="60"
+                ></rect>
+
+                <!-- Y grid -->
+                <line stroke="#e2e8f0" x1="90" x2="730" y1="360" y2="360"></line>
+                <line stroke="#e2e8f0" x1="90" x2="730" y1="300" y2="300"></line>
+                <line stroke="#e2e8f0" x1="90" x2="730" y1="240" y2="240"></line>
+                <line stroke="#e2e8f0" x1="90" x2="730" y1="180" y2="180"></line>
+                <line stroke="#e2e8f0" x1="90" x2="730" y1="120" y2="120"></line>
+                <line stroke="#e2e8f0" x1="90" x2="730" y1="60" y2="60"></line>
+
+                <!-- Y labels -->
+                <text fill="#475569" font-size="12" x="50" y="364">0</text>
+                <text fill="#475569" font-size="12" x="42" y="304">250</text>
+                <text fill="#475569" font-size="12" x="42" y="244">500</text>
+                <text fill="#475569" font-size="12" x="42" y="184">750</text>
+                <text fill="#475569" font-size="12" x="34" y="124">1000</text>
+                <text fill="#475569" font-size="12" x="34" y="64">1250</text>
+
+                <!-- Group 1: Avg switch cycles (Baseline 393, DRFP 173) -->
+                <rect fill="#94a3b8" height="94" rx="4" width="56" x="150" y="266"></rect>
+                <rect fill="#006767" height="42" rx="4" width="56" x="218" y="318"></rect>
+                <text fill="#0f172a" font-size="11" text-anchor="middle" x="178" y="258">
+                  393
+                </text>
+                <text fill="#0f172a" font-size="11" text-anchor="middle" x="246" y="310">
+                  173
+                </text>
+
+                <!-- Group 2: Worst-case cycles (Baseline 696, DRFP 1249) -->
+                <rect fill="#94a3b8" height="167" rx="4" width="56" x="360" y="193"></rect>
+                <rect fill="#006767" height="300" rx="4" width="56" x="428" y="60"></rect>
+                <text fill="#0f172a" font-size="11" text-anchor="middle" x="388" y="185">
+                  696
+                </text>
+                <text fill="#0f172a" font-size="11" text-anchor="middle" x="456" y="52">
+                  1249
+                </text>
+
+                <!-- Group 3: Bytes per switch (Baseline 256, DRFP 55) -->
+                <rect fill="#94a3b8" height="61" rx="4" width="56" x="570" y="299"></rect>
+                <rect fill="#006767" height="13" rx="4" width="56" x="638" y="347"></rect>
+                <text fill="#0f172a" font-size="11" text-anchor="middle" x="598" y="291">
+                  256
+                </text>
+                <text fill="#0f172a" font-size="11" text-anchor="middle" x="666" y="339">
+                  55
+                </text>
+
+                <!-- X labels -->
+                <text
+                  fill="#334155"
+                  font-size="12"
+                  font-weight="600"
+                  text-anchor="middle"
+                  x="212"
+                  y="388"
+                >
+                  Avg Switch Cycles
+                </text>
+                <text
+                  fill="#334155"
+                  font-size="12"
+                  font-weight="600"
+                  text-anchor="middle"
+                  x="422"
+                  y="388"
+                >
+                  Worst-Case Cycles
+                </text>
+                <text
+                  fill="#334155"
+                  font-size="12"
+                  font-weight="600"
+                  text-anchor="middle"
+                  x="632"
+                  y="388"
+                >
+                  Bytes per Switch
+                </text>
+              </svg>
+              <div class="mt-4 grid grid-cols-3 gap-3 text-xs">
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <div class="text-slate-500 uppercase tracking-wider text-[10px]">
+                    Avg Cycle Gain
+                  </div>
+                  <div class="text-primary font-bold text-base">-56.0%</div>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <div class="text-slate-500 uppercase tracking-wider text-[10px]">
+                    Traffic Gain
+                  </div>
+                  <div class="text-primary font-bold text-base">-78.5%</div>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <div class="text-slate-500 uppercase tracking-wider text-[10px]">
+                    Note
+                  </div>
+                  <div class="text-on-surface-variant font-medium text-[11px]">
+                    Tail rises under oversubscription
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="flex flex-col justify-center space-y-md">
               <div
                 class="p-lg glass-panel rounded-xl border border-white/20 shadow-xl bg-white/10 mb-sm hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
               >
                 <h5 class="font-headline-md text-headline-md mb-sm">
-                  2-Cycle Handover Primitive
+                  2-Cycle Resident Handover
                 </h5>
                 <p class="text-on-surface-variant leading-relaxed max-w-[65ch]">
-                  Our custom ISA extension provides a deterministic 2-cycle
-                  primitive for handing over control. Unlike standard
-                  branch/jump operations that require register spills, the DRFP
-                  hardware handles the transition at the fetch stage.
+                  DRFP uses custom machine-mode CSR state (0x800/0x801) and a
+                  trap-return handover path to keep resident task switches
+                  minimal. Full software save/restore remains available as a
+                  compatibility fallback.
                 </p>
               </div>
               <ul
@@ -849,7 +1056,8 @@
                     >check_circle</span
                   >
                   <span class="text-on-surface-variant"
-                    >Reduced jitter in real-time control loops by 85%</span
+                    >Lower average switch cost in resident paths (e.g., 173 vs
+                    388 cycles in the traffic/predictability benchmark)</span
                   >
                 </li>
                 <li class="flex items-start gap-sm">
@@ -857,8 +1065,8 @@
                     >check_circle</span
                   >
                   <span class="text-on-surface-variant"
-                    >Eliminated interrupt latency variance during peak CPU
-                    load</span
+                    >Two-regime behavior is explicit: fast when resident,
+                    higher spread when 100 tasks oversubscribe 4 windows</span
                   >
                 </li>
                 <li class="flex items-start gap-sm">
@@ -866,7 +1074,7 @@
                     >check_circle</span
                   >
                   <span class="text-on-surface-variant"
-                    >Ready to be verified on FPGA (Xilinx Gensys 2) for power and area
+                    >Ready to be verified on FPGA (Digilent Genesys 2) for power and area
                     metrics</span
                   >
                 </li>
