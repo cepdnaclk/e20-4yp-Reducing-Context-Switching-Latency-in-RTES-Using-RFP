@@ -74,7 +74,7 @@
                       "xs": "4px",
                       "sm": "12px",
                       "md": "24px",
-                      "container-max": "1280px",
+                      "container-max": "1440px",
                       "base": "8px",
                       "lg": "48px",
                       "gutter": "24px"
@@ -128,10 +128,8 @@
 <body class="bg-background font-body-md text-on-background selection:bg-primary-container selection:text-white">
 <!-- TopNavBar -->
 <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-<div class="flex justify-between items-center px-8 h-16 max-w-screen-2xl mx-auto">
-<div class="text-xl font-bold tracking-tighter text-cyan-800 uppercase font-['Space_Grotesk']">
-            RISC-V Partitioning
-        </div>
+<div class="flex justify-between items-center px-8 h-16 max-w-[1440px] mx-auto">
+<div class="text-xl font-bold tracking-tighter text-cyan-800 uppercase font-['Space_Grotesk']"><img alt="RISC-V Partitioning Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida/ADBb0ujFApFKvEHb8nU9V2EdYg-rOgnlGmxZTj9wf4fV3NR2M4I90zhcU3dqNUTG-g6mkz45--Z5fbiKFh91aULIvxQmYmZB4KjP3a32Mf2Dwtmgqz7TTQ8V1RqJOvQ2I7b3PJbQKgJspHfFnBD3DfQVPmHdVSHT-n0R1SkxKE6PGy5mXMCDuIKsPwXZHxu0i4ARAqSz0qW1wAY_yv856QAbxgrOHAXD8rGUDcqsCW29JjhtrwBHy4XAkwNcR17ohSfQgfq0VBdsCfKlInI"/></div>
 <div class="hidden md:flex gap-8 items-center">
 <a class="text-slate-600 font-medium hover:text-cyan-600 transition-colors font-['Space_Grotesk'] tracking-tight" href="#summary">Summary</a>
 <a class="text-slate-600 font-medium hover:text-cyan-600 transition-colors font-['Space_Grotesk'] tracking-tight" href="#architecture">Architecture</a>
@@ -142,10 +140,10 @@
 </div>
 </nav>
 <main class="mt-16">
-<!-- Hero Section -->
+<!-- Bespoke Hero Section -->
 <section class="relative min-h-[85vh] flex items-center overflow-hidden bg-surface-dark py-xl px-gutter">
 <div class="absolute inset-0 blueprint-bg opacity-30"></div>
-<div class="max-w-7xl mx-auto w-full relative z-10">
+<div class="max-w-[1440px] mx-auto w-full relative z-10">
 <div class="grid lg:grid-cols-12 gap-16 items-center">
 <div class="lg:col-span-7">
 <div class="inline-flex items-center gap-3 px-3 py-1 border border-accent/30 rounded-sm mb-8 bg-accent/5">
@@ -156,26 +154,26 @@
 <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">Research Project 2024.08</span>
 </div>
 <h1 class="font-headline text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-8">
-                        Reducing Context-Switch <span class="text-accent text-glow">Overhead</span> in Real-Time Embedded Systems.
-                    </h1>
-<p class="text-slate-400 text-lg max-w-xl leading-relaxed mb-10 font-light">
-                        A novel hardware-software co-design approach implementing Dynamic Register File Partitioning (DRFP) on RISC-V to drastically reduce interrupt latency and task-switching overhead.
-                    </p>
+                            Reducing Context-Switch <span class="text-accent text-glow">Overhead</span> in Real-Time Embedded Systems.
+                        </h1>
+<p class="text-slate-400 text-lg max-w-xl leading-relaxed mb-10 font-light max-w-[65ch]">
+                            A novel hardware-software co-design approach implementing Dynamic Register File Partitioning (DRFP) on RISC-V to drastically reduce interrupt latency and task-switching overhead.
+                        </p>
 <div class="flex flex-wrap gap-4">
-<a class="px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-xs hover:bg-accent hover:text-surface-dark transition-all" href="#summary">Read Abstract</a>
-<a class="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/5 transition-all flex items-center gap-2" href="https://github.com">
+<a class="px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-xs hover:bg-accent hover:text-surface-dark transition-all hover:scale-[1.02] hover:shadow-lg" href="#summary">Read Abstract</a>
+<a class="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/5 transition-all flex items-center gap-2 hover:scale-[1.02] hover:shadow-lg" href="https://github.com">
 <span class="material-symbols-outlined text-sm">terminal</span>
-                            Explore Source
-                        </a>
+                                Explore Source
+                            </a>
 </div>
 </div>
 <div class="lg:col-span-5 relative">
-<div class="relative z-20 aspect-square overflow-hidden border border-white/10 glass-panel p-4 group">
+<div class="relative z-20 aspect-square overflow-hidden border border-white/10 glass-panel p-4 group hover:scale-[1.02] transition-transform duration-500 hover:shadow-2xl">
 <img alt="Technical Visual" class="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtYTY5qVjYt30ebAhSPRNJZB0d5n_veJg_B-f7GBKnhcBb4Yn1IFLoN8zDc4RXQT1rLfjFqBzdRjf31byEqLyYVaUMzL8aqo7etMy6B2dzbZVSmQe4QVQC1_ncCruJwNr0o2ZpgFvfveCMQ-8nQBM6bDOE1lYt6pAARqfpTSJR7LMzX1A31Vj_kqoqCDYdV6v34qbSYNd0VaL7PCdIefw6VtbVYMR4PVtEqloAe7HzAdkEG1vVFAWn2-NnUKFySAtjqXtancARg_V0"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface-dark via-transparent to-transparent opacity-60"></div>
 </div>
 <!-- Core Impact Overlapping Dashboard -->
-<div class="absolute -bottom-8 -left-8 right-8 lg:right-auto bg-primary p-8 z-30 grid grid-cols-2 gap-x-12 gap-y-6 shadow-2xl">
+<div class="absolute -bottom-8 -left-8 right-8 lg:right-auto bg-primary p-8 z-30 grid grid-cols-2 gap-x-12 gap-y-6 shadow-2xl hover:scale-[1.05] hover:shadow-[0_20px_40px_rgba(0,103,103,0.4)] transition-all duration-300 rounded-xl">
 <div>
 <div class="font-mono text-2xl font-bold text-white mb-1">1.2%</div>
 <div class="text-[9px] font-bold text-accent uppercase tracking-widest">Gate Count Increase</div>
@@ -197,72 +195,102 @@
 </div>
 </div>
 </section>
-<!-- Section 01 // Abstract -->
+<!-- Redesigned Abstract/Problem Section -->
 <section class="py-xl px-gutter bg-white" id="summary">
-<div class="max-w-7xl mx-auto">
+<div class="max-w-[1440px] mx-auto">
 <div class="grid lg:grid-cols-12 gap-xl">
-<!-- Left Content: Metrics/Summary Box (New Style) -->
+<!-- Left Sidebar: Key Definitions -->
 <div class="lg:col-span-4 flex flex-col gap-md">
-<!-- New Style Box for Definition/Summary -->
-<div class="relative bg-surface-container border border-outline-variant p-lg rounded-xl overflow-hidden">
-<div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
-<h4 class="font-label-caps text-sm uppercase tracking-widest text-primary mb-6 font-bold">Key Performance Indices</h4>
-<div class="space-y-8">
+<div class="p-lg border border-white/20 glass-panel rounded-xl shadow-xl bg-white/10 hover:scale-[1.02] hover:shadow-2xl transition-all duration-300">
+<h4 class="font-label-caps text-sm uppercase tracking-widest text-on-surface mb-6 font-bold">Key Definitions</h4>
+<div class="space-y-6">
 <div>
-<h5 class="text-on-surface text-lg font-bold mb-2">DRFP Integration</h5>
-<p class="text-sm text-on-surface-variant leading-relaxed">Hardware-software co-design enabling heterogeneous logical partitioning of the physical register file.</p>
+<h5 class="text-primary text-sm font-bold mb-1">DRFP</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Dynamic Register File Partitioning: Heterogeneous logical partitioning of the physical register file.</p>
 </div>
-<div class="pt-6 border-t border-outline-variant/30">
-<div class="flex items-baseline gap-2 mb-1">
-<span class="text-4xl font-bold text-primary">~1.2%</span>
-<span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+<div>
+<h5 class="text-primary text-sm font-bold mb-1">CSR 0x800</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Active descriptor managing partition base and size mapping for current context.</p>
 </div>
-<div class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant opacity-80">Gate Count Overhead</div>
+<div>
+<h5 class="text-primary text-sm font-bold mb-1">WCET</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Worst-Case Execution Time: The critical metric for safety-critical timing determinism.</p>
 </div>
 </div>
 </div>
+<div class="glass-panel rounded-xl p-6 relative overflow-hidden border border-white/20 shadow-2xl bg-white/5 backdrop-blur-xl hover:scale-[1.02] hover:shadow-2xl transition-all duration-300">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-label-caps text-xs uppercase tracking-widest text-primary font-bold">Latency Decomposition</h4>
+<span class="material-symbols-outlined text-accent animate-pulse">query_stats</span>
 </div>
-<!-- Right Main Content: Title & Text -->
+<div class="relative group">
+<img alt="Interrupt Latency Breakdown" class="w-full h-auto rounded-lg opacity-90 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida/ADBb0ug7webprGX-4EwfWhsxVilOSbe2IW6Ou4vQQ1xhSUz7XkUPnaKnCs5fviijtzqeMzEQW-r8DmcygNeh0em98rzpRxOPl3w13XrnkwmGfp-_KkX-znsLMudCtyYqVjKjt4PKUCtmTrATR2LBmjneaGf3bhefnummHPsm2RVj8eaQyYRY6BbHNpOZpklOvjyk6B_NgJiguYxzXzv_Cy53I26ENieZiK67z2DKQLmDqGI5mCM5Zzf4v83ElYz1KCxK1i98ygTII-OUTB8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/40 to-transparent pointer-events-none"></div>
+</div>
+<div class="mt-6 space-y-4">
+<div class="flex items-center gap-3">
+<div class="h-px flex-1 bg-primary/30"></div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Total Interrupt Latency</span>
+<div class="h-px flex-1 bg-primary/30"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-slate-50 transition-colors cursor-default">
+<div class="text-[9px] font-bold text-accent uppercase mb-1">Hardware</div>
+<div class="text-xs text-on-surface-variant leading-tight">Deterministic Trigger &amp; Entry</div>
+</div>
+<div class="p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-slate-50 transition-colors cursor-default">
+<div class="text-[9px] font-bold text-primary uppercase mb-1">Software</div>
+<div class="text-xs text-on-surface-variant leading-tight">Save • Schedule • Restore</div>
+</div>
+</div>
+</div>
+<div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>
+</div>
+</div>
+<!-- Right Main Content: Title & Two-Column Text -->
 <div class="lg:col-span-8">
 <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-4">Section 01 // Abstract</div>
 <h2 class="text-4xl lg:text-5xl font-bold text-on-background mb-10 leading-tight">
-                        Eliminating the memory-bound bottleneck in context-switching.
-                    </h2>
+                            Eliminating the memory-bound bottleneck in context-switching.
+                        </h2>
 <div class="border-l-2 border-slate-200 pl-8 mb-12">
-<blockquote class="italic text-2xl text-on-surface-variant font-light leading-relaxed">
-                            "Context switching remains a major performance and predictability bottleneck in real-time embedded systems because saving and restoring general-purpose registers is memory-latency bound."
-                        </blockquote>
+<blockquote class="italic text-2xl text-on-surface-variant font-light leading-relaxed max-w-[65ch]">
+                                "Context switching remains a major performance and predictability bottleneck in real-time embedded systems because saving and restoring general-purpose registers is memory-latency bound."
+                            </blockquote>
 </div>
 <div class="grid md:grid-cols-2 gap-xl text-on-surface-variant leading-relaxed text-sm">
-<div class="space-y-4">
+<div class="space-y-4 max-w-[65ch]">
 <p>
-                                Traditional software-only context switching requires saving all N registers to memory, incurring O(N) latency as task complexity grows. While hardware-assisted schemes like shadow register sets achieve constant switch timing, they often impose prohibitive area and power costs impractical for resource-constrained systems.
-                            </p>
+                                    Traditional software-only context switching requires saving all N registers to memory, incurring O(N) latency as task complexity grows. While hardware-assisted schemes like shadow register sets achieve constant switch timing, they often impose prohibitive area and power costs impractical for resource-constrained systems.
+                                </p>
 <p>
-                                We propose a <strong>hardware-software co-designed</strong> mechanism that enables heterogeneous logical partitioning of the register file (RF). This approach is fully transparent to applications, which continue to observe a standard architectural register interface.
-                            </p>
+                                    We propose a <strong>hardware-software co-designed</strong> mechanism that enables heterogeneous logical partitioning of the register file (RF). This 
+                                </p>
 </div>
-<div class="space-y-4">
+<div class="space-y-4 max-w-[65ch]">
 <p>
-                                By extending a 32-bit RISC-V core (CVA6) with additional register storage and two custom machine-mode CSRs, we manage active and staged register windows. On each trap, the core snapshots the active window and switches to a kernel window, eliminating massive memory traffic.
-                            </p>
+                                    approach is fully transparent to applications, which continue to observe a standard architectural register interface.
+                                </p>
+<p>
+                                    By extending a 32-bit RISC-V core (CVA6) with additional register storage and two custom machine-mode CSRs, we manage active and staged register windows. On each trap, the core snapshots the active window and switches to a kernel window, eliminating massive memory traffic.
+                                </p>
 </div>
 </div>
 <!-- Stats Row -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-md mt-16 pt-8 border-t border-slate-100">
-<div>
+<div class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50">
 <div class="text-2xl font-bold text-primary">2 Cyc</div>
 <div class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Handover</div>
 </div>
-<div>
+<div class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50">
 <div class="text-2xl font-bold text-primary">Zero</div>
 <div class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Stack Spillage</div>
 </div>
-<div>
+<div class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50">
 <div class="text-2xl font-bold text-primary">78.5%</div>
 <div class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Traffic Reduction</div>
 </div>
-<div>
+<div class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50">
 <div class="text-2xl font-bold text-primary">100%</div>
 <div class="text-[9px] font-bold uppercase tracking-widest text-slate-400">ISA Compliant</div>
 </div>
@@ -273,21 +301,21 @@
 </section>
 <!-- Architecture & Design -->
 <section class="py-xl px-gutter bg-surface circuit-bg" id="architecture">
-<div class="max-w-7xl mx-auto">
+<div class="max-w-[1440px] mx-auto">
 <div class="text-center mb-xl">
 <h2 class="font-headline-lg text-headline-lg mb-sm">Architectural Design</h2>
 <p class="font-body-lg text-on-surface-variant max-w-3xl mx-auto">Hardware-level modifications to the RISC-V machine state for seamless partition management.</p>
 </div>
-<div class="grid lg:grid-cols-12 gap-lg items-start">
+<div class="grid lg:grid-cols-12 gap-xl items-start">
 <div class="lg:col-span-4 space-y-lg">
-<div class="p-lg bg-white border border-outline-variant rounded-xl academic-shadow">
+<div class="p-lg bg-white border border-outline-variant rounded-xl academic-shadow hover:scale-[1.02] hover:shadow-2xl transition-all duration-300">
 <div class="flex items-center gap-sm mb-sm">
 <span class="px-3 py-1 bg-primary text-on-primary font-code-snippet rounded">0x800</span>
 <h4 class="font-headline-md text-headline-md">CSR_PART_CFG</h4>
 </div>
 <p class="text-sm text-on-surface-variant leading-relaxed">The Partition Configuration Register manages the active bank allocation and defines the split point for the physical register file.</p>
 </div>
-<div class="p-lg bg-white border border-outline-variant rounded-xl academic-shadow">
+<div class="p-lg bg-white border border-outline-variant rounded-xl academic-shadow hover:scale-[1.02] hover:shadow-2xl transition-all duration-300">
 <div class="flex items-center gap-sm mb-sm">
 <span class="px-3 py-1 bg-primary text-on-primary font-code-snippet rounded">0x801</span>
 <h4 class="font-headline-md text-headline-md">CSR_PART_STATUS</h4>
@@ -297,28 +325,28 @@
 </div>
 <div class="lg:col-span-8">
 <div class="space-y-xl">
-<figure class="bg-white p-base border border-outline-variant rounded-xl academic-shadow">
+<figure class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300">
 <img alt="Microarchitecture Diagram" class="w-full rounded-lg" src="https://lh3.googleusercontent.com/aida/ADBb0ujmai_yEyQwa4FLymtIbkQuSHNaOjFQChQ1nDCOyHKuGLDiFii5hhKhNFhjUhIwcMCJWGa702Ayw8ouEY1AZHqDsoiF3RH73TM0Jki0TuSG8JRBgfIaaOCBjeWueQguQWzCFFHEKyYg55UAqXT6oJtseJ8V4Qwqo7uc2DLZgdUbH-anc72GfZC5QyVT501CBJTeQYbRyY4P9dNgm3eQd8iqHSFxsxNGl5JEne6ykQj_vTwRkW8DR7hATECj03t2VzE7GIWJyXAIrQ"/>
-<figcaption class="p-sm text-center font-label-caps text-on-surface-variant text-sm uppercase">Figure 1: Microarchitecture of the partitioned integer register file.</figcaption>
+<figcaption class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase">Figure 1: Microarchitecture of the partitioned integer register file.</figcaption>
 </figure>
-<figure class="bg-white p-base border border-outline-variant rounded-xl academic-shadow">
+<figure class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300">
 <img alt="Architecture Diagram" class="w-full rounded-lg" src="https://lh3.googleusercontent.com/aida/ADBb0uiRaB6aEw8xt5hhdzSyVZaJZRCcmwf8ihChZxmeoY95vfAdc7ocy-3DipaPB2tLaUWPsfHzLErVzwdoNTZoXCimlb5Cau0RKLSK_AGd04YolwwIRGD0OGXeAVp3fNYYNufkqdH6yE_sckQ8kj6Tf8Bd9E1DlGL8UXXqHuSYX_D6S8r555GaDm4dO_u8MWz7koe4zWTDXB6Eg36sA3OOZhV28RDv6O8Pv8ogK02ZMAPBlH9aDYvMnGXuYDLP2bkPGOMizWtTu9JCfCE"/>
-<figcaption class="p-sm text-center font-label-caps text-on-surface-variant text-sm uppercase">Figure 2: Modified RISC-V Datapath with Register Partitioning Logic</figcaption>
+<figcaption class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase">Figure 2: Modified RISC-V Datapath with Register Partitioning Logic</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
 </section>
-<!-- Competitive Landscape -->
+<!-- Competitive Landscape Table Section -->
 <section class="py-xl px-gutter bg-white" id="comparison">
-<div class="max-w-7xl mx-auto">
+<div class="max-w-[1440px] mx-auto">
 <div class="mb-xl">
 <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-4">Section 03 // Competitive Landscape</div>
 <h2 class="text-headline-lg font-bold text-on-background mb-4">Evidence-Constrained Comparison</h2>
 <p class="font-body-md text-on-surface-variant max-w-3xl">Benchmark comparison with representative prior context-switch schemes across hardware overhead and task-switch performance.</p>
 </div>
-<div class="overflow-x-auto border border-outline-variant rounded-xl academic-shadow">
+<div class="overflow-x-auto border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300 bg-white">
 <table class="w-full text-left border-collapse bg-white">
 <thead class="bg-slate-50 border-b border-outline-variant">
 <tr>
@@ -386,7 +414,7 @@
 </section>
 <!-- Testing & Results -->
 <section class="py-xl px-gutter bg-white">
-<div class="max-w-container-max mx-auto">
+<div class="max-w-[1440px] mx-auto">
 <div class="flex flex-col md:flex-row justify-between items-end gap-md mb-xl">
 <div>
 <h2 class="font-headline-lg text-headline-lg">Testing &amp; Benchmarking</h2>
@@ -403,43 +431,36 @@
 </div>
 </div>
 </div>
-<div class="grid lg:grid-cols-2 gap-lg">
-<div class="relative bg-surface-dark rounded-xl overflow-hidden aspect-video flex items-center justify-center p-md">
-<!-- Placeholder for the dark performance graphic from Screen 3 -->
-<img alt="Performance Benchmarks" class="max-w-full rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfzrAjAgiTCn-xmZ6wKGGh4FGMKPAbNYfp1BWsUKi1nfRIUrkkx-8zotEJ7ZARwozePG-XlzDoBxxRbz6digGIGNHTeNb4W7z9bO9oAY1q3MJafjr0RgRrHYF69EeGJy-Nk6KDM0My6JkNBvvv71yOaF5M6r7qAqXrp7PvmJnUDIaq4G6jMqecLCG_nphWkNbIioxBkFmXisJcFzpoVwvOQ0d9HfTYufuCQYUYG10FDRis4MmaQDLOAcUbAZFhWHIyqnfN1jShglYA"/>
+<div class="grid lg:grid-cols-2 gap-xl">
+<div class="relative hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 rounded-xl">
+<img alt="Performance Benchmarks" class="w-full rounded-xl border border-outline-variant academic-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfzrAjAgiTCn-xmZ6wKGGh4FGMKPAbNYfp1BWsUKi1nfRIUrkkx-8zotEJ7ZARwozePG-XlzDoBxxRbz6digGIGNHTeNb4W7z9bO9oAY1q3MJafjr0RgRrHYF69EeGJy-Nk6KDM0My6JkNBvvv71yOaF5M6r7qAqXrp7PvmJnUDIaq4G6jMqecLCG_nphWkNbIioxBkFmXisJcFzpoVwvOQ0d9HfTYufuCQYUYG10FDRis4MmaQDLOAcUbAZFhWHIyqnfN1jShglYA"/>
 </div>
 <div class="flex flex-col justify-center space-y-md">
-<!-- Restyled Box for 2-Cycle Handover Primitive -->
-<div class="p-lg bg-surface-container rounded-2xl border border-outline-variant shadow-sm transition-all hover:shadow-md">
-<div class="flex items-center gap-4 mb-4">
-<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-<span class="material-symbols-outlined text-primary font-bold">bolt</span>
+<div class="p-lg glass-panel rounded-xl border border-white/20 shadow-xl bg-white/10 mb-sm hover:scale-[1.02] hover:shadow-2xl transition-all duration-300">
+<h5 class="font-headline-md text-headline-md mb-sm">2-Cycle Handover Primitive</h5>
+<p class="text-on-surface-variant leading-relaxed max-w-[65ch]">Our custom ISA extension provides a deterministic 2-cycle primitive for handing over control. Unlike standard branch/jump operations that require register spills, the DRFP hardware handles the transition at the fetch stage.</p>
 </div>
-<h5 class="font-headline-md text-headline-md">2-Cycle Handover Primitive</h5>
-</div>
-<p class="text-on-surface-variant leading-relaxed mb-6">Our custom ISA extension provides a deterministic 2-cycle primitive for handing over control. Unlike standard branch/jump operations that require register spills, the DRFP hardware handles the transition at the fetch stage.</p>
-<ul class="space-y-4">
-<li class="flex items-center gap-3">
-<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-<span class="text-sm font-medium">Reduced jitter in real-time control loops by 85%</span>
+<ul class="space-y-sm bg-slate-50 p-6 rounded-xl border border-slate-100 shadow-sm hover:scale-[1.02] hover:shadow-md transition-all duration-300">
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface-variant">Reduced jitter in real-time control loops by 85%</span>
 </li>
-<li class="flex items-center gap-3">
-<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-<span class="text-sm font-medium">Eliminated interrupt latency variance during peak CPU load</span>
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface-variant">Eliminated interrupt latency variance during peak CPU load</span>
 </li>
-<li class="flex items-center gap-3">
-<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-<span class="text-sm font-medium">Verified on FPGA (Xilinx Artix-7) for power and area metrics</span>
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-on-surface-variant">Verified on FPGA (Xilinx Artix-7) for power and area metrics</span>
 </li>
 </ul>
 </div>
 </div>
 </div>
-</div>
 </section>
-<!-- Research Team Section -->
+<!-- Redesigned Research Team Section -->
 <section class="py-xl px-gutter bg-surface-container-lowest" id="team">
-<div class="max-w-7xl mx-auto">
+<div class="max-w-[1440px] mx-auto">
 <div class="text-center mb-xl">
 <h2 class="font-headline-lg text-headline-lg mb-sm">Research Team</h2>
 <p class="font-body-lg text-on-surface-variant">Collaborative effort from the Department of Computer Engineering.</p>
@@ -447,91 +468,82 @@
 <!-- Supervisors -->
 <div class="mb-16">
 <h3 class="font-label-caps text-xs tracking-widest uppercase text-primary mb-10 font-bold border-b border-outline-variant pb-2 inline-block">Faculty Supervisors</h3>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg">
 <!-- Supervisor 1 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
 <img alt="Dr. Isuru Nawinne" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9UzmLxTkcqZU5XF1G_QXMfcNTaPp8MZZ7AVZV6crcpMJ5LK2I3S0SjES8sikgAuCB_tpspSdLt0z4N-h0HUC7q84O0C1M5vuLEkH5FKaS_v8ynkAo44OR-T150dX7j-1ztJ7TIxwfSxVllqYHlUL0qxFJ1IiSGpX4Gcity4ySH9L6M24s10Rnj-DY78NuFjpp47wLsCabQdmsYc5xxysenHJ2rAT_3OhQVfbHOho3zQyqcmI0DoP-kwDVhmbPADJspkoX3Y4dI2fy"/>
 </div>
 </div>
-<h4 class="font-bold text-on-surface">Dr. Isuru Nawinne</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Senior Lecturer</p>
+<h4 class="font-bold text-on-surface text-lg">Dr. Isuru Nawinne</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Senior Lecturer</p>
 </div>
 <!-- Supervisor 2 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
 <img alt="Prof. Roshan Ragel" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaQ0r2125VnKU4_L_Scqxt7ZHXJBiXNBD1qjafRwwEABU21Gup1clgT6G5NJ9HvloqCTO03s3dxSucVPDyfzs7ZxsFmEw7Y4xyo-Hj7dSDp2PHEIBwgoZfQ85958yt-QMVQhCCtKQXmcAXRSF0PHGIhZxJE4hIiV0c3tIn1aE3bhEevQ3BoRlEVdHb_pv2hxGxAuGXDI1vCaRDA_0aMbFQE2LC-M0DgPN5Jl9fpVM9lp3XIU4GTmAE0D9B25kfrKI2IWjYYoGuesTZ"/>
 </div>
 </div>
-<h4 class="font-bold text-on-surface">Prof. Roshan Ragel</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Professor</p>
+<h4 class="font-bold text-on-surface text-lg">Prof. Roshan Ragel</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Professor</p>
 </div>
 <!-- Supervisor 3 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
 <img alt="Dr. Oshani Dayarathne" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8p9x1bStGnPQW-ThfUtRFIZ7K5D56J5RoYO3TsvmTkTnZYMuuUoH-aZPVDlrJjWywIAo2sZkcIEc9PLPXoGsXr7JmjCg5wIPMJHMjEdMm12TetH8glHbFtU0lxSVZYeYUhv-746eWff6EF1a2Bi7twSuir8HnbLJic1q5er-y7jbYBZyItG-cmjHA5HDU2x2TJ7k1qlRbks8RQmBQ677HhjypHwiDky0fhx4lkM8g1vUs3yyxq92hTXnrjfhXFtf4f5WoMCOVyW6s"/>
 </div>
 </div>
-<h4 class="font-bold text-on-surface">Dr. Oshani Dayarathne</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Senior Lecturer</p>
+<h4 class="font-bold text-on-surface text-lg">Dr. Oshani Dayarathne</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Senior Lecturer</p>
 </div>
 <!-- Supervisor 4 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
 <img alt="Heshan Dissanayake" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRqHEdkbRN9njrkXS_pvknkCyYZTOHyYh5TjrDe-yyH_OXtEmoNg1pmGV7-8ddTpItmk0I3ktu0qqDlMyFzt2jKoEmrEM7SmYIVzMZSgqfqWjgmpqrMjVWvsm3KKwT_9WcDxTrw8nkdTK4QUe-ToR4srWdUWl-ZyexEvl0C1JEH--g6g6z1z9uoHmOIYB2X7hrPpR8EJL_Ja2KxORbia_QACbf5fg0f0bZdyvhZZqm0ozwuiZakkU41WGV5Azz74CNLqHsMqek3ml5"/>
 </div>
 </div>
-<h4 class="font-bold text-on-surface">Heshan Dissanayake</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Lecturer (Prob.)</p>
+<h4 class="font-bold text-on-surface text-lg">Heshan Dissanayake</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Lecturer (Prob.)</p>
 </div>
 </div>
 </div>
-<!-- Students - Managed Space & Aligned properly with DataStore images -->
+<!-- Students -->
 <div>
 <h3 class="font-label-caps text-xs tracking-widest uppercase text-primary mb-10 font-bold border-b border-outline-variant pb-2 inline-block">Student Research Group</h3>
-<div class="grid grid-cols-2 md:grid-cols-3 gap-md max-w-5xl">
+<div class="grid grid-cols-2 md:grid-cols-3 gap-lg max-w-5xl">
 <!-- Student 1 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
-<!-- Cropped from IMAGE_8 bottom left -->
-<div class="w-full h-full bg-slate-100 flex items-center justify-center overflow-hidden">
-<img alt="Chethiya Bandara" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlZlX_X4_SIsM0H-Ff4G_E8S1j_P_9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9v"/>
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
+<img alt="Chethiya Bandara" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlZlX_X4_SIsM0H-Ff4G_E8S1j_P_9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9v"/>
 </div>
 </div>
-</div>
-<h4 class="font-bold text-on-surface">Chethiya Bandara</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Undergraduate Researcher</p>
+<h4 class="font-bold text-on-surface text-lg">Chethiya Bandara</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Undergraduate Researcher</p>
 </div>
 <!-- Student 2 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
-<!-- Cropped from IMAGE_8 bottom middle -->
-<div class="w-full h-full bg-slate-100 flex items-center justify-center overflow-hidden">
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
 <img alt="Bimsara Janakantha" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlZlX_X4_SIsM0H-Ff4G_E8S1j_P_9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9v"/>
 </div>
 </div>
-</div>
-<h4 class="font-bold text-on-surface">Bimsara Janakantha</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Undergraduate Researcher</p>
+<h4 class="font-bold text-on-surface text-lg">Bimsara Janakantha</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Undergraduate Researcher</p>
 </div>
 <!-- Student 3 -->
-<div class="group">
-<div class="aspect-square rounded-xl overflow-hidden bg-primary/5 mb-4 p-1 relative border border-outline-variant/30">
-<div class="bg-white w-full h-full rounded-lg overflow-hidden">
-<!-- Cropped from IMAGE_8 bottom right -->
-<div class="w-full h-full bg-slate-100 flex items-center justify-center overflow-hidden">
-<img alt="Kavindu Methpura" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlZlX_X4_SIsM0H-Ff4G_E8S1j_P_9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9v"/>
+<div class="group hover:scale-[1.05] hover:shadow-xl transition-all duration-300 p-4 rounded-xl bg-white border border-transparent hover:border-slate-100">
+<div class="aspect-square rounded-lg overflow-hidden bg-primary mb-4 p-1 relative">
+<div class="bg-white w-full h-full rounded-md overflow-hidden">
+<img alt="Kavindu Methpura" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlZlX_X4_SIsM0H-Ff4G_E8S1j_P_9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9vV9v"/>
 </div>
 </div>
-</div>
-<h4 class="font-bold text-on-surface">Kavindu Methpura</h4>
-<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Undergraduate Researcher</p>
+<h4 class="font-bold text-on-surface text-lg">Kavindu Methpura</h4>
+<p class="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant mt-1">Undergraduate Researcher</p>
 </div>
 </div>
 </div>
@@ -540,24 +552,25 @@
 <!-- CTA / Resources -->
 <section class="py-xl px-gutter bg-primary-container text-on-primary relative overflow-hidden" id="publications">
 <div class="absolute inset-0 opacity-10 circuit-bg"></div>
-<div class="max-w-container-max mx-auto text-center relative z-10">
+<div class="max-w-[1440px] mx-auto text-center relative z-10">
 <h2 class="font-display-xl text-display-xl mb-md">Open Source &amp; Documentation</h2>
 <p class="font-body-lg mb-lg max-w-2xl mx-auto opacity-90">Access our RTL implementation, benchmark suite, and full technical documentation on GitHub. We welcome contributions and peer reviews from the RISC-V community.</p>
 <div class="flex flex-wrap justify-center gap-md">
-<a class="bg-white text-primary px-10 py-5 rounded font-label-caps uppercase text-lg hover:bg-surface-bright transition-all flex items-center gap-sm" href="https://github.com">
+<a class="bg-white text-primary px-10 py-5 rounded font-label-caps uppercase text-lg hover:bg-surface-bright transition-all flex items-center gap-sm hover:scale-[1.02] hover:shadow-lg" href="https://github.com">
 <span class="material-symbols-outlined">code</span>
-                    Explore on GitHub
-                </a>
-<a class="border-2 border-white/30 text-white px-10 py-5 rounded font-label-caps uppercase text-lg hover:bg-white/10 transition-all flex items-center gap-sm" href="#">
+                        Explore on GitHub
+                    </a>
+<a class="border-2 border-white/30 text-white px-10 py-5 rounded font-label-caps uppercase text-lg hover:bg-white/10 transition-all flex items-center gap-sm hover:scale-[1.02] hover:shadow-lg" href="#">
 <span class="material-symbols-outlined">description</span>
-                    Download Paper
-                </a>
+                        Download Paper
+                    </a>
 </div>
 </div>
 </section>
 </main>
+<!-- Footer -->
 <footer class="bg-slate-50 border-t border-slate-200 w-full py-12">
-<div class="flex flex-col md:flex-row justify-between items-center px-8 gap-6 max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 gap-6 max-w-[1440px] mx-auto">
 <div>
 <div class="font-bold text-slate-900 font-['Space_Grotesk'] text-lg mb-2">RISC-V Research Project</div>
 <p class="text-slate-500 font-['Space_Grotesk'] text-sm">© 2024 RISC-V Research Project. All rights reserved.</p>
