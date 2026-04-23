@@ -1,0 +1,12 @@
+
+[BENCHMARK] Running Matrix Multiplication (16x16)
+[MODE] Hardware Accelerated (HRW)
+  Total Instructions: 136937
+
+[MODE] Standard Software Switch (Simulated)
+  Total Instructions: 150169
+
+=== FINAL ANALYSIS ===
+Hardware (HRW) Cost: 136937 inst
+Software (Std) Cost: 150169 inst
+Throughput Gain: 1.0x

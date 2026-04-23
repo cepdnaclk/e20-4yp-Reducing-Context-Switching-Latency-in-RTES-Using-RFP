@@ -1,0 +1,12 @@
+
+=== REAL WORKLOAD STRESS TEST ===
+Running BASELINE (Software Save/Restore)... AAAAAAAAAADone.
+  Min: 5007 cycles
+  Max: 5008 cycles
+  Avg: 5007 cycles
+
+Running PROPOSED (Hardware Windows)... AAAAAAAAAADone.
+  Min: 4749 cycles
+  Max: 4750 cycles
+  Avg: 4749 cycles
+

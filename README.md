@@ -1,27 +1,252 @@
-# Reducing Context Switching Latency in Real-Time Embedded Systems Using Register File Partitioning
+# Reducing Context-Switching Latency in RTES Using Register-File Partitioning
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![RISC-V](https://img.shields.io/badge/RISC-V-ISA-009688?logo=riscv)](https://riscv.org)
-[![Docker](https://img.shields.io/badge/Docker-Environment-0db7ed?logo=docker)](docker/)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Architecture](https://img.shields.io/badge/Architecture-RISC--V-informational)
+![RTOS](https://img.shields.io/badge/RTOS-FreeRTOS-blue)
+![RTL](https://img.shields.io/badge/RTL-SystemVerilog-orange)
+![Simulator](https://img.shields.io/badge/Simulator-Verilator-yellow)
+![ISS](https://img.shields.io/badge/ISS-Spike-lightgrey)
+![Language](https://img.shields.io/badge/Primary%20Language-C-00599C)
 
-## Research Context
+Research repository for a hardware-software co-design that reduces context-switch overhead in real-time embedded systems on RISC-V by combining:
 
-Context switching latency poses a critical challenge in real-time embedded systems, where deterministic task switching is essential for meeting hard deadlines. Traditional context switching requires full register file save/restore sequences—introducing non-deterministic overhead that scales with register count and disrupts pipeline execution. This problem is particularly acute in RISC-V embedded profiles (RV32E/EMC), where minimal register sets still incur significant cycle penalties during frequent task switches in RTOS environments.
+- RTL support for partitioned integer register-file windows in CVA6
+- FreeRTOS kernel integration for partition-aware scheduling paths
+- Bare-metal and RTOS regression suites for cycle and behavior validation
+- Reproducible scripts for evaluation artifacts and regression evidence
 
-Prior research has explored architectural techniques to mitigate this overhead:
-- **Register windows** (SPARC, IA-64): Overlapping register sets reduce spill/fill operations but introduce complexity in window management and limit task count scalability
-- **Banked registers** (ARM exception levels): Dedicated register sets per privilege mode eliminate save/restore for mode transitions but remain inaccessible to user-level task switching
-- **Shadow register sets** (MIPS MT): Hardware-threaded register replication supports concurrent contexts but increases silicon area proportionally to thread count
+## 1) Overview
 
-Recent literature (Abdallah et al., 2020; Mariani et al., 2022) identifies a research gap in *lightweight*, *static partitioning* schemes suitable for deeply embedded systems with strict area constraints. Unlike dynamic windowing or full replication, partitioning divides the physical register file into dedicated subsets assigned to specific tasks or priority levels—eliminating save/restore overhead entirely for partitioned registers while maintaining RISC-V's minimalist philosophy. This approach aligns with emerging interest in *application-specific ISA customization* for real-time workloads (Waterman & Asanović, 2021), where predictable latency outweighs general-purpose flexibility.
+The main hypothesis is that context-switch overhead in RT systems is dominated by software save and restore of general-purpose registers. This project evaluates whether partition-aware switching can remove most of that memory traffic on critical paths while keeping software compatibility for non-partitioned tasks.
 
-This project investigates a hardware-aware register file partitioning scheme for RISC-V, evaluating whether static allocation of register subsets to critical real-time tasks can eliminate context switch overhead without compromising the base ISA's simplicity or requiring full register replication.
+The implementation includes:
 
-## Research Objective
+- CVA6 RTL and verification flows in `cva6/`
+- FreeRTOS port integration in `FreeRTOS-Kernel/`
+- Spike support and smoke checks in `riscv-isa-sim/`
 
-To design, implement, and empirically evaluate a register file partitioning mechanism for RISC-V that reduces context switch latency by:
-1. **Eliminating save/restore operations** for partitioned registers through static hardware allocation to specific tasks or priority levels
-2. **Preserving software transparency** via minimal CSR extensions that control partition boundaries without modifying the base integer instruction set
-3. **Maintaining area efficiency** by avoiding full register replication—partitioning shares physical storage while enforcing access isolation through decode logic
+## 2) Repository Structure
 
-The implementation targets the Spike instruction set simulator augmented with partitioning logic and access control mechanisms, enabling cycle-accurate evaluation of context switch latency under realistic RTOS workloads. This methodology follows established practices for pre-silicon architectural exploration in RISC-V research (Celio et al., 2021), allowing quantitative comparison against conventional software-managed context switching.
+```text
+<project-root>/
+  cva6/                 RTL, DV, regression, context-switch tests
+  FreeRTOS-Kernel/      FreeRTOS kernel and CVA6 demos
+  riscv-isa-sim/        Spike fork and research test binaries
+```
+
+Primary evaluation entrypoint:
+
+- `cva6/verif/tests/custom/context_switch/reproduce_ctxsw_eval.sh`
+
+## 3) Environment and Prerequisites
+
+Recommended environment:
+
+- Linux shell or Docker container
+- RISC-V GNU toolchain with `riscv-none-elf-gcc`
+- Verilator build dependencies required by CVA6
+
+Required environment variables:
+
+```bash
+export RISCV=/opt/riscv
+export PATH="${RISCV}/bin:${PATH}"
+```
+
+Common defaults used by scripts:
+
+- `DV_TARGET=cv32a6_imac_sv32`
+- `RUN_TIMEOUT_S=180`
+- `ISS_TICKS=5000000`
+- `NTB_SEED=20260417`
+- `SEED=20260417`
+
+## 4) Quick Start: Reproducible End-to-End Sweep
+
+From the `cva6` directory:
+
+```bash
+cd /path/to/project-root/cva6
+bash verif/tests/custom/context_switch/reproduce_ctxsw_eval.sh --project-root /path/to/project-root
+```
+
+What this runs:
+
+1. Bare-metal context-switch regression  
+   `verif/regress/context-switch-baremetal.sh`
+2. Integer-only register-footprint assay  
+   `verif/tests/custom/context_switch/measure_task_register_footprint.sh`
+3. FreeRTOS CVA6 regression  
+   `verif/regress/freertos-windowed-cva6.sh`
+
+Optional flags:
+
+- `--build-model` rebuilds Verilator model first
+- `--with-spike` builds Spike and runs research-tests smoke pass
+- `--skip-freertos` runs bare-metal plus footprint only
+
+## 5) Manual Run Paths
+
+### 5.1 Bare-metal campaign
+
+```bash
+cd /path/to/project-root/cva6
+DV_TARGET=cv32a6_imac_sv32 BUILD_MODEL=0 RUN_TIMEOUT_S=180 ISS_TICKS=5000000 \
+bash verif/regress/context-switch-baremetal.sh
+```
+
+### 5.2 FreeRTOS CVA6 suite
+
+```bash
+cd /path/to/project-root/cva6
+bash verif/regress/freertos-windowed-cva6.sh
+```
+
+This compiles and runs demos from `FreeRTOS-Kernel/demo/CVA6_FYP`, including integrity, sequence, borrow, yield-latency, and matrix-string latency variants.
+
+### 5.3 Integer-only register-footprint assay
+
+```bash
+cd /path/to/project-root/cva6
+export RISCV=/opt/riscv
+export PATH="${RISCV}/bin:${PATH}"
+bash verif/tests/custom/context_switch/measure_task_register_footprint.sh
+```
+
+The assay compiles `register_footprint_tasks.c` and emits static GPR usage summaries for:
+
+- `pid`
+- `aha_mont64`
+- `crc32`
+- `cubic`
+- `edn`
+- `huffbench`
+- `matmult_int`
+- `minver`
+- `iot_st`
+
+## 6) Expected Results
+
+Validated bare-metal cycle summaries from the current campaign:
+
+- `rr2_window_switch`: `mcycle_dec min/max/avg = 2/2/2`
+- `scale4_window_switch`: `2/2/2`
+- `scale4_mixed_window_switch`: `2/2/2`
+- `latency_hw_window`: `2/2/2`
+- `latency_baseline_sw`: `62/96/62`
+- `spill_oldest_window_switch`: `1134/2300/1571`
+- `stress_rt_window100`: `107/1249/709`
+- `stress_rt_baseline100`: `388/696/393`
+
+Interpretation guidance:
+
+- Windowed micro-tests should show very low fixed switch deltas
+- Baseline software save and restore is higher and more variable
+- Stress cases include spill pressure and show wider distributions
+
+## 7) Output Artifacts
+
+### 7.1 Regression output directories
+
+- Bare-metal logs and signatures  
+  `cva6/verif/sim/out_<date>/ctxsw_baremetal/`
+- FreeRTOS regression outputs  
+  `cva6/verif/sim/out_<date>/freertos_cva6/`
+- Register-footprint assay outputs  
+  `cva6/verif/sim/out_<date>/ctxsw_register_footprint/`
+
+### 7.2 Register-footprint files
+
+- `register_footprint_counts.csv`
+- `register_footprint_report.md`
+- `register_footprint_tasks.<target>.S`
+
+## 8) Key Measurement Signals
+
+The bare-metal tests write signature values consumed by regression scripts:
+
+- `0x120/0x124/0x128`: `mcycle` min, max, avg
+- `0x12c..0x14c`: workload and trap phase counters
+
+Printed summaries usually include:
+
+- `simulator_cycles`
+- `mcycle_hex` and `mcycle_dec` triplets
+- `breakdown_dec_sum`
+- `breakdown_dec_avg_per_iter`
+
+## 9) Troubleshooting
+
+### Toolchain not found
+
+Symptom:
+
+- `riscv-none-elf-gcc not found in PATH`
+
+Fix:
+
+```bash
+export RISCV=/opt/riscv
+export PATH="${RISCV}/bin:${PATH}"
+```
+
+### Missing Verilator harness
+
+Symptom:
+
+- Missing `cva6/work-ver/Variane_testharness`
+
+Fix:
+
+```bash
+cd /path/to/project-root/cva6
+make verilate verilator="verilator --no-timing" target=cv32a6_imac_sv32
+```
+
+Or run reproducible sweep with:
+
+```bash
+bash verif/tests/custom/context_switch/reproduce_ctxsw_eval.sh --build-model --project-root /path/to/project-root
+```
+
+### FreeRTOS regression failures
+
+Checks:
+
+- Rebuild demos from `FreeRTOS-Kernel/demo/CVA6_FYP`
+- Confirm target ISA and ABI match the configured `DV_TARGET`
+- Inspect latest logs under `verif/sim/out_<date>/freertos_cva6/`
+
+### Test hangs or unexpected behavior
+
+Checks:
+
+- Confirm `*** SUCCESS ***` markers in log files
+- Inspect generated traces in output directories
+- Verify script layout assumptions: sibling `cva6`, `FreeRTOS-Kernel`, and `riscv-isa-sim`
+
+## 10) Reproducibility and Publishing Checklist
+
+Before release:
+
+1. Run `reproduce_ctxsw_eval.sh` and archive the resulting `verif/sim/out_*` trees
+2. Re-run the register-footprint assay if kernels or toolchain changed, and keep `register_footprint_*.csv` / `register_footprint_report.md` with the run logs
+3. Record command line, `DV_TARGET`, seeds, and date in experiment notes
+
+## 11) Additional Internal Documentation
+
+- `cva6/verif/tests/custom/context_switch/README.md`
+- `cva6/verif/tests/custom/context_switch/REPRODUCIBLE_RUN_README.md`
+- `cva6/verif/tests/custom/context_switch/JOURNAL_EVALUATION_SUPPLEMENT.md`
+- `FreeRTOS-Kernel/demo/CVA6_FYP/README.md`
+
+## 12) Scope Notes
+
+- Current campaign focuses on integer-only workload analysis for register-footprint assays
+- Cycle claims are taken from CVA6 RTL simulation outputs
+- Spike is used for functional and smoke validation workflows, not primary cycle reporting
+
+## 13) GitHub “Contributors” and authorship
+
+GitHub’s **Contributors** view counts **commit authors** on the default branch. Because the subtrees were added with their **entire** histories, that list includes **every** author who has ever committed to the vendored CVA6, Spike, and FreeRTOS trees—not only people who worked on this FYP.
+

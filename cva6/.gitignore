@@ -1,0 +1,77 @@
+# Editor and OS artifacts
+*.swp
+*.swo
+*nfs*
+.DS_Store
+Thumbs.db
+
+# Python/cache artifacts
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Generic build and run outputs
+build/
+site/
+install/
+/tmp*
+stdout/
+work/
+work-ver/
+work-dpi/
+work-*/
+xrun_results/
+covhtmlreport/
+
+# Simulation/wave/log outputs
+transcript
+uart
+*.ucdb
+*.ini
+*.wlf
+*.vstf
+wlft*
+*.sig
+*.dtb
+*.dasm
+*.vcd
+*.fsdb
+*.log
+*.out
+*.jou
+*.o
+
+# Local/generated project files
+.moore
+.bender/
+Bender.lock
+/Bender.local
+src/moore.sv
+/core/include/hwconfig_config_pkg.sv
+/config/gen_from_riscv_config/hwconfig/linker/link.ld
+/config/gen_from_riscv_config/hwconfig/spike/spike.yaml
+/encaps.traces
+/iti.traces
+/verif/sim/encaps.traces
+/verif/sim/iti.traces
+/verif/sim/verilator.fst.hier
+
+# FPGA generated artifacts
+corev_apu/fpga/work-fpga/
+corev_apu/fpga/reports/
+corev_apu/fpga/scripts/add_sources.tcl
+corev_apu/fpga/ariane.xpr
+corev_apu/fpga/ariane.cache/
+corev_apu/fpga/ariane.hw/
+corev_apu/fpga/.Xil/
+corev_apu/fpga/mode*
+
+# External/toolchain local outputs
+tb/riscv-isa-sim/
+/tools/
+/util/toolchain-builder/src/
+/util/toolchain-builder/build/
+
+# Keep ISA manual build directory visible in listings.
+!/vendor/riscv/riscv-isa-manual/build/
+!/vendor/riscv/riscv-isa-manual/build/*

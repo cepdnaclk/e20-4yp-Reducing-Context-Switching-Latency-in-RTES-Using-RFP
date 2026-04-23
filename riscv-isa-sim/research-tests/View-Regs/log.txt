@@ -1,0 +1,61 @@
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000204   x2: 0xffffffff80001300   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0x00000000   x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000038   x2: 0xffffffff800012d0   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0xffffffffbbbb0003   x4: 0xffffffffbbbb0004 
+=================================================
+
+
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000038   x2: 0xffffffff800012d0   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0xffffffffbbbb0003   x4: 0xffffffffbbbb0004 
+=================================================
+
+
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000038   x2: 0xffffffff80001300   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0xffffffffbbbb0003   x4: 0xffffffffbbbb0004 
+=================================================
+
+
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000038   x2: 0xffffffff800012d0   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0xffffffffbbbb0003   x4: 0xffffffffbbbb0004 
+=================================================
+
+
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000038   x2: 0xffffffff800012d0   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0xffffffffbbbb0003   x4: 0xffffffffbbbb0004 
+=================================================
+
+
+[HARDWARE DUMP] Physical Register File State:
+=================================================
+Window 0 (Task A):
+  x1: 0xffffffff80000038   x2: 0xffffffff80001300   x3: 0xffffffffaaaa0003   x4: 0xffffffffaaaa0004 
+Window 1 (Task B):
+  x1: 0x00000000   x2: 0x00000000   x3: 0xffffffffbbbb0003   x4: 0xffffffffbbbb0004 
+=================================================

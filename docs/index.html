@@ -1360,7 +1360,7 @@
               href="#"
             >
               <span class="material-symbols-outlined">description</span>
-              Download Paper
+              Paper Coming Soon
             </a>
           </div>
         </div>
@@ -1378,7 +1378,7 @@
             RISC-V Research Project
           </div>
           <p class="text-slate-500 font-['Space_Grotesk'] text-sm">
-            © 2024 RISC-V Research Project. All rights reserved.
+            © 2026 RISC-V Research Project. All rights reserved.
           </p>
         </div>
         <div class="flex gap-8">
@@ -1389,21 +1389,141 @@
           >
           <a
             class="text-slate-500 font-['Space_Grotesk'] text-sm hover:text-cyan-600 transition-colors hover:underline"
-            href="https://github.com"
+            href="https://github.com/cepdnaclk/e20-4yp-Reducing-Context-Switching-Latency-in-RTES-Using-RFP"
             >Source Code</a
           >
           <a
             class="text-slate-500 font-['Space_Grotesk'] text-sm hover:text-cyan-600 transition-colors hover:underline"
             href="#"
+            data-modal-target="contact-modal"
             >Contact</a
           >
           <a
             class="text-slate-500 font-['Space_Grotesk'] text-sm hover:text-cyan-600 transition-colors hover:underline"
             href="#"
+            data-modal-target="privacy-modal"
             >Privacy Policy</a
           >
         </div>
       </div>
     </footer>
+
+    <div
+      id="contact-modal"
+      class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/50 px-4"
+      aria-hidden="true"
+    >
+      <div class="w-full max-w-xl rounded-xl bg-white p-6 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-['Space_Grotesk'] text-xl font-bold text-slate-900">
+            Contact
+          </h3>
+          <button
+            type="button"
+            class="text-slate-500 hover:text-cyan-600"
+            data-modal-close
+            aria-label="Close contact popup"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p
+          class="font-['Space_Grotesk'] text-sm text-slate-600 leading-relaxed"
+        >
+          Reach the team via:
+        </p>
+        <div class="mt-3 space-y-2 font-['Space_Grotesk'] text-sm">
+          <a
+            class="block text-cyan-700 hover:underline"
+            href="mailto:e20032@eng.pdn.ac.lk"
+            >e20032@eng.pdn.ac.lk</a
+          >
+          <a
+            class="block text-cyan-700 hover:underline"
+            href="mailto:e20157@eng.pdn.ac.lk"
+            >e20157@eng.pdn.ac.lk</a
+          >
+          <a
+            class="block text-cyan-700 hover:underline"
+            href="mailto:e20254@eng.pdn.ac.lk"
+            >e20254@eng.pdn.ac.lk</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="privacy-modal"
+      class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/50 px-4"
+      aria-hidden="true"
+    >
+      <div class="w-full max-w-xl rounded-xl bg-white p-6 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-['Space_Grotesk'] text-xl font-bold text-slate-900">
+            Privacy Policy
+          </h3>
+          <button
+            type="button"
+            class="text-slate-500 hover:text-cyan-600"
+            data-modal-close
+            aria-label="Close privacy policy popup"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p
+          class="font-['Space_Grotesk'] text-sm text-slate-600 leading-relaxed"
+        >
+          This website is for project information only. We do not intentionally
+          collect personal data through this page, and we do not sell or share
+          visitor data with third parties.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const openModal = (id) => {
+          const modal = document.getElementById(id);
+          if (!modal) return;
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          modal.setAttribute("aria-hidden", "false");
+        };
+
+        const closeModal = (modal) => {
+          if (!modal) return;
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          modal.setAttribute("aria-hidden", "true");
+        };
+
+        document.querySelectorAll("[data-modal-target]").forEach((trigger) => {
+          trigger.addEventListener("click", (event) => {
+            event.preventDefault();
+            openModal(trigger.getAttribute("data-modal-target"));
+          });
+        });
+
+        document.querySelectorAll("[data-modal-close]").forEach((button) => {
+          button.addEventListener("click", () => {
+            closeModal(button.closest("[id$='-modal']"));
+          });
+        });
+
+        document.querySelectorAll("[id$='-modal']").forEach((modal) => {
+          modal.addEventListener("click", (event) => {
+            if (event.target === modal) closeModal(modal);
+          });
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key !== "Escape") return;
+          document.querySelectorAll("[id$='-modal']").forEach((modal) => {
+            if (!modal.classList.contains("hidden")) closeModal(modal);
+          });
+        });
+      })();
+    </script>
   </body>
 </html>

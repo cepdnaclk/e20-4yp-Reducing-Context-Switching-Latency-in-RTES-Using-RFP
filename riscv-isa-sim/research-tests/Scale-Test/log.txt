@@ -1,0 +1,183 @@
+[TASK 0] Kernel Started. Cycling through tasks...
+[TASK 0] Switching...
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x00000000  x2: 0x00000000  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x00000000  x2: 0x00000000  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x00000000  x2: 0x00000000  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x00000000  x2: 0x00000000  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x00000000  x2: 0x00000000  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x00000000  x2: 0x00000000  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+[TASK 0] Switching...
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+[TASK 0] Switching...
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+
+[HARDWARE DUMP] Multi-Window Scalability Test:
+=================================================
+Window 0 (Task 0 - Kernel) [Base 0 | Size 32]:
+ x1: 0xffffffff80000038  x2: 0xffffffff800012b0  x3: 0x00000000  x4: 0x00000000 
+Window 1 (Task 1 - Nano) [Base 32 | Size 10]:
+ x1: 0x11111111  x2: 0x11112222  x3: 0x00000000  x4: 0x00000000 
+Window 2 (Task 2 - Nano) [Base 42 | Size 10]:
+ x1: 0x22221111  x2: 0x22222222  x3: 0x00000000  x4: 0x00000000 
+Window 3 (Task 3 - Nano) [Base 52 | Size 10]:
+ x1: 0x33331111  x2: 0x33332222  x3: 0x00000000  x4: 0x00000000 
+=================================================
+
+[TASK 0] Done. Exiting.
+
+
+Scalability Test: 4 Simultaneous Windows
+
+1. The "Cold Start" (First Switch)
+
+    Window 0 (Kernel): Active.
+    Windows 1, 2, 3: Empty (0x00000000).
+    Status: System initialized correctly.
+
+2. The "Fill" Phase (Cycle 1)
+
+    Window 1 fills: You see x1: 0x11111111 appear.
+    Window 2 fills: You see x1: 0x22221111 appear, while Window 1 stays safe.
+    Window 3 fills: You see x1: 0x33331111 appear, while Windows 1 & 2 stay safe.
+
+3. The "Steady State" (Full Saturation) By the end of the log , look at the state of the machine:
+
+    Window 0 (Base 0, Size 32): Running the Kernel.
+    Window 1 (Base 32, Size 10): Holding Task 1 state (0x1111...).
+    Window 2 (Base 42, Size 10): Holding Task 2 state (0x2222...).
+    Window 3 (Base 52, Size 10): Holding Task 3 state (0x3333...).
