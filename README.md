@@ -28,21 +28,39 @@ The implementation targets the Spike instruction set simulator augmented with pa
 
 ## Keeping Sub-Repos in Sync
 
-This repository tracks three external codebases as git subtrees:
-- `cva6/` from remote `cva6-local`, branch `reasearch`
-- `riscv-isa-sim/` from remote `spike-local`, branch `research-dynamic-partitions-FreeRTOS-SP`
-- `FreeRTOS-Kernel/` from remote `freertos-local`, branch `fyp-rfp-4`
+This repository tracks three external codebases as **git subtrees**. The **source of truth** for each subtree is your GitHub fork (so work survives even if you delete local working copies, as long as it was pushed):
 
-Before pulling updates (or after cloning this main repo on a new machine), configure the local source remotes:
+- [ChethiyaB/cva6](https://github.com/ChethiyaB/cva6) → `cva6/`
+- [ChethiyaB/riscv-isa-sim](https://github.com/ChethiyaB/riscv-isa-sim) → `riscv-isa-sim/`
+- [ChethiyaB/FreeRTOS-Kernel](https://github.com/ChethiyaB/FreeRTOS-Kernel) → `FreeRTOS-Kernel/`
+
+Remotes in this repo are named `cva6-local`, `spike-local`, and `freertos-local` (they point at those URLs by default).
+
+**Default branches** used for subtree pulls (override with env vars if you rename branches on the forks):
+
+| Subtree | Remote name | Default branch | Override env |
+|---------|-------------|----------------|--------------|
+| `cva6/` | `cva6-local` | `reasearch` | `CVA6_SUBTREE_BRANCH` |
+| `riscv-isa-sim/` | `spike-local` | `research-dynamic-partitions-FreeRTOS-SP` | `SPIKE_SUBTREE_BRANCH` |
+| `FreeRTOS-Kernel/` | `freertos-local` | `fyp-rfp-4` | `FREERTOS_SUBTREE_BRANCH` |
+
+**Workflow:** commit and **push** on the fork branch you use for that subtree, then in this repository:
 
 ```bash
-./scripts/setup-subrepo-remotes.sh
+./scripts/setup-subrepo-remotes.sh   # once per clone; defaults to HTTPS forks above
+./scripts/update-subrepos.sh
 ```
 
-After you add new commits in those source repositories, update this main repo with:
+To point remotes at local clones instead (optional):
 
 ```bash
-./scripts/update-subrepos.sh
+USE_LOCAL_CLONES=1 ./scripts/setup-subrepo-remotes.sh
+```
+
+To use different fork URLs:
+
+```bash
+CVA6_REMOTE_URL="https://github.com/you/cva6.git" ./scripts/setup-subrepo-remotes.sh
 ```
 
 If you prefer one squashed commit per subtree update:
@@ -50,6 +68,8 @@ If you prefer one squashed commit per subtree update:
 ```bash
 ./scripts/update-subrepos.sh --squash
 ```
+
+**Subtree note:** `git subtree pull` must follow the **same branch** that was used when the subtree was first added (or a descendant of that history). If your fork’s default branch is `master` but the subtree tracks `reasearch`, push your work to a branch named `reasearch` on the fork (or set `CVA6_SUBTREE_BRANCH` to match what you actually push).
 
 You can also update a single subtree manually, for example:
 
