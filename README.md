@@ -246,18 +246,7 @@ Before release:
 - Cycle claims are taken from CVA6 RTL simulation outputs
 - Spike is used for functional and smoke validation workflows, not primary cycle reporting
 
-## 13) Keeping subtrees in sync
-
-This monorepo vendors **cva6**, **riscv-isa-sim**, and **FreeRTOS-Kernel** with `git subtree` (full upstream histories). After clone, point remotes at your forks and pull updates with the helper scripts in `scripts/` at the repository root, for example:
-
-```bash
-./scripts/setup-subrepo-remotes.sh
-./scripts/update-subrepos.sh
-```
-
-For a single squashed commit per update, use `./scripts/update-subrepos.sh --squash`. Branches and remote names are defined in those scripts; adjust there if your fork uses different default branch names.
-
-## 14) GitHub “Contributors” and authorship
+## 13) GitHub “Contributors” and authorship
 
 GitHub’s **Contributors** view counts **commit authors** on the default branch. Because the subtrees were added with their **entire** histories, that list includes **every** author who has ever committed to the vendored CVA6, Spike, and FreeRTOS trees—not only people who worked on this FYP.
 
