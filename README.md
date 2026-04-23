@@ -13,7 +13,7 @@ Research repository for a hardware-software co-design that reduces context-switc
 - RTL support for partitioned integer register-file windows in CVA6
 - FreeRTOS kernel integration for partition-aware scheduling paths
 - Bare-metal and RTOS regression suites for cycle and behavior validation
-- Reproducible scripts for evaluation artifacts used in the paper
+- Reproducible scripts for evaluation artifacts and regression evidence
 
 ## 1) Overview
 
@@ -24,7 +24,6 @@ The implementation includes:
 - CVA6 RTL and verification flows in `cva6/`
 - FreeRTOS port integration in `FreeRTOS-Kernel/`
 - Spike support and smoke checks in `riscv-isa-sim/`
-- Paper sources and generated tables in `Paper/`
 
 ## 2) Repository Structure
 
@@ -33,8 +32,6 @@ The implementation includes:
   cva6/                 RTL, DV, regression, context-switch tests
   FreeRTOS-Kernel/      FreeRTOS kernel and CVA6 demos
   riscv-isa-sim/        Spike fork and research test binaries
-  Paper/                Manuscript and generated evaluation tables
-  web-page/             Project website assets
 ```
 
 Primary evaluation entrypoint:
@@ -164,11 +161,6 @@ Interpretation guidance:
 - `register_footprint_report.md`
 - `register_footprint_tasks.<target>.S`
 
-### 7.3 Paper-integrated generated files
-
-- `Paper/generated/register_footprint_rows.tex`
-- `Paper/generated/register_footprint_summary.tex`
-
 ## 8) Key Measurement Signals
 
 The bare-metal tests write signature values consumed by regression scripts:
@@ -235,11 +227,11 @@ Checks:
 
 ## 10) Reproducibility and Publishing Checklist
 
-Before paper update or release:
+Before release:
 
 1. Run `reproduce_ctxsw_eval.sh` and archive output folders
 2. Regenerate register-footprint CSV and TeX files
-3. Confirm `Paper/main.tex` consumes updated generated artifacts
+3. Confirm generated assay outputs are archived with the run logs
 4. Record command line, target, seeds, and date in experiment notes
 
 ## 11) Additional Internal Documentation
