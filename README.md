@@ -229,10 +229,9 @@ Checks:
 
 Before release:
 
-1. Run `reproduce_ctxsw_eval.sh` and archive output folders
-2. Regenerate register-footprint CSV and TeX files
-3. Confirm generated assay outputs are archived with the run logs
-4. Record command line, target, seeds, and date in experiment notes
+1. Run `reproduce_ctxsw_eval.sh` and archive the resulting `verif/sim/out_*` trees
+2. Re-run the register-footprint assay if kernels or toolchain changed, and keep `register_footprint_*.csv` / `register_footprint_report.md` with the run logs
+3. Record command line, `DV_TARGET`, seeds, and date in experiment notes
 
 ## 11) Additional Internal Documentation
 
@@ -247,74 +246,18 @@ Before release:
 - Cycle claims are taken from CVA6 RTL simulation outputs
 - Spike is used for functional and smoke validation workflows, not primary cycle reporting
 
+## 13) Keeping subtrees in sync
 
-## 13) Keeping sub-repos in sync (git subtrees)
-
-This repository tracks three external codebases as **git subtrees**. The **source of truth** for each subtree is your GitHub fork (so work survives even if you delete local working copies, as long as it was pushed):
-
-- [ChethiyaB/cva6](https://github.com/ChethiyaB/cva6) → `cva6/`
-- [ChethiyaB/riscv-isa-sim](https://github.com/ChethiyaB/riscv-isa-sim) → `riscv-isa-sim/`
-- [ChethiyaB/FreeRTOS-Kernel](https://github.com/ChethiyaB/FreeRTOS-Kernel) → `FreeRTOS-Kernel/`
-
-Remotes in this repo are named `cva6-local`, `spike-local`, and `freertos-local` (they point at those URLs by default).
-
-**Default branches** used for subtree pulls (override with env vars if you rename branches on the forks):
-
-| Subtree | Remote name | Default branch | Override env |
-|---------|-------------|----------------|--------------|
-| `cva6/` | `cva6-local` | `reasearch` | `CVA6_SUBTREE_BRANCH` |
-| `riscv-isa-sim/` | `spike-local` | `research-dynamic-partitions-FreeRTOS-SP` | `SPIKE_SUBTREE_BRANCH` |
-| `FreeRTOS-Kernel/` | `freertos-local` | `fyp-rfp-4` | `FREERTOS_SUBTREE_BRANCH` |
-
-**Workflow:** commit and **push** on the fork branch you use for that subtree, then in this repository:
+This monorepo vendors **cva6**, **riscv-isa-sim**, and **FreeRTOS-Kernel** with `git subtree` (full upstream histories). After clone, point remotes at your forks and pull updates with the helper scripts in `scripts/` at the repository root, for example:
 
 ```bash
-./scripts/setup-subrepo-remotes.sh   # once per clone; defaults to HTTPS forks above
+./scripts/setup-subrepo-remotes.sh
 ./scripts/update-subrepos.sh
 ```
 
-To point remotes at local clones instead (optional):
+For a single squashed commit per update, use `./scripts/update-subrepos.sh --squash`. Branches and remote names are defined in those scripts; adjust there if your fork uses different default branch names.
 
-```bash
-USE_LOCAL_CLONES=1 ./scripts/setup-subrepo-remotes.sh
-```
+## 14) GitHub “Contributors” and authorship
 
-To use different fork URLs:
+GitHub’s **Contributors** view counts **commit authors** on the default branch. Because the subtrees were added with their **entire** histories, that list includes **every** author who has ever committed to the vendored CVA6, Spike, and FreeRTOS trees—not only people who worked on this FYP. For who performed **this** work, use this README, your project author list, and your formal write-up; treat the GitHub graph as a **history of imported repositories**, not a project roster.
 
-```bash
-CVA6_REMOTE_URL="https://github.com/you/cva6.git" ./scripts/setup-subrepo-remotes.sh
-```
-
-If you prefer one squashed commit per subtree update:
-
-```bash
-./scripts/update-subrepos.sh --squash
-```
-
-**Subtree note:** `git subtree pull` must follow the **same branch** that was used when the subtree was first added (or a descendant of that history). If your fork’s default branch is `master` but the subtree tracks `reasearch`, push your work to a branch named `reasearch` on the fork (or set `CVA6_SUBTREE_BRANCH` to match what you actually push).
-
-You can also update a single subtree manually, for example:
-
-```bash
-git fetch spike-local research-dynamic-partitions-FreeRTOS-SP
-git subtree pull --prefix=riscv-isa-sim spike-local research-dynamic-partitions-FreeRTOS-SP -m "Update riscv-isa-sim subtree"
-```
-
-## 14) GitHub “Contributors” graph (upstream authors)
-
-The **Insights → Contributors** view on [this repository](https://github.com/cepdnaclk/e20-4yp-Reducing-Context-Switching-Latency-in-RTES-Using-RFP) is built from **commit authors on the default branch**. Importing `cva6/`, `riscv-isa-sim/`, and `FreeRTOS-Kernel/` with **`git subtree add` brought in their full histories**, so GitHub correctly lists everyone who ever authored those commits—not only your team.
-
-GitHub **does not** offer a setting to exclude specific directories or “vendor” paths from that graph (see [Viewing a repository’s contributors](https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository/viewing-a-projects-contributors)).
-
-**Ways to change what the graph shows (all involve trade-offs):**
-
-1. **Keep full history on a non-default branch, use a slimmer default branch**  
-   Push the current `main` to a branch such as `archive/full-subtree-history`, then replace **default** `main` with a new history that only contains your org’s meta commits (for example one squashed snapshot per release, or **git submodules** pointing at your forks). The Contributors graph for the default branch then mostly reflects people who commit to that meta history. Anyone who needs full per-file history can use the archive branch or the forks.
-
-2. **Submodules instead of subtrees for future integration**  
-   The default branch then mostly records submodule pointer bumps; upstream authors stay on the separate repositories’ graphs, not mixed into this repo’s graph the same way.
-
-3. **Do nothing**  
-   Leave the graph as-is; treat it as “authors present in imported histories,” not “people who worked on this FYP only.”
-
-There is **no** repository toggle that hides upstream authors while keeping the same default-branch subtree history unchanged.
