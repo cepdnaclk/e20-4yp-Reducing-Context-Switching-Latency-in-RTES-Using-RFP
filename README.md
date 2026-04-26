@@ -1,27 +1,77 @@
-# Reducing Context Switching Latency in Real-Time Embedded Systems Using Register File Partitioning
+# RISC-V Partitioning Research Project - Documentation
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![RISC-V](https://img.shields.io/badge/RISC-V-ISA-009688?logo=riscv)](https://riscv.org)
-[![Docker](https://img.shields.io/badge/Docker-Environment-0db7ed?logo=docker)](docker/)
+This directory contains the documentation website for the RISC-V Dynamic Register File Partitioning (DRFP) research project.
 
-## Research Context
+## Project Overview
 
-Context switching latency poses a critical challenge in real-time embedded systems, where deterministic task switching is essential for meeting hard deadlines. Traditional context switching requires full register file save/restore sequences—introducing non-deterministic overhead that scales with register count and disrupts pipeline execution. This problem is particularly acute in RISC-V embedded profiles (RV32E/EMC), where minimal register sets still incur significant cycle penalties during frequent task switches in RTOS environments.
+This website showcases research on reducing context-switch overhead in Real-Time Embedded Systems (RTES) using hardware-software co-design on RISC-V CVA6.
 
-Prior research has explored architectural techniques to mitigate this overhead:
-- **Register windows** (SPARC, IA-64): Overlapping register sets reduce spill/fill operations but introduce complexity in window management and limit task count scalability
-- **Banked registers** (ARM exception levels): Dedicated register sets per privilege mode eliminate save/restore for mode transitions but remain inaccessible to user-level task switching
-- **Shadow register sets** (MIPS MT): Hardware-threaded register replication supports concurrent contexts but increases silicon area proportionally to thread count
+## Website Structure
 
-Recent literature (Abdallah et al., 2020; Mariani et al., 2022) identifies a research gap in *lightweight*, *static partitioning* schemes suitable for deeply embedded systems with strict area constraints. Unlike dynamic windowing or full replication, partitioning divides the physical register file into dedicated subsets assigned to specific tasks or priority levels—eliminating save/restore overhead entirely for partitioned registers while maintaining RISC-V's minimalist philosophy. This approach aligns with emerging interest in *application-specific ISA customization* for real-time workloads (Waterman & Asanović, 2021), where predictable latency outweighs general-purpose flexibility.
+```
+docs/
+├── index.html              # Main entry point (modular SPA)
+├── components/             # Reusable HTML components
+│   ├── head.html          # Base head with Tailwind config
+│   ├── navbar.html        # Navigation bar
+│   ├── hero.html          # Hero section
+│   ├── section-summary.html   # Abstract/Problem
+│   ├── section-architecture.html  # Architecture diagrams
+│   ├── section-comparison.html    # Competitive landscape
+│   ├── section-testing.html       # Benchmark results
+│   ├── section-team.html          # Research team
+│   ├── section-publications.html  # CTA/Resources
+│   └── footer.html         # Footer
+└── assets/                 # Static assets
+    ├── logo.png           # Project logo
+    ├── hero-section-cpu.png  # Hero image
+    ├── latency-decomposition.svg
+    ├── modified-riscv-datapath-with-register-partitioning-logic.svg
+    └── team/              # Team member photos
+```
 
-This project investigates a hardware-aware register file partitioning scheme for RISC-V, evaluating whether static allocation of register subsets to critical real-time tasks can eliminate context switch overhead without compromising the base ISA's simplicity or requiring full register replication.
+## Running the Website
 
-## Research Objective
+### Option 1: Direct Browser
+Open `docs/index.html` directly in a web browser.
 
-To design, implement, and empirically evaluate a register file partitioning mechanism for RISC-V that reduces context switch latency by:
-1. **Eliminating save/restore operations** for partitioned registers through static hardware allocation to specific tasks or priority levels
-2. **Preserving software transparency** via minimal CSR extensions that control partition boundaries without modifying the base integer instruction set
-3. **Maintaining area efficiency** by avoiding full register replication—partitioning shares physical storage while enforcing access isolation through decode logic
+### Option 2: Local Server (Recommended)
+```bash
+cd docs
+python -m http.server 8000
+```
+Then visit `http://localhost:8000`
 
-The implementation targets the Spike instruction set simulator augmented with partitioning logic and access control mechanisms, enabling cycle-accurate evaluation of context switch latency under realistic RTOS workloads. This methodology follows established practices for pre-silicon architectural exploration in RISC-V research (Celio et al., 2021), allowing quantitative comparison against conventional software-managed context switching.
+### Option 3: VS Code Live Server
+Use the Live Server extension to serve the `docs/` directory.
+
+## Technology Stack
+
+- **Tailwind CSS** - Utility-first CSS framework
+- **Google Fonts** - Inter, Space Grotesk, Fira Code
+- **Material Symbols** - Icon library
+- **Vanilla JavaScript** - Component loading
+
+## Key Features
+
+- Responsive design with mobile support
+- Modular component architecture
+- Custom Tailwind theme with project colors
+- Interactive hover effects and animations
+- SVG-based charts and diagrams
+
+## Browser Compatibility
+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+## License
+
+© 2024 RISC-V Research Project. All rights reserved.
+
+## Links
+
+- **GitHub Repository**: https://github.com/cepdnaclk/e20-4yp-Reducing-Context-Switching-Latency-in-RTES-Using-RFP
+- **University of Peradeniya**: https://www.pdn.ac.lk
