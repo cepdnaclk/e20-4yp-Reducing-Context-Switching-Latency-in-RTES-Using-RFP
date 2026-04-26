@@ -1,0 +1,297 @@
+<!-- Abstract/Problem Section -->
+      <section class="py-xl px-gutter bg-white" id="summary">
+        <div class="max-w-[1440px] mx-auto">
+          <div class="grid lg:grid-cols-12 gap-xl">
+            <!-- Left Sidebar: Key Definitions -->
+            <div class="lg:col-span-4 flex flex-col gap-xl">
+              <div
+                class="p-lg border border-white/20 glass-panel rounded-xl shadow-xl bg-white/10 hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
+              >
+                <h4
+                  class="font-label-caps text-sm uppercase tracking-widest text-on-surface mb-6 font-bold"
+                >
+                  Key Definitions
+                </h4>
+                <div class="space-y-6">
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">DRFP</h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Dynamic Register File Partitioning: Heterogeneous logical
+                      partitioning of the physical register file.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      CSR 0x800
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Active descriptor managing partition base and size mapping
+                      for current context.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      CSR 0x801
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Staged descriptor written before trap return; committed by
+                      hardware on <span class="font-code-snippet">mret</span>.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">WCET</h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Worst-Case Execution Time: The critical metric for
+                      safety-critical timing determinism.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      Oversubscription
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Condition where runnable tasks exceed available resident
+                      hardware windows, triggering spill/reload fallback work.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      Resident Path
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Minimal switch path used when task context remains in a
+                      dedicated hardware partition.
+                    </p>
+                  </div>
+                  <div>
+                    <h5 class="text-primary text-sm font-bold mb-1">
+                      O-WCET
+                    </h5>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                      Observed worst-case latency within the measured benchmark
+                      envelope, distinct from a certified universal bound.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="glass-panel rounded-xl p-6 relative overflow-hidden border border-white/20 shadow-2xl bg-white/5 backdrop-blur-xl hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
+              >
+                <div class="flex justify-between items-center mb-6">
+                  <h4
+                    class="font-label-caps text-xs uppercase tracking-widest text-primary font-bold"
+                  >
+                    Latency Decomposition
+                  </h4>
+                  <span
+                    class="material-symbols-outlined text-accent animate-pulse"
+                    >query_stats</span
+                  >
+                </div>
+                <div class="relative group">
+                  <img
+                    alt="Interrupt Latency Breakdown"
+                    class="w-full h-auto rounded-lg opacity-90 group-hover:opacity-100 transition-opacity"
+                    src="assets/latency-decomposition.svg"
+                  />
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-background-dark/40 to-transparent pointer-events-none"
+                  ></div>
+                </div>
+                <div class="mt-6 space-y-4">
+                  <div class="flex items-center gap-3">
+                    <div class="h-px flex-1 bg-primary/30"></div>
+                    <span
+                      class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant"
+                      >Total Interrupt Latency</span
+                    >
+                    <div class="h-px flex-1 bg-primary/30"></div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div
+                      class="p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-slate-50 transition-colors cursor-default"
+                    >
+                      <div
+                        class="text-[9px] font-bold text-accent uppercase mb-1"
+                      >
+                        Hardware
+                      </div>
+                      <div
+                        class="text-xs text-on-surface-variant leading-tight"
+                      >
+                        Deterministic Trigger &amp; Entry
+                      </div>
+                    </div>
+                    <div
+                      class="p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-slate-50 transition-colors cursor-default"
+                    >
+                      <div
+                        class="text-[9px] font-bold text-primary uppercase mb-1"
+                      >
+                        Software
+                      </div>
+                      <div
+                        class="text-xs text-on-surface-variant leading-tight"
+                      >
+                        Save • Schedule • Restore
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-3xl rounded-full"
+                ></div>
+              </div>
+            </div>
+            <!-- Right Main Content: Title & Two-Column Text -->
+            <div class="lg:col-span-8">
+              <div
+                class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-4"
+              >
+                Section 01 // Abstract
+              </div>
+              <h2
+                class="text-4xl lg:text-5xl font-bold text-on-background mb-10 leading-tight"
+              >
+                Eliminating the memory-bound bottleneck in context-switching.
+              </h2>
+              <div class="border-l-2 border-slate-200 pl-8 mb-12">
+                <blockquote
+                  class="italic text-2xl text-on-surface-variant font-light leading-relaxed max-w-[65ch]"
+                >
+                  "Context switching remains a major performance and
+                  predictability bottleneck in real-time embedded systems
+                  because saving and restoring general-purpose registers is
+                  memory-latency bound."
+                </blockquote>
+              </div>
+              <div
+                class="grid md:grid-cols-2 gap-xl text-on-surface-variant leading-relaxed text-sm"
+              >
+                <div class="space-y-4 max-w-[65ch]">
+                  <p>
+                    This project addresses a core real-time systems problem:
+                    context switches are often dominated by memory traffic from
+                    saving and restoring general-purpose registers. In a
+                    software-only path, that cost scales with the amount of
+                    architectural state moved to and from memory, which can
+                    hurt responsiveness and predictability as task pressure
+                    grows. Our approach, Dynamic Register File Partitioning
+                    (DRFP), is a hardware-software co-design built around CVA6,
+                    Spike, and FreeRTOS-Kernel. The objective is not to replace
+                    the operating system scheduler, but to reduce the expensive
+                    save/restore portion whenever a task can stay resident in a
+                    hardware-backed register partition.
+                  </p>
+                  <p>
+                    On the hardware side, CVA6 is extended with a larger
+                    physical integer register file and two custom machine-mode
+                    CSRs: 0x800 for the active window descriptor and 0x801 for
+                    the staged/previous descriptor. The trap path snapshots and
+                    restores window metadata so that a resident task switch can
+                    avoid dense GPR spill/reload traffic. On the software side,
+                    the FreeRTOS RISC-V port is integrated with mixed context
+                    handling: a minimal path for window-resident tasks and a
+                    full save/restore fallback for non-resident or legacy
+                    paths. This keeps compatibility with the standard software
+                    model while enabling acceleration where the hardware
+                    residency condition is satisfied.
+                  </p>
+                  <p>
+                    Spike is used as a functional oracle to validate CSR and
+                    trap semantics, while cycle claims are taken from CVA6 RTL
+                    simulation under Verilator. This separation is important:
+                    functional correctness and timing evidence are verified in
+                    different, complementary environments. We run dedicated
+                    bare-metal context-switch tests to isolate mechanism costs,
+                    then validate integrated behavior through FreeRTOS flow and
+                    regression scripts.
+                  </p>
+                </div>
+                <div class="space-y-4 max-w-[65ch]">
+                  <p>
+                    The measured results show a clear two-regime behavior.
+                    Under resident conditions, the handover primitive remains
+                    very small and stable, with low memory movement in the
+                    switch path. Under heavy oversubscription (for example, many
+                    logical tasks competing for a small number of resident
+                    windows), DRFP still preserves correctness through fallback,
+                    but average and tail latency increase because spill/reload
+                    work reappears. This makes the performance story realistic:
+                    DRFP reduces central switching cost when residency is
+                    available, and degrades gracefully when it is not.
+                  </p>
+                  <p>
+                    In our published evaluation flow, this behavior is shown
+                    with stress and traffic/predictability benchmarks that
+                    compare DRFP against a software baseline in the same CVA6
+                    environment. Representative numbers include lower average
+                    switch cost and significantly lower context-state bytes per
+                    switch on resident-friendly workloads, alongside wider
+                    spread in oversubscribed scenarios. These outcomes align
+                    with the architecture: the hardware primitive is short, but
+                    full end-to-end timing also depends on residency policy and
+                    fallback frequency.
+                  </p>
+                  <p>
+                    The project therefore contributes a practical integration
+                    path rather than an isolated microarchitectural trick:
+                    custom CSR semantics in hardware, verified functional
+                    behavior in Spike, cycle-accurate evidence in CVA6 RTL, and
+                    OS-level application through FreeRTOS-Kernel. The software
+                    contract remains familiar (standard architectural register
+                    view for applications), while the platform gains a
+                    controllable mechanism to reduce context-switch overhead in
+                    real-time workloads.
+                  </p>
+                </div>
+              </div>
+              <!-- Stats Row -->
+              <div
+                class="grid grid-cols-2 lg:grid-cols-4 gap-md mt-16 pt-8 border-t border-slate-100"
+              >
+                <div
+                  class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50"
+                >
+                  <div class="text-2xl font-bold text-primary">2 Cycle</div>
+                  <div
+                    class="text-[9px] font-bold uppercase tracking-widest text-slate-400"
+                  >
+                    Handover
+                  </div>
+                </div>
+                <div
+                  class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50"
+                >
+                  <div class="text-2xl font-bold text-primary">Zero</div>
+                  <div
+                    class="text-[9px] font-bold uppercase tracking-widest text-slate-400"
+                  >
+                    Stack Spillage
+                  </div>
+                </div>
+                <div
+                  class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50"
+                >
+                  <div class="text-2xl font-bold text-primary">78.5%</div>
+                  <div
+                    class="text-[9px] font-bold uppercase tracking-widest text-slate-400"
+                  >
+                    Traffic Reduction
+                  </div>
+                </div>
+                <div
+                  class="hover:scale-[1.05] transition-transform duration-300 p-4 rounded-lg hover:bg-slate-50"
+                >
+                  <div class="text-2xl font-bold text-primary">100%</div>
+                  <div
+                    class="text-[9px] font-bold uppercase tracking-widest text-slate-400"
+                  >
+                    ISA Compliant
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

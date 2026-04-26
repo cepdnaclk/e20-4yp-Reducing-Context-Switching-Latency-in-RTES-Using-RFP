@@ -1,0 +1,157 @@
+<!-- Competitive Landscape Table Section -->
+      <section class="py-xl px-gutter bg-white" id="comparison">
+        <div class="max-w-[1440px] mx-auto">
+          <div class="mb-xl">
+            <div
+              class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-4"
+            >
+              Section 03 // Competitive Landscape
+            </div>
+            <h2 class="text-headline-lg font-bold text-on-background mb-4">
+              Evidence-Constrained Comparison
+            </h2>
+            <p class="font-body-md text-on-surface-variant max-w-3xl">
+              Benchmark comparison with representative prior context-switch
+              schemes across hardware overhead and task-switch performance.
+            </p>
+          </div>
+          <div
+            class="overflow-x-auto border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300 bg-white"
+          >
+            <table class="w-full text-left border-collapse bg-white">
+              <thead class="bg-slate-50 border-b border-outline-variant">
+                <tr>
+                  <th
+                    class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-primary"
+                  >
+                    Scheme
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-primary"
+                  >
+                    HW Overhead
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-primary"
+                  >
+                    OS Task-Switch Path (Cooperative)
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-primary"
+                  >
+                    HW Intr. Entry Focus
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-primary"
+                  >
+                    Fallback Strategy
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-sm">
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-5 font-bold text-on-surface">
+                    Baseline RISC-V + FreeRTOS
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">None</td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    62 cycle avg micro-path; stress avg 393 cycle
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Baseline CVA6 path
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">Yes (Stack)</td>
+                </tr>
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-5 font-bold text-on-surface">CV32RT</td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Bank replication + background drain
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Not primary target (focus is fast ISR)
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    6 cycle reported
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Yes (Background context commit)
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-5 font-bold text-on-surface">PCS</td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    24.4K–473.2K gates (config-dependent)
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Direct hardware switch in interrupt flow
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    4 cycle reported
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    No (Depth-bounded HW stack)
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-5 font-bold text-on-surface">
+                    Hoozemans VLIW
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    +13.7% LUT / +6.9% FF
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    8 cycle HW switch (VLIW context model)
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">—</td>
+                  <td class="px-6 py-5 text-on-surface-variant">No</td>
+                </tr>
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-5 font-bold text-on-surface">
+                    Rafla Windowed MIPS
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Internal register-window bank set
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    4 cycle save+restore model
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">—</td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Spill on wrap
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-5 font-bold text-on-surface">Kim MRF</td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Multiple RF organisation
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    ~23% CS-time reduction
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">—</td>
+                  <td class="px-6 py-5 text-on-surface-variant">No</td>
+                </tr>
+                <tr
+                  class="bg-primary/5 hover:bg-primary/10 transition-colors border-l-4 border-primary"
+                >
+                  <td class="px-6 py-5 font-bold text-primary">
+                    DRFP (This Work)
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    +2 CSRs + partitioned RF storage
+                  </td>
+                  <td class="px-6 py-5 font-bold text-on-surface">
+                    2 cycle micro-path; 173 cycle avg stress
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Baseline CVA6 trap path
+                  </td>
+                  <td class="px-6 py-5 text-on-surface-variant">
+                    Yes (Software spill/reload fallback)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>

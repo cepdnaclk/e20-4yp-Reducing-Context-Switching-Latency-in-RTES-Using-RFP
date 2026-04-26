@@ -1,0 +1,91 @@
+<!-- Architecture & Design -->
+      <section class="py-xl px-gutter bg-surface circuit-bg" id="architecture">
+        <div class="max-w-[1440px] mx-auto">
+          <div class="text-center mb-xl">
+            <h2 class="font-headline-lg text-headline-lg mb-sm">
+              Architectural Design
+            </h2>
+            <p class="font-body-lg text-on-surface-variant max-w-3xl mx-auto">
+              Hardware-level modifications to the RISC-V machine state for
+              seamless partition management.
+            </p>
+          </div>
+          <div class="grid lg:grid-cols-12 gap-xl items-start">
+            <div class="lg:col-span-4 space-y-lg">
+              <div
+                class="p-lg bg-white border border-outline-variant rounded-xl academic-shadow hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
+              >
+                <div class="flex items-center gap-sm mb-sm">
+                  <span
+                    class="px-3 py-1 bg-primary text-on-primary font-code-snippet rounded"
+                    >0x800</span
+                  >
+                  <h4 class="font-headline-md text-headline-md">
+                    CSR_WINDOW_ACTIVE (0x800)
+                  </h4>
+                </div>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                  Active window descriptor. It selects the physical register
+                  partition currently visible as architectural x0-x31.
+                </p>
+              </div>
+              <div
+                class="p-lg bg-white border border-outline-variant rounded-xl academic-shadow hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
+              >
+                <div class="flex items-center gap-sm mb-sm">
+                  <span
+                    class="px-3 py-1 bg-primary text-on-primary font-code-snippet rounded"
+                    >0x801</span
+                  >
+                  <h4 class="font-headline-md text-headline-md">
+                    CSR_WINDOW_STAGED (0x801)
+                  </h4>
+                </div>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                  Staged/previous window descriptor. Software writes the next
+                  mapping here; trap return (mret) commits it for the incoming
+                  task context.
+                </p>
+              </div>
+            </div>
+            <div class="lg:col-span-8">
+              <div class="space-y-xl">
+                <figure
+                  class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300"
+                >
+                  <img
+                    alt="Architecture Diagram"
+                    class="w-full rounded-lg"
+                    src="assets/modified-riscv-datapath-with-register-partitioning-logic.svg"
+                  />
+                  <figcaption
+                    class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase"
+                  >
+                    Figure 1: Modified RISC-V Datapath with Register
+                    Partitioning Logic
+                  </figcaption>
+                </figure>
+                <figure
+                  class="bg-white p-lg border border-outline-variant rounded-xl academic-shadow hover:scale-[1.01] hover:shadow-2xl transition-all duration-300"
+                >
+                  <div
+                    class="w-full rounded-lg border border-slate-100 bg-slate-50 p-3 min-h-[340px] flex items-center justify-center"
+                  >
+                    <img
+                      alt="Microarchitecture Diagram from Paper Figure 2"
+                      class="w-full h-auto max-h-[420px] object-contain"
+                      src="assets/Microarchitecture%20of%20the%20partitioned%20integer%20register%20file.svg"
+                    />
+                  </div>
+                  <figcaption
+                    class="p-sm mt-4 text-center font-label-caps text-on-surface-variant text-sm uppercase"
+                  >
+                    Figure 2: Microarchitecture of the partitioned integer register file
+                  </figcaption>
+                </figure>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
