@@ -30,13 +30,16 @@ module ariane_regfile_fpga #(
     parameter config_pkg::cva6_cfg_t CVA6Cfg       = config_pkg::cva6_cfg_empty,
     parameter int unsigned           DATA_WIDTH    = 32,
     parameter int unsigned           NR_READ_PORTS = 2,
-    parameter bit                    ZERO_REG_ZERO = 0
+    parameter bit                    ZERO_REG_ZERO = 0,
+    parameter int unsigned           PHYSICAL_REGS = 64
 ) (
     // clock and reset
     input  logic                                             clk_i,
     input  logic                                             rst_ni,
     // disable clock gates for testing
     input  logic                                             test_en_i,
+    // register window configuration: [31:16] = size, [15:0] = base
+    input  logic [CVA6Cfg.XLEN-1:0]                          window_config_i,
     // read port
     input  logic [        NR_READ_PORTS-1:0][           4:0] raddr_i,
     output logic [        NR_READ_PORTS-1:0][DATA_WIDTH-1:0] rdata_o,
@@ -46,8 +49,8 @@ module ariane_regfile_fpga #(
     input  logic [CVA6Cfg.NrCommitPorts-1:0]                 we_i
 );
 
-  localparam ADDR_WIDTH = 5;
-  localparam NUM_WORDS = 2 ** ADDR_WIDTH;
+  localparam ADDR_WIDTH = (PHYSICAL_REGS > 1) ? $clog2(PHYSICAL_REGS) : 1;
+  localparam NUM_WORDS = PHYSICAL_REGS;
   localparam LOG_NR_WRITE_PORTS = CVA6Cfg.NrCommitPorts == 1 ? 1 : $clog2(CVA6Cfg.NrCommitPorts);
 
   // Distributed RAM usually supports one write port per block - duplicate for each write port.
@@ -59,14 +62,42 @@ module ariane_regfile_fpga #(
   logic [CVA6Cfg.NrCommitPorts-1:0][DATA_WIDTH-1:0] wdata_reg;
   logic [NR_READ_PORTS-1:0] read_after_write;
 
-  logic [NR_READ_PORTS-1:0][4:0] raddr_q;
-  logic [NR_READ_PORTS-1:0][4:0] raddr;
+  logic [NR_READ_PORTS-1:0][ADDR_WIDTH-1:0] raddr_q;
+  logic [NR_READ_PORTS-1:0][ADDR_WIDTH-1:0] raddr;
+
+  logic [15:0] window_base, window_size;
+  logic [NR_READ_PORTS-1:0][ADDR_WIDTH-1:0] phys_raddr;
+  logic [NR_READ_PORTS-1:0] read_in_window;
+  logic [CVA6Cfg.NrCommitPorts-1:0][ADDR_WIDTH-1:0] phys_waddr;
+  logic [CVA6Cfg.NrCommitPorts-1:0] write_in_window;
+
+  assign window_base = window_config_i[15:0];
+  assign window_size = window_config_i[31:16];
+
+  always_comb begin : window_translation
+    for (int unsigned i = 0; i < NR_READ_PORTS; i++) begin
+      read_in_window[i] = 1'b0;
+      phys_raddr[i]     = '0;
+      if (raddr_i[i] < window_size && (window_base + raddr_i[i]) < PHYSICAL_REGS) begin
+        read_in_window[i] = 1'b1;
+        phys_raddr[i]     = ADDR_WIDTH'(window_base + raddr_i[i]);
+      end
+    end
+    for (int unsigned i = 0; i < CVA6Cfg.NrCommitPorts; i++) begin
+      write_in_window[i] = 1'b0;
+      phys_waddr[i]      = '0;
+      if (waddr_i[i] < window_size && (window_base + waddr_i[i]) < PHYSICAL_REGS) begin
+        write_in_window[i] = 1'b1;
+        phys_waddr[i]      = ADDR_WIDTH'(window_base + waddr_i[i]);
+      end
+    end
+  end
 
   // write address decoder (for block selector)
   always_comb begin
     for (int unsigned j = 0; j < CVA6Cfg.NrCommitPorts; j++) begin
       for (int unsigned i = 0; i < NUM_WORDS; i++) begin
-        if (waddr_i[j] == i) begin
+        if (write_in_window[j] && (phys_waddr[j] == i)) begin
           we_dec[j][i] = we_i[j];
         end else begin
           we_dec[j][i] = 1'b0;
@@ -97,7 +128,7 @@ module ariane_regfile_fpga #(
       raddr_q <= '0;
     end else begin
       mem_block_sel_q <= mem_block_sel;
-      if (CVA6Cfg.FpgaAlteraEn) raddr_q <= raddr_i;
+      if (CVA6Cfg.FpgaAlteraEn) raddr_q <= phys_raddr;
       else raddr_q <= '0;
     end
   end
@@ -107,33 +138,33 @@ module ariane_regfile_fpga #(
   logic [NR_READ_PORTS-1:0][DATA_WIDTH-1:0] mem_read_sync[CVA6Cfg.NrCommitPorts];
   for (genvar j = 0; j < CVA6Cfg.NrCommitPorts; j++) begin : regfile_ram_block
     always_ff @(posedge clk_i) begin
-      if (we_i[j] && ~waddr_i[j] != 0) begin
-        mem[j][waddr_i[j]] <= wdata_i[j];
+      if (we_i[j] && write_in_window[j] && ~phys_waddr[j] != 0) begin
+        mem[j][phys_waddr[j]] <= wdata_i[j];
         if (CVA6Cfg.FpgaAlteraEn)
           wdata_reg[j] <= wdata_i[j];  // register data written in case is needed to read next cycle
         else wdata_reg[j] <= '0;
       end
       if (CVA6Cfg.FpgaAlteraEn) begin
         for (int k = 0; k < NR_READ_PORTS; k++) begin : block_read
-          mem_read_sync[j][k] = mem[j][raddr_i[k]];  // synchronous RAM
+          mem_read_sync[j][k] = mem[j][phys_raddr[k]];  // synchronous RAM
           read_after_write[k] <= '0;
-          if (waddr_i[j] == raddr_i[k])
-            read_after_write[k] <= we_i[j] && ~waddr_i[j] != 0; // Identify if we need to read the content that was written
+          if (write_in_window[j] && read_in_window[k] && (phys_waddr[j] == phys_raddr[k]))
+            read_after_write[k] <= we_i[j] && ~phys_waddr[j] != 0; // Identify if we need to read the content that was written
         end
       end
     end
     for (genvar k = 0; k < NR_READ_PORTS; k++) begin : block_read
-      assign mem_read[j][k] = CVA6Cfg.FpgaAlteraEn ? ( read_after_write[k] ? wdata_reg[j]: mem_read_sync[j][k]) : mem[j][raddr_i[k]];
+      assign mem_read[j][k] = CVA6Cfg.FpgaAlteraEn ? ( read_after_write[k] ? wdata_reg[j]: mem_read_sync[j][k]) : mem[j][phys_raddr[k]];
     end
   end
   //with synchronous ram there is the need to adjust which address is used at the output MUX
-  assign raddr = CVA6Cfg.FpgaAlteraEn ? raddr_q : raddr_i;
+  assign raddr = CVA6Cfg.FpgaAlteraEn ? raddr_q : phys_raddr;
 
   // output MUX
   logic [NR_READ_PORTS-1:0][LOG_NR_WRITE_PORTS-1:0] block_addr;
   for (genvar k = 0; k < NR_READ_PORTS; k++) begin : regfile_read_port
     assign block_addr[k] = mem_block_sel_q[raddr[k]];
-    assign rdata_o[k] = (ZERO_REG_ZERO && raddr[k] == '0) ? '0 : mem_read[block_addr[k]][k];
+    assign rdata_o[k] = (ZERO_REG_ZERO && raddr_i[k] == '0) ? '0 : (read_in_window[k] ? mem_read[block_addr[k]][k] : '0);
   end
 
   // random initialization of the memory to suppress assert warnings on Questa.

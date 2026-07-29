@@ -178,6 +178,8 @@ run_one "stress_rt_window100"
 run_one "stress_rt_baseline100"
 run_one "latency_baseline_sw"
 run_one "latency_hw_window"
+run_one "rt_dsp_window"
+run_one "rt_dsp_baseline"
 
 echo "[CTXSW_BM] Done."
 

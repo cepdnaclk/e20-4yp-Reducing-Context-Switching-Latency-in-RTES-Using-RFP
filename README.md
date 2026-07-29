@@ -137,6 +137,8 @@ Validated bare-metal cycle summaries from the current campaign:
 - `spill_oldest_window_switch`: `1134/2300/1571`
 - `stress_rt_window100`: `107/1249/709`
 - `stress_rt_baseline100`: `388/696/393`
+- `rt_dsp_window` (Real-Time DSP/IoT Pipeline with RFP): `2/2/2` (with verified checksum `0x47C0/0x5E60` and live partition telemetry)
+- `rt_dsp_baseline` (Real-Time DSP/IoT Pipeline with Software Baseline): `62/96/62` (with verified checksum `0x47C0/0x5E60`)
 
 Interpretation guidance:
 

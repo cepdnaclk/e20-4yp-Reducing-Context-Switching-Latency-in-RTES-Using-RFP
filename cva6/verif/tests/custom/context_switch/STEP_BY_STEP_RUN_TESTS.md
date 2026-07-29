@@ -49,7 +49,7 @@ test -x /FYP/cva6/work-ver/Variane_testharness && echo "Variane_testharness: OK"
 
 ## 2. Run all bare-metal context-switch tests (CVA6 Verilator)
 
-These are the `.S` tests in **this directory** (RR2, scale4, spill, stress, latency HW vs SW). The script compiles each test, runs `Variane_testharness`, copies RVFI trace when present, and prints `mcycle` and breakdown lines.
+These are the `.S` tests in **this directory** (RR2, scale4, spill, stress, latency HW vs SW, and the real-world real-time DSP & IoT control pipeline tests `rt_dsp_window` vs `rt_dsp_baseline`). The script compiles each test, runs `Variane_testharness`, copies RVFI trace when present, and prints `mcycle` and breakdown lines.
 
 ### Step 2.1 — Go to CVA6 root
 
